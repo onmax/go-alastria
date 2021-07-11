@@ -52,9 +52,11 @@ var defaultPresentationRequestContextURLs = [1]string{"https://alastria.github.i
 // Mandatory fields are: payload.Issuer, payload.CallbackURL, payload.VerifiableCredential.ProcessHash,
 // payload.VerifiablePresentation.ProcessUrl and payload.VerifiablePresentation.Data
 func CreatePresentationRequest(header *Header, payload *PRPayload) (*PR, error) {
-	err := ValidatePresentationRequest(header, payload)
+	if err := ValidateHeader(header); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
+	if err := ValidatePRPayload(payload); err != nil {
 		return nil, err
 	}
 
@@ -67,12 +69,7 @@ func CreatePresentationRequest(header *Header, payload *PRPayload) (*PR, error) 
 // Validates the PresentationRequest according to the specification
 // https://github.com/alastria/alastria-identity/wiki/Alastria-DID-Method-Specification-(Quorum-version)#5-presentation-request
 // Sets default values if they are empty and they are required
-func ValidatePresentationRequest(header *Header, payload *PRPayload) error {
-
-	if err := ValidateHeader(header); err != nil {
-		return err
-	}
-
+func ValidatePRPayload(payload *PRPayload) error {
 	if payload.VerifiablePresentation == nil {
 		return fmt.Errorf(emptyPayloadField, "VerifiablePresentation")
 	}
@@ -88,7 +85,7 @@ func ValidatePresentationRequest(header *Header, payload *PRPayload) error {
 		"ProcessUrl":  payload.VerifiablePresentation.ProcessUrl,
 	}
 
-	if err := CheckMandatoryStringFieldsAreNotEmpty(mandatoryStringValues); err != nil {
+	if err := checkMandatoryStringFieldsAreNotEmpty(mandatoryStringValues); err != nil {
 		return err
 	}
 
@@ -106,8 +103,8 @@ func ValidatePresentationRequest(header *Header, payload *PRPayload) error {
 		return err
 	}
 
-	payload.VerifiablePresentation.Types = AddDefaultValues(payload.VerifiablePresentation.Types, defaultPresentationRequestTypes[:])
-	payload.VerifiablePresentation.Contexts = AddDefaultValues(payload.VerifiablePresentation.Contexts, defaultPresentationRequestContextURLs[:])
+	payload.VerifiablePresentation.Types = addDefaultValues(payload.VerifiablePresentation.Types, defaultPresentationRequestTypes[:])
+	payload.VerifiablePresentation.Contexts = addDefaultValues(payload.VerifiablePresentation.Contexts, defaultPresentationRequestContextURLs[:])
 
 	// TODO Check if payload.VerifiableCredential.credentialSubject is set and has proper values
 	// TODO Check iss and sub are valid

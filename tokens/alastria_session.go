@@ -28,9 +28,11 @@ var validASTypes = append([]string{"US211", "US221", "US142"}, defaultASType[:].
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.AlastriaToken and AlastriaToken.Issuer
 func CreateAlastriaSession(header *Header, payload *ASPayload) (*AS, error) {
-	err := ValidateAlastriaSession(header, payload)
+	if err := ValidateHeader(header); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
+	if err := ValidateASPayload(payload); err != nil {
 		return nil, err
 	}
 
@@ -43,29 +45,24 @@ func CreateAlastriaSession(header *Header, payload *ASPayload) (*AS, error) {
 // Validates the AlastriaSession according to the specification
 // https://github.com/alastria/alastria-identity/wiki/Artifacts-and-User-Stories-Definitions#02-alastria-session-as
 // Sets default values if they are empty and they are required
-func ValidateAlastriaSession(header *Header, payload *ASPayload) error {
-
-	if err := ValidateHeader(header); err != nil {
-		return err
-	}
-
+func ValidateASPayload(payload *ASPayload) error {
 	mandatoryValues := map[string]string{
 		"AlastriaToken": payload.AlastriaToken,
 		"Issuer":        payload.Issuer,
 	}
 
-	if err := CheckMandatoryStringFieldsAreNotEmpty(mandatoryValues); err != nil {
+	if err := checkMandatoryStringFieldsAreNotEmpty(mandatoryValues); err != nil {
 		return err
 	}
 
 	// ! In the docs, it is not explicitly mentioned that the payload.Types can have more values that the ones that they mention
-	if err := ValidateEnum(payload.Types, validASTypes, "Types"); err != nil {
+	if err := validateEnum(payload.Types, validASTypes, "Types"); err != nil {
 		return err
 	}
 	// TODO validASTypes should be a oneOfs
 
 	// ! In the docs, it is not explicitly mentioned that the payload.Context can have more values that the ones that they mention
-	if err := ValidateEnum(payload.Contexts, defaultASContextURLs[:], "Context"); err != nil {
+	if err := validateEnum(payload.Contexts, defaultASContextURLs[:], "Context"); err != nil {
 		return err
 	}
 
@@ -73,8 +70,8 @@ func ValidateAlastriaSession(header *Header, payload *ASPayload) error {
 		return err
 	}
 
-	payload.Types = AddDefaultValues(payload.Types, defaultASType[:])
-	payload.Contexts = AddDefaultValues(payload.Contexts, defaultASContextURLs[:])
+	payload.Types = addDefaultValues(payload.Types, defaultASType[:])
+	payload.Contexts = addDefaultValues(payload.Contexts, defaultASContextURLs[:])
 
 	return nil
 }

@@ -39,9 +39,11 @@ var defaultPresentationContextURLs = [2]string{"https://www.w3.org/2018/credenti
 // Mandatory fields are: payload.Issuer, payload.Audience, payload.VerifiablePresentation.ProcessHash,
 // payload.VerifiablePresentation.ProcessUrl and payload.VerifiableCredential.VerifiableCredentials
 func CreatePresentation(header *Header, payload *PresentationPayload) (*Presentation, error) {
-	err := ValidatePresentation(header, payload)
+	if err := ValidateHeader(header); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
+	if err := ValidatePresentationPayload(payload); err != nil {
 		return nil, err
 	}
 
@@ -54,11 +56,7 @@ func CreatePresentation(header *Header, payload *PresentationPayload) (*Presenta
 // Validates the Presentation according to the specification
 // https://github.com/alastria/alastria-identity/wiki/Alastria-DID-Method-Specification-(Quorum-version)#4-presentation
 // Sets default values if they are empty and they are required
-func ValidatePresentation(header *Header, payload *PresentationPayload) error {
-
-	if err := ValidateHeader(header); err != nil {
-		return err
-	}
+func ValidatePresentationPayload(payload *PresentationPayload) error {
 
 	if payload.VerifiablePresentation == nil {
 		return fmt.Errorf(emptyPayloadField, "VerifiablePresentation")
@@ -71,7 +69,7 @@ func ValidatePresentation(header *Header, payload *PresentationPayload) error {
 		"ProcessUrl":  payload.VerifiablePresentation.ProcessUrl,
 	}
 
-	if err := CheckMandatoryStringFieldsAreNotEmpty(mandatoryStringValues); err != nil {
+	if err := checkMandatoryStringFieldsAreNotEmpty(mandatoryStringValues); err != nil {
 		return err
 	}
 
@@ -79,7 +77,7 @@ func ValidatePresentation(header *Header, payload *PresentationPayload) error {
 		"VerifiableCredentials": payload.VerifiablePresentation.VerifiableCredentials,
 	}
 
-	if err := CheckMandatoryStringArrayFieldsNotEmpty(mandatoryStringArraysValues); err != nil {
+	if err := checkMandatoryStringArrayFieldsNotEmpty(mandatoryStringArraysValues); err != nil {
 		return err
 	}
 
@@ -87,8 +85,8 @@ func ValidatePresentation(header *Header, payload *PresentationPayload) error {
 		return err
 	}
 
-	payload.VerifiablePresentation.Types = AddDefaultValues(payload.VerifiablePresentation.Types, defaultPresentationTypes[:])
-	payload.VerifiablePresentation.Contexts = AddDefaultValues(payload.VerifiablePresentation.Contexts, defaultPresentationContextURLs[:])
+	payload.VerifiablePresentation.Types = addDefaultValues(payload.VerifiablePresentation.Types, defaultPresentationTypes[:])
+	payload.VerifiablePresentation.Contexts = addDefaultValues(payload.VerifiablePresentation.Contexts, defaultPresentationContextURLs[:])
 
 	// TODO Check if payload.VerifiableCredential.credentialSubject is set and has proper values
 	// TODO Check iss and sub are valid

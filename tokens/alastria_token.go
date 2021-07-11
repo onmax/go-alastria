@@ -30,9 +30,11 @@ var validATTypes = append([]string{"US12", "US211", "US221", "US231", "US142"}, 
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: AlastriaToken.GatewayURL, AlastriaToken.Issuer, AlastriaToken.CallbackURL, AlastriaToken.AlastriaNetworkId
 func CreateAlastriaToken(header *Header, payload *ATPayload) (*AT, error) {
-	err := ValidateAlastriaToken(header, payload)
+	if err := ValidateHeader(header); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
+	if err := ValidateATPayload(payload); err != nil {
 		return nil, err
 	}
 
@@ -45,12 +47,7 @@ func CreateAlastriaToken(header *Header, payload *ATPayload) (*AT, error) {
 // Validates the AlastriaToken according to the specification
 // https://github.com/alastria/alastria-identity/wiki/Artifacts-and-User-Stories-Definitions#01-alastria-token-at
 // Sets default values if they are empty and they are required
-func ValidateAlastriaToken(header *Header, payload *ATPayload) error {
-
-	if err := ValidateHeader(header); err != nil {
-		return err
-	}
-
+func ValidateATPayload(payload *ATPayload) error {
 	mandatoryValues := map[string]string{
 		"Issuer":            payload.Issuer,
 		"GatewayURL":        payload.GatewayURL,
@@ -58,17 +55,17 @@ func ValidateAlastriaToken(header *Header, payload *ATPayload) error {
 		"AlastriaNetworkId": payload.AlastriaNetworkId,
 	}
 
-	if err := CheckMandatoryStringFieldsAreNotEmpty(mandatoryValues); err != nil {
+	if err := checkMandatoryStringFieldsAreNotEmpty(mandatoryValues); err != nil {
 		return err
 	}
 
 	// ! In the docs, it is not explicitly mentioned that the payload.Types can have more values that the ones that they mention
-	if err := ValidateEnum(payload.Types, validATTypes, "Types"); err != nil {
+	if err := validateEnum(payload.Types, validATTypes, "Types"); err != nil {
 		return err
 	}
 	// TODO validATTypes should be a oneOfs
 
-	payload.Types = AddDefaultValues(payload.Types, defaultATType[:])
+	payload.Types = addDefaultValues(payload.Types, defaultATType[:])
 
 	if err := ValidateTimestamps(&payload.IssuedAt, &payload.ExpiresAt, &payload.NotBefore); err != nil {
 		return err

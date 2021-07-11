@@ -29,9 +29,11 @@ var validAICTypes = append([]string{"US12"}, defaultAICType[:]...)
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.AlastriaToken, payload.CreateAlastriaTX and payload.PublicKey
 func CreateAlastriaIdentityCreation(header *Header, payload *AICPayload) (*AIC, error) {
-	err := ValidateAlastriaIdentityCreation(header, payload)
+	if err := ValidateHeader(header); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
+	if err := ValidateAICPayload(payload); err != nil {
 		return nil, err
 	}
 
@@ -44,11 +46,7 @@ func CreateAlastriaIdentityCreation(header *Header, payload *AICPayload) (*AIC, 
 // Validates the AIC according to the specification
 // https://github.com/alastria/alastria-identity/wiki/Artifacts-and-User-Stories-Definitions#03-alastria-identity-creation-aic
 // Sets default values if they are empty and they are required
-func ValidateAlastriaIdentityCreation(header *Header, payload *AICPayload) error {
-
-	if err := ValidateHeader(header); err != nil {
-		return err
-	}
+func ValidateAICPayload(payload *AICPayload) error {
 
 	mandatoryValues := map[string]string{
 		"AlastriaToken":    payload.AlastriaToken,
@@ -56,18 +54,18 @@ func ValidateAlastriaIdentityCreation(header *Header, payload *AICPayload) error
 		"PublicKey":        payload.PublicKey,
 	}
 
-	if err := CheckMandatoryStringFieldsAreNotEmpty(mandatoryValues); err != nil {
+	if err := checkMandatoryStringFieldsAreNotEmpty(mandatoryValues); err != nil {
 		return err
 	}
 
 	// ! In the docs, it is not explicitly mentioned that the payload.Types can have more values that the ones that they mention
-	if err := ValidateEnum(payload.Types, validAICTypes, "Types"); err != nil {
+	if err := validateEnum(payload.Types, validAICTypes, "Types"); err != nil {
 		return err
 	}
 	// TODO validAICTypes should be a oneOfs
 
 	// ! In the docs, it is not explicitly mentioned that the payload.Contexts can have more values that the ones that they mention
-	if err := ValidateEnum(payload.Contexts, defaultAICContextURLs[:], "Context"); err != nil {
+	if err := validateEnum(payload.Contexts, defaultAICContextURLs[:], "Context"); err != nil {
 		return err
 	}
 
@@ -75,8 +73,8 @@ func ValidateAlastriaIdentityCreation(header *Header, payload *AICPayload) error
 		return err
 	}
 
-	payload.Types = AddDefaultValues(payload.Types, defaultAICType[:])
-	payload.Contexts = AddDefaultValues(payload.Contexts, defaultAICContextURLs[:])
+	payload.Types = addDefaultValues(payload.Types, defaultAICType[:])
+	payload.Contexts = addDefaultValues(payload.Contexts, defaultAICContextURLs[:])
 
 	// TODO Validates contexts are URLs
 	// TODO CreateAlastria, TXPublicKey and JSONTokenId can be a regex?

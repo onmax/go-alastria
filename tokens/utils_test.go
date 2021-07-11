@@ -34,7 +34,7 @@ func TestStringInSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := StringInSlice(tt.args.a, tt.args.list); got != tt.want {
+			if got := stringInSlice(tt.args.a, tt.args.list); got != tt.want {
 				t.Errorf("StringInSlice() = %v, want %v", got, tt.want)
 			}
 		})
@@ -189,7 +189,7 @@ func TestCheckMandatoryStringFieldsNotEmpty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := CheckMandatoryStringFieldsAreNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
+			if err := checkMandatoryStringFieldsAreNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateTimestamps() error = %v", err)
 			} else if (err != nil) && tt.wantErr && !strings.Contains(err.Error(), tt.errorMsgContains) {
 				t.Errorf("ValidateTimestamps() unexpected error message: error = %v | should contain: %v", err, tt.errorMsgContains)
@@ -211,7 +211,7 @@ func TestCheckMandatoryStringArrayFieldsNotEmpty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := CheckMandatoryStringArrayFieldsNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
+			if err := checkMandatoryStringArrayFieldsNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
 				t.Errorf("CheckMandatoryStringArrayFieldsNotEmpty() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -232,7 +232,7 @@ func TestAddDefaultValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddDefaultValues(tt.args.values, tt.args.defaultValues); !reflect.DeepEqual(got, tt.want) {
+			if got := addDefaultValues(tt.args.values, tt.args.defaultValues); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddDefaultValues() = %v, want %v", got, tt.want)
 			}
 		})
@@ -254,7 +254,7 @@ func TestValidateEnum(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := ValidateEnum(tt.args.values, tt.args.validValues, tt.args.field); (err != nil) != tt.wantErr {
+			if err := validateEnum(tt.args.values, tt.args.validValues, tt.args.field); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateEnum() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -274,7 +274,7 @@ func TestCheckMandatoryStringFieldsAreNotEmpty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := CheckMandatoryStringFieldsAreNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
+			if err := checkMandatoryStringFieldsAreNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
 				t.Errorf("CheckMandatoryStringFieldsAreNotEmpty() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -294,7 +294,7 @@ func TestCheckMandatoryStructFieldsAreNotEmpty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := CheckMandatoryStructFieldsAreNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
+			if err := checkMandatoryStructFieldsAreNotEmpty(tt.args.values); (err != nil) != tt.wantErr {
 				t.Errorf("CheckMandatoryStructFieldsAreNotEmpty() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -344,7 +344,7 @@ func TestCheckLevelOfAssurance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := CheckLevelOfAssurance(tt.args.data); (err != nil) != tt.wantErr {
+			if err := checkLevelOfAssurance(tt.args.data); (err != nil) != tt.wantErr {
 				t.Errorf("CheckLevelOfAssurance() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

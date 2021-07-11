@@ -12,7 +12,7 @@ type Header struct {
 }
 
 // Checks if list contains the given string
-func StringInSlice(a string, list []string) bool {
+func stringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
 			return true
@@ -39,14 +39,14 @@ func ValidateHeader(header *Header) error {
 	// If header.Type is empty, then sets a default value. Otherwise, checks if header.Type is valid.
 	if header.Type == "" {
 		header.Type = validHeaderTypes[0]
-	} else if !StringInSlice(header.Type, validHeaderTypes[:]) {
+	} else if !stringInSlice(header.Type, validHeaderTypes[:]) {
 		return fmt.Errorf("invalid Type equals to %s in header. Use: JWT", header.Type)
 	}
 
 	// If header.Algorithm is empty, then sets a default value. Otherwise, checks if header.Algorithm is valid.
 	if header.Algorithm == "" {
 		header.Algorithm = validHeaderAlgorithms[0]
-	} else if !StringInSlice(header.Algorithm, validHeaderAlgorithms[:]) {
+	} else if !stringInSlice(header.Algorithm, validHeaderAlgorithms[:]) {
 		return fmt.Errorf("invalid Algorithm equals to %s in header. Use: ES256K", header.Algorithm)
 	}
 
@@ -56,7 +56,7 @@ func ValidateHeader(header *Header) error {
 	return nil
 }
 
-func CheckMandatoryStringFieldsAreNotEmpty(values map[string]string) error {
+func checkMandatoryStringFieldsAreNotEmpty(values map[string]string) error {
 	for k, v := range values {
 		if v == "" {
 			return fmt.Errorf(emptyPayloadField, k)
@@ -65,7 +65,7 @@ func CheckMandatoryStringFieldsAreNotEmpty(values map[string]string) error {
 	return nil
 }
 
-func CheckMandatoryStringArrayFieldsNotEmpty(values map[string][]string) error {
+func checkMandatoryStringArrayFieldsNotEmpty(values map[string][]string) error {
 	for k, v := range values {
 		if len(v) == 0 {
 			return fmt.Errorf(emptyPayloadField, k)
@@ -74,7 +74,7 @@ func CheckMandatoryStringArrayFieldsNotEmpty(values map[string][]string) error {
 	return nil
 }
 
-func CheckMandatoryStructFieldsAreNotEmpty(values map[string]interface{}) error {
+func checkMandatoryStructFieldsAreNotEmpty(values map[string]interface{}) error {
 	for k, v := range values {
 		if v == nil {
 			return fmt.Errorf(emptyPayloadField, k)
@@ -84,9 +84,9 @@ func CheckMandatoryStructFieldsAreNotEmpty(values map[string]interface{}) error 
 }
 
 // Adds default value in values array if they are not set
-func AddDefaultValues(values []string, defaultValues []string) []string {
+func addDefaultValues(values []string, defaultValues []string) []string {
 	for _, _defaultValue := range defaultValues {
-		if !StringInSlice(_defaultValue, values) {
+		if !stringInSlice(_defaultValue, values) {
 			values = append(values, _defaultValue)
 		}
 	}
@@ -94,16 +94,16 @@ func AddDefaultValues(values []string, defaultValues []string) []string {
 }
 
 // Validates that the elements in values are in the validValues array
-func ValidateEnum(values []string, validValues []string, field string) error {
+func validateEnum(values []string, validValues []string, field string) error {
 	for _, value := range values {
-		if !StringInSlice(value, validValues) {
+		if !stringInSlice(value, validValues) {
 			return fmt.Errorf("the value %s=%s is invalid. Only the following values are accepted %s", field, value, validValues)
 		}
 	}
 	return nil
 }
 
-func CheckLevelOfAssurance(_data *map[string]interface{}) error {
+func checkLevelOfAssurance(_data *map[string]interface{}) error {
 	if _data == nil {
 		return fmt.Errorf("arg is nil")
 	}

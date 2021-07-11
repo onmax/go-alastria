@@ -34,9 +34,11 @@ var defaultCredentialContextURLs = [2]string{"https://www.w3.org/2018/credential
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.AlastriaToken, payload.CreateAlastriaTX and payload.PublicKey
 func CreateCredential(header *Header, payload *CredentialPayload) (*Credential, error) {
-	err := ValidateCredential(header, payload)
+	if err := ValidateHeader(header); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
+	if err := ValidateCredentialPayload(payload); err != nil {
 		return nil, err
 	}
 
@@ -49,18 +51,14 @@ func CreateCredential(header *Header, payload *CredentialPayload) (*Credential, 
 // Validates the Credential according to the specification
 // https://github.com/alastria/alastria-identity/wiki/Alastria-DID-Method-Specification-(Quorum-version)#3-credentials
 // Sets default values if they are empty and they are required
-func ValidateCredential(header *Header, payload *CredentialPayload) error {
-
-	if err := ValidateHeader(header); err != nil {
-		return err
-	}
+func ValidateCredentialPayload(payload *CredentialPayload) error {
 
 	mandatoryStringValues := map[string]string{
 		"Issuer":  payload.Issuer,
 		"Subject": payload.Subject,
 	}
 
-	if err := CheckMandatoryStringFieldsAreNotEmpty(mandatoryStringValues); err != nil {
+	if err := checkMandatoryStringFieldsAreNotEmpty(mandatoryStringValues); err != nil {
 		return err
 	}
 
@@ -72,7 +70,7 @@ func ValidateCredential(header *Header, payload *CredentialPayload) error {
 		return fmt.Errorf(emptyPayloadField, "CredentialSubject")
 	}
 
-	if err := CheckLevelOfAssurance(payload.VerifiableCredential.CredentialSubject); err != nil {
+	if err := checkLevelOfAssurance(payload.VerifiableCredential.CredentialSubject); err != nil {
 		return err
 	}
 
@@ -80,8 +78,8 @@ func ValidateCredential(header *Header, payload *CredentialPayload) error {
 		return err
 	}
 
-	payload.VerifiableCredential.Types = AddDefaultValues(payload.VerifiableCredential.Types, defaultCredentialTypes[:])
-	payload.VerifiableCredential.Contexts = AddDefaultValues(payload.VerifiableCredential.Contexts, defaultCredentialContextURLs[:])
+	payload.VerifiableCredential.Types = addDefaultValues(payload.VerifiableCredential.Types, defaultCredentialTypes[:])
+	payload.VerifiableCredential.Contexts = addDefaultValues(payload.VerifiableCredential.Contexts, defaultCredentialContextURLs[:])
 
 	// TODO Check iss and sub are valid
 	return nil
