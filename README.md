@@ -1,5 +1,4 @@
 ## Go Alastria
----
 
 Unofficial implementation of the Alastria specification
 
