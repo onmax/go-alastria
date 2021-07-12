@@ -3,24 +3,24 @@ package tokens
 import "fmt"
 
 type Credential struct {
-	Header  *Header            `json:"header"`
-	Payload *CredentialPayload `json:"payload"`
+	Header  *Header            `json:"header,omitempty"`
+	Payload *CredentialPayload `json:"payload,omitempty"`
 }
 
 type CredentialPayload struct {
-	JSONTokenId          string               `json:"jti"`
-	IssuedAt             uint64               `json:"iat"`
-	ExpiresAt            uint64               `json:"exp"`
-	NotBefore            uint64               `json:"nbf"`
-	Issuer               string               `json:"iss"`
-	Subject              string               `json:"sub"`
-	VerifiableCredential *CredentialPayloadVC `json:"vc"`
+	JSONTokenId          string               `json:"jti,omitempty"`
+	IssuedAt             uint64               `json:"iat,omitempty"`
+	ExpiresAt            uint64               `json:"exp,omitempty"`
+	NotBefore            uint64               `json:"nbf,omitempty"`
+	Issuer               string               `json:"iss,omitempty"`
+	Subject              string               `json:"sub,omitempty"`
+	VerifiableCredential *CredentialPayloadVC `json:"vc,omitempty"`
 }
 
 type CredentialPayloadVC struct {
-	Contexts          []string                `json:"@context"`
-	Types             []string                `json:"type"`
-	CredentialSubject *map[string]interface{} `json:"credentialSubject"`
+	Contexts          []string                `json:"@context,omitempty"`
+	Types             []string                `json:"type,omitempty"`
+	CredentialSubject *map[string]interface{} `json:"credentialSubject,omitempty"`
 }
 
 var defaultCredentialTypes = [2]string{"VerifiableCredential", "AlastriaVerifiableCredential"}

@@ -1,20 +1,20 @@
 package tokens
 
 type AIC struct {
-	Header  *Header     `json:"header"`
-	Payload *AICPayload `json:"payload"`
+	Header  *Header     `json:"header,omitempty"`
+	Payload *AICPayload `json:"payload,omitempty"`
 }
 
 type AICPayload struct {
-	IssuedAt         uint64   `json:"iat"`
-	ExpiresAt        uint64   `json:"exp"`
-	NotBefore        uint64   `json:"nbf"`
-	PublicKey        string   `json:"publicKey"`
-	JSONTokenId      string   `json:"jti"`
-	CreateAlastriaTX string   `json:"createAlastriaTX"` // ! Not the best name
-	AlastriaToken    string   `json:"alastriaToken"`
-	Contexts         []string `json:"@context"`
-	Types            []string `json:"type"`
+	IssuedAt         uint64   `json:"iat,omitempty"`
+	ExpiresAt        uint64   `json:"exp,omitempty"`
+	NotBefore        uint64   `json:"nbf,omitempty"`
+	PublicKey        string   `json:"publicKey,omitempty"`
+	JSONTokenId      string   `json:"jti,omitempty"`
+	CreateAlastriaTX string   `json:"createAlastriaTX,omitempty"` // ! Not the best name
+	AlastriaToken    string   `json:"alastriaToken,omitempty"`
+	Contexts         []string `json:"@context,omitempty"`
+	Types            []string `json:"type,omitempty"`
 }
 
 var defaultAICContextURLs = [...]string{"https://alastria.github.io/identity/artifacts/v1"}

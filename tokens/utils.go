@@ -5,10 +5,10 @@ import (
 )
 
 type Header struct {
-	Algorithm    string `json:"alg"`
-	Type         string `json:"typ"`
-	JSONWebToken string `json:"jwk"`
-	KeyID        string `json:"kid"`
+	Algorithm    string `json:"alg,omitempty"`
+	Type         string `json:"typ,omitempty"`
+	JSONWebToken string `json:"jwk,omitempty"`
+	KeyID        string `json:"kid,omitempty"`
 }
 
 // Checks if list contains the given string

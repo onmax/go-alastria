@@ -1,22 +1,22 @@
 package tokens
 
 type AT struct {
-	Header  *Header    `json:"header"`
-	Payload *ATPayload `json:"payload"`
+	Header  *Header    `json:"header,omitempty"`
+	Payload *ATPayload `json:"payload,omitempty"`
 }
 
 type ATPayload struct {
 	// ! AT lacks of `@context` field
-	JSONTokenId               string   `json:"jti"`
-	IssuedAt                  uint64   `json:"iat"`
-	ExpiresAt                 uint64   `json:"exp"`
-	NotBefore                 uint64   `json:"nbf"`
-	Issuer                    string   `json:"iss"`
-	Types                     []string `json:"type"`
-	AlastriaNetworkId         string   `json:"any"`
-	CallbackURL               string   `json:"cbu"`
-	GatewayURL                string   `json:"gwu"`
-	MultiFactorAuthentication string   `json:"mfau"` // ! probably better with just 3 letter "mfa" as the rest of properties
+	JSONTokenId               string   `json:"jti,omitempty"`
+	IssuedAt                  uint64   `json:"iat,omitempty"`
+	ExpiresAt                 uint64   `json:"exp,omitempty"`
+	NotBefore                 uint64   `json:"nbf,omitempty"`
+	Issuer                    string   `json:"iss,omitempty"`
+	Types                     []string `json:"type,omitempty"`
+	AlastriaNetworkId         string   `json:"any,omitempty"`
+	CallbackURL               string   `json:"cbu,omitempty"`
+	GatewayURL                string   `json:"gwu,omitempty"`
+	MultiFactorAuthentication string   `json:"mfau,omitempty"` // ! probably better with just 3 letter "mfa" as the rest of properties
 }
 
 var defaultATType = [...]string{"AlastriaToken"}

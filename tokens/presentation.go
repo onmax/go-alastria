@@ -3,28 +3,28 @@ package tokens
 import "fmt"
 
 type Presentation struct {
-	Header  *Header              `json:"header"`
-	Payload *PresentationPayload `json:"payload"`
+	Header  *Header              `json:"header,omitempty"`
+	Payload *PresentationPayload `json:"payload,omitempty"`
 }
 
 type PresentationPayload struct {
-	JSONTokenId                    string                 `json:"jti"`
-	IssuedAt                       uint64                 `json:"iat"`
-	ExpiresAt                      uint64                 `json:"exp"`
-	NotBefore                      uint64                 `jsonPresentation:"nbf"`
-	Issuer                         string                 `json:"iss"`
-	Audience                       string                 `json:"aud"`
-	PresentationRequestJSONTokenId string                 `json:"jtipr"`
-	VerifiablePresentation         *PresentationPayloadVP `json:"vp"`
+	JSONTokenId                    string                 `json:"jti,omitempty"`
+	IssuedAt                       uint64                 `json:"iat,omitempty"`
+	ExpiresAt                      uint64                 `json:"exp,omitempty"`
+	NotBefore                      uint64                 `json:"nbf,omitempty"`
+	Issuer                         string                 `json:"iss,omitempty"`
+	Audience                       string                 `json:"aud,omitempty"`
+	PresentationRequestJSONTokenId string                 `json:"jtipr,omitempty"`
+	VerifiablePresentation         *PresentationPayloadVP `json:"vp,omitempty"`
 }
 
 type PresentationPayloadVP struct {
-	Contexts              []string `json:"@context"`
-	Types                 []string `json:"type"`
-	ProcessHash           string   `json:"procHash"`
-	ProcessUrl            string   `json:"procUrl"`
-	ProcessDescription    string   `json:"procDescription"`
-	VerifiableCredentials []string `json:"verifiableCredential"` // ! Should be plural: 'verifiableCredentials'
+	Contexts              []string `json:"@context,omitempty"`
+	Types                 []string `json:"type,omitempty"`
+	ProcessHash           string   `json:"procHash,omitempty"`
+	ProcessUrl            string   `json:"procUrl,omitempty"`
+	ProcessDescription    string   `json:"procDescription,omitempty"`
+	VerifiableCredentials []string `json:"verifiableCredential,omitempty"` // ! Should be plural: 'verifiableCredentials'
 }
 
 var defaultPresentationTypes = [2]string{"VerifiablePresentation", "AlastriaVerifiablePresentation"}

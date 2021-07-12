@@ -5,34 +5,34 @@ import (
 )
 
 type PR struct {
-	Header  *Header    `json:"header"`
-	Payload *PRPayload `json:"payload"`
+	Header  *Header    `json:"header,omitempty"`
+	Payload *PRPayload `json:"payload,omitempty"`
 }
 
 type PRPayload struct {
-	JSONTokenId            string       `json:"jti"`
-	IssuedAt               uint64       `json:"iat"`
-	ExpiresAt              uint64       `json:"exp"`
-	NotBefore              uint64       `json:"nbf"`
-	Issuer                 string       `json:"iss"`
-	CallbackURL            string       `json:"cbu"`
-	VerifiablePresentation *PRPayloadVP `json:"vp"`
+	JSONTokenId            string       `json:"jti,omitempty"`
+	IssuedAt               uint64       `json:"iat,omitempty"`
+	ExpiresAt              uint64       `json:"exp,omitempty"`
+	NotBefore              uint64       `json:"nbf,omitempty"`
+	Issuer                 string       `json:"iss,omitempty"`
+	CallbackURL            string       `json:"cbu,omitempty"`
+	VerifiablePresentation *PRPayloadVP `json:"vp,omitempty"`
 }
 
 type PRPayloadVP struct {
-	Contexts           []string           `json:"@context"`
-	Types              []string           `json:"type"`
-	ProcessHash        string             `json:"procHash"`
-	ProcessUrl         string             `json:"procUrl"`
-	ProcessDescription string             `json:"procDescription"`
-	Data               *[]PRPayloadVPData `json:"data"` // ! in a presentation is 'verifiableCredentials', and here data. It's not consistent
+	Contexts           []string           `json:"@context,omitempty"`
+	Types              []string           `json:"type,omitempty"`
+	ProcessHash        string             `json:"procHash,omitempty"`
+	ProcessUrl         string             `json:"procUrl,omitempty"`
+	ProcessDescription string             `json:"procDescription,omitempty"`
+	Data               *[]PRPayloadVPData `json:"data,omitempty"` // ! in a presentation is 'verifiableCredentials', and here data. It's not consistent
 }
 
 type PRPayloadVPData struct {
-	Contexts         []string `json:"@context"` // ! Not type?
-	LevelOfAssurance int      `json:"levelOfAssurance"`
-	Required         bool     `json:"required"`
-	FieldName        string   `json:"field_name"` // ! maybe credential_name is better than field_name
+	Contexts         []string `json:"@context,omitempty"` // ! Not type?
+	LevelOfAssurance int      `json:"levelOfAssurance,omitempty"`
+	Required         bool     `json:"required,omitempty"`
+	FieldName        string   `json:"field_name,omitempty"` // ! maybe credential_name is better than field_name
 }
 
 var defaultPresentationRequestTypes = [1]string{"AlastriaVerifiablePresentationRequest"}

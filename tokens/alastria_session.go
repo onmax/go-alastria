@@ -1,19 +1,19 @@
 package tokens
 
 type AS struct {
-	Header  *Header    `json:"header"`
-	Payload *ASPayload `json:"payload"`
+	Header  *Header    `json:"header,omitempty"`
+	Payload *ASPayload `json:"payload,omitempty"`
 }
 
 type ASPayload struct {
-	JSONTokenId   string   `json:"jti"`
-	IssuedAt      uint64   `json:"iat"`
-	ExpiresAt     uint64   `json:"exp"`
-	NotBefore     uint64   `json:"nbf"`
-	Issuer        string   `json:"iss"`
-	AlastriaToken string   `json:"alastriaToken"`
-	Contexts      []string `json:"@context"`
-	Types         []string `json:"type"`
+	JSONTokenId   string   `json:"jti,omitempty"`
+	IssuedAt      uint64   `json:"iat,omitempty"`
+	ExpiresAt     uint64   `json:"exp,omitempty"`
+	NotBefore     uint64   `json:"nbf,omitempty"`
+	Issuer        string   `json:"iss,omitempty"`
+	AlastriaToken string   `json:"alastriaToken,omitempty"`
+	Contexts      []string `json:"@context,omitempty"`
+	Types         []string `json:"type,omitempty"`
 }
 
 var defaultASContextURLs = [...]string{"https://alastria.github.io/identity/artifacts/v1"}
