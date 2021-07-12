@@ -9,31 +9,99 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/onmax/go-alastria/tokens"
 	secp256k1 "github.com/ureeves/jwt-go-secp256k1"
 )
 
-// TODO Change type
-func Sign(jwt AIC, _pk string) (string, error) {
-	headerJSON, _ := json.Marshal(jwt.Header)
-	// TODO - check for errors
-	header64 := strings.Trim(b64.StdEncoding.EncodeToString([]byte(headerJSON)), "=")
-	// TODO - check for errors
-	payloadJSON, _ := json.Marshal(jwt.Payload)
-	payload64 := strings.Trim(b64.StdEncoding.EncodeToString([]byte(payloadJSON)), "=")
+func interfaceToB64(artifact interface{}) (string, error) {
+	json, err := json.Marshal(artifact)
+	if err != nil {
+		return "", err
+	}
+	json64 := strings.Trim(b64.StdEncoding.EncodeToString([]byte(json)), "=")
+	return json64, nil
+}
 
-	pk, _ := crypto.HexToECDSA(_pk)
-	// TODO - check for errors
+func jwtToB64(jwt interface{}) (string, string, error) {
+	if jwt == nil {
+		return "", "", fmt.Errorf("jwt is nil")
+	}
 
-	s, _ := secp256k1.SigningMethodES256K.Sign(header64+"."+payload64, pk)
-	// TODO - check for errors
+	var headerError, payloadErr error
+	var header *tokens.Header
+	var payload interface{}
+
+	switch token := jwt.(type) {
+	case tokens.AIC:
+		header = token.Header
+		payload = token.Payload
+		payloadErr = tokens.ValidateAICPayload(token.Payload)
+	case tokens.AS:
+		header = token.Header
+		payload = token.Payload
+		payloadErr = tokens.ValidateASPayload(token.Payload)
+	case tokens.AT:
+		header = token.Header
+		payload = token.Payload
+		payloadErr = tokens.ValidateATPayload(token.Payload)
+	case tokens.Credential:
+		header = token.Header
+		payload = token.Payload
+		payloadErr = tokens.ValidateCredentialPayload(token.Payload)
+	case tokens.Presentation:
+		header = token.Header
+		payload = token.Payload
+		payloadErr = tokens.ValidatePresentationPayload(token.Payload)
+	case tokens.PR:
+		header = token.Header
+		payload = token.Payload
+		payloadErr = tokens.ValidatePRPayload(token.Payload)
+	default:
+		return "", "", fmt.Errorf("unsupported jwt")
+	}
+
+	headerError = tokens.ValidateHeader(header)
+	if headerError != nil {
+		return "", "", payloadErr
+	} else if payloadErr != nil {
+		return "", "", payloadErr
+	}
+
+	h64, err := interfaceToB64(header)
+	if err != nil {
+		return "", "", err
+	}
+	p64, err := interfaceToB64(payload)
+	if err != nil {
+		return "", "", err
+	}
+	return h64, p64, nil
+}
+
+func SignToken(jwt interface{}, _pk string) (string, error) {
+	header64, payload64, err := jwtToB64(jwt)
+	if err != nil {
+		return "", err
+	}
+	pk, err := crypto.HexToECDSA(_pk)
+	if err != nil {
+		return "", err
+	}
+
+	s, err := secp256k1.SigningMethodES256K.Sign(header64+"."+payload64, pk)
+	if err != nil {
+		return "", err
+	}
 
 	return fmt.Sprintf("%s.%s.%s", header64, payload64, s), nil
 }
 
-func Verify(signed, _pub string) error {
+func VerifyToken(signed, _pub string) error {
 	parts := strings.Split(signed, ".")
-	pub, _ := HexToECDSAPub(_pub)
-	// TODO - check for errors
+	pub, err := HexToECDSAPub(_pub)
+	if err != nil {
+		return err
+	}
 	e := secp256k1.SigningMethodES256K.Verify(strings.Join(parts[:2], "."), parts[2], pub)
 	return e
 }
@@ -44,14 +112,12 @@ func HexToECDSAPub(_pub string) (*ecdsa.PublicKey, error) {
 	x := new(big.Int)
 	x, ok = x.SetString(_pub[:len(_pub)/2], 16)
 	if !ok {
-		fmt.Println("SetString: error")
 		return nil, fmt.Errorf("invalid hex")
 	}
 
 	y := new(big.Int)
 	y, ok = y.SetString(_pub[len(_pub)/2:], 16)
 	if !ok {
-		fmt.Println("SetString: error")
 		return nil, fmt.Errorf("invalid hex")
 	}
 
