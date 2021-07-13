@@ -1,4 +1,4 @@
-package tokens
+package secp256k1
 
 import (
 	"crypto/ecdsa"
@@ -98,7 +98,7 @@ func SignToken(jwt interface{}, _pk string) (string, error) {
 
 func VerifyToken(signed, _pub string) error {
 	parts := strings.Split(signed, ".")
-	pub, err := HexToECDSAPub(_pub)
+	pub, err := hexToECDSAPub(_pub)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func VerifyToken(signed, _pub string) error {
 	return e
 }
 
-func HexToECDSAPub(_pub string) (*ecdsa.PublicKey, error) {
+func hexToECDSAPub(_pub string) (*ecdsa.PublicKey, error) {
 	var ok bool
 
 	x := new(big.Int)
