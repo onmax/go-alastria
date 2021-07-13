@@ -1,4 +1,4 @@
-package main
+package keystore
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/onmax/go-alastria/secp256k1"
+	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/tokens"
 )
 
@@ -99,13 +99,13 @@ func TestImportKs(t *testing.T) {
 			},
 		}
 
-		signed, err := secp256k1.Sign(at, privKey)
+		signed, err := crypto.Sign(at, privKey)
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return
 		}
 
-		err = secp256k1.Verify(signed, pubKey)
+		err = crypto.Verify(signed, pubKey)
 		if err != nil {
 			t.Errorf("Verify() error = %v", err)
 			return
