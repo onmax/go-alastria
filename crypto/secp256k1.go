@@ -1,4 +1,4 @@
-package secp256k1
+package crypto
 
 import (
 	"crypto/ecdsa"
@@ -96,7 +96,7 @@ func SignToken(jwt interface{}, _pk string) (string, error) {
 	return fmt.Sprintf("%s.%s.%s", header64, payload64, s), nil
 }
 
-func VerifyToken(signed, _pub string) error {
+func Verify(signed, _pub string) error {
 	parts := strings.Split(signed, ".")
 	pub, err := hexToECDSAPub(_pub)
 	if err != nil {
