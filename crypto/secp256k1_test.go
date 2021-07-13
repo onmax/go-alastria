@@ -6,7 +6,7 @@ import (
 	"github.com/onmax/go-alastria/tokens"
 )
 
-func TestSignToken(t *testing.T) {
+func TestSign(t *testing.T) {
 	type args struct {
 		jwt        interface{}
 		privateKey string
@@ -167,14 +167,14 @@ func TestSignToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := SignToken(tt.args.jwt, tt.args.privateKey)
+			got, err := Sign(tt.args.jwt, tt.args.privateKey)
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("SignToken() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Sign() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("SignToken() = %v, want %v", got, tt.want)
+				t.Errorf("Sign() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -203,7 +203,7 @@ func TestVerify(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := VerifyToken(tt.args.signed, tt.args._pk); (err != nil) != tt.wantErr {
+			if err := Verify(tt.args.signed, tt.args._pk); (err != nil) != tt.wantErr {
 				t.Errorf("Verify() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

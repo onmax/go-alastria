@@ -1,7 +1,6 @@
 package keystore
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -43,7 +42,7 @@ func TestCreateKs(t *testing.T) {
 			}
 
 			// remove the folder
-			// os.RemoveAll(tt.args.folder)
+			os.RemoveAll(tt.args.folder)
 		})
 	}
 }
@@ -63,21 +62,20 @@ func TestImportKs(t *testing.T) {
 			return
 		}
 
-		fmt.Printf("%s", "./test-data/")
 		_, pubKey, err := ImportKs("./test-data/"+files[0].Name(), "password")
 		if err != nil {
 			t.Errorf("ImportKs() error = %v", err)
 			return
 		}
-		if len(pubKey) != 42 {
-			t.Errorf("ImportKs() = %v, want something with 42 chars", pubKey)
+		if len(pubKey) != 128 {
+			t.Errorf("ImportKs() = %v, want something with 128 chars", pubKey)
 		}
 
 		os.RemoveAll("./test-data")
 	})
 
 	t.Run("Signs and verifies a JWT with same keystore", func(t *testing.T) {
-		privKey, pubKey, err := ImportKs("./test-keystore/keystore1.json", "password")
+		privKey, pubKey, err := ImportKs("./test-keystore/keystore1.json", "test")
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return
@@ -90,7 +88,6 @@ func TestImportKs(t *testing.T) {
 				JSONWebToken: "json-web-token",
 			},
 			Payload: &tokens.ATPayload{
-				IssuedAt:          1,
 				Issuer:            "issuer",
 				AlastriaNetworkId: "alastria-network-id",
 				CallbackURL:       "callback-url",

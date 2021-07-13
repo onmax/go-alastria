@@ -37,7 +37,7 @@ func ImportKs(file string, password string) (string, string, error) {
 	}
 
 	privKey := hex.EncodeToString(crypto.FromECDSA(key.PrivateKey))
-	pubKey := crypto.PubkeyToAddress(key.PrivateKey.PublicKey).Hex()
+	pubKey := hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:]
 
 	return privKey, pubKey, nil
 }
