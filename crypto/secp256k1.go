@@ -78,7 +78,7 @@ func jwtToB64(jwt interface{}) (string, string, error) {
 	return h64, p64, nil
 }
 
-func SignToken(jwt interface{}, _pk string) (string, error) {
+func Sign(jwt interface{}, _pk string) (string, error) {
 	header64, payload64, err := jwtToB64(jwt)
 	if err != nil {
 		return "", err
