@@ -37,7 +37,7 @@ func ImportKs(file string, password string) (string, string, error) {
 	return privKey, pubKey, nil
 }
 
-// getKey get a key from KeyStore
+// ImportRawKs imports a key from a file
 func ImportRawKs(file string, password string) (*keystore.Key, error) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
