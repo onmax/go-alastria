@@ -26,12 +26,7 @@ func CreateKs(folder string, password string) (accounts.Account, error) {
 
 // getKey get a key from KeyStore
 func ImportKs(file string, password string) (string, string, error) {
-	data, err := ioutil.ReadFile(file)
-	if err != nil {
-		return "", "", err
-	}
-
-	key, err := keystore.DecryptKey(data, password)
+	key, err := ImportRawKs(file, password)
 	if err != nil {
 		return "", "", err
 	}
@@ -40,4 +35,19 @@ func ImportKs(file string, password string) (string, string, error) {
 	pubKey := hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:]
 
 	return privKey, pubKey, nil
+}
+
+// getKey get a key from KeyStore
+func ImportRawKs(file string, password string) (*keystore.Key, error) {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, err
+	}
+
+	key, err := keystore.DecryptKey(data, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return key, nil
 }
