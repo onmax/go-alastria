@@ -79,7 +79,7 @@ func jwtToB64(jwt interface{}) (string, string, error) {
 }
 
 func Sign(jwt interface{}, _pk string) (string, error) {
-	header64, payload64, err := jwtToB64(jwt)
+	h64, p64, err := jwtToB64(jwt)
 	if err != nil {
 		return "", err
 	}
@@ -88,16 +88,22 @@ func Sign(jwt interface{}, _pk string) (string, error) {
 		return "", err
 	}
 
-	s, err := secp256k1.SigningMethodES256K.Sign(header64+"."+payload64, pk)
+	s, err := secp256k1.SigningMethodES256K.Sign(h64+"."+p64, pk)
 	if err != nil {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s.%s.%s", header64, payload64, s), nil
+	return fmt.Sprintf("%s.%s.%s", h64, p64, s), nil
 }
 
 func Verify(signed, _pub string) error {
 	parts := strings.Split(signed, ".")
+
+	// Maybe create a helper function/lib for this
+	if len(parts) != 3 {
+		return fmt.Errorf("invalid jwt")
+	}
+
 	pub, err := hexToECDSAPub(_pub)
 	if err != nil {
 		return err
