@@ -1,6 +1,7 @@
 package keystore
 
 import (
+	"crypto/ecdsa"
 	"encoding/hex"
 	"io/ioutil"
 	"os"
@@ -24,6 +25,10 @@ func CreateKs(folder string, password string) (accounts.Account, error) {
 	return account, nil
 }
 
+func PublicKeyToString(publicKey *ecdsa.PublicKey) string {
+	return hex.EncodeToString(crypto.FromECDSAPub(publicKey))[2:]
+}
+
 // getKey get a key from KeyStore
 func ImportKs(file string, password string) (string, string, error) {
 	key, err := ImportRawKs(file, password)
@@ -32,7 +37,7 @@ func ImportKs(file string, password string) (string, string, error) {
 	}
 
 	privKey := hex.EncodeToString(crypto.FromECDSA(key.PrivateKey))
-	pubKey := hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:]
+	pubKey := PublicKeyToString(&key.PrivateKey.PublicKey)
 
 	return privKey, pubKey, nil
 }
