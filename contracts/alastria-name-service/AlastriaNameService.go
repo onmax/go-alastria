@@ -1,7 +1,7 @@
 // Code generated - DO NOT EDIT.
 // This file is a generated binding and any manual changes will be lost.
 
-package alastria
+package alastriaContracts
 
 import (
 	"errors"
@@ -28,113 +28,113 @@ var (
 	_ = event.NewSubscription
 )
 
-// AlastriaMetaData contains all meta data concerning the Alastria contract.
-var AlastriaMetaData = &bind.MetaData{
+// AlastriaContractsMetaData contains all meta data concerning the AlastriaContracts contract.
+var AlastriaContractsMetaData = &bind.MetaData{
 	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_firstIdentity\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"cif\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"url_AOA\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"url_createAID\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"url_logo\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_cif\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_url_logo\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_url_createAID\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_url_AOA\",\"type\":\"string\"}],\"name\":\"addEntity\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"name\":\"setNameEntity\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_cif\",\"type\":\"string\"}],\"name\":\"setCifEntity\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_url_logo\",\"type\":\"string\"}],\"name\":\"setUrlLogo\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_url_createAID\",\"type\":\"string\"}],\"name\":\"setUrlCreateAID\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_url_AOA\",\"type\":\"string\"}],\"name\":\"setUrlAOA\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressEntity\",\"type\":\"address\"}],\"name\":\"getEntity\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_cif\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_url_logo\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_url_createAID\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_url_AOA\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"_active\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"entitiesList\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
-// AlastriaABI is the input ABI used to generate the binding from.
-// Deprecated: Use AlastriaMetaData.ABI instead.
-var AlastriaABI = AlastriaMetaData.ABI
+// AlastriaContractsABI is the input ABI used to generate the binding from.
+// Deprecated: Use AlastriaContractsMetaData.ABI instead.
+var AlastriaContractsABI = AlastriaContractsMetaData.ABI
 
-// Alastria is an auto generated Go binding around an Ethereum contract.
-type Alastria struct {
-	AlastriaCaller     // Read-only binding to the contract
-	AlastriaTransactor // Write-only binding to the contract
-	AlastriaFilterer   // Log filterer for contract events
+// AlastriaContracts is an auto generated Go binding around an Ethereum contract.
+type AlastriaContracts struct {
+	AlastriaContractsCaller     // Read-only binding to the contract
+	AlastriaContractsTransactor // Write-only binding to the contract
+	AlastriaContractsFilterer   // Log filterer for contract events
 }
 
-// AlastriaCaller is an auto generated read-only Go binding around an Ethereum contract.
-type AlastriaCaller struct {
+// AlastriaContractsCaller is an auto generated read-only Go binding around an Ethereum contract.
+type AlastriaContractsCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// AlastriaTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type AlastriaTransactor struct {
+// AlastriaContractsTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type AlastriaContractsTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// AlastriaFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type AlastriaFilterer struct {
+// AlastriaContractsFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type AlastriaContractsFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// AlastriaSession is an auto generated Go binding around an Ethereum contract,
+// AlastriaContractsSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type AlastriaSession struct {
-	Contract     *Alastria         // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
+type AlastriaContractsSession struct {
+	Contract     *AlastriaContracts // Generic contract binding to set the session for
+	CallOpts     bind.CallOpts      // Call options to use throughout this session
+	TransactOpts bind.TransactOpts  // Transaction auth options to use throughout this session
 }
 
-// AlastriaCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// AlastriaContractsCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type AlastriaCallerSession struct {
-	Contract *AlastriaCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts   // Call options to use throughout this session
+type AlastriaContractsCallerSession struct {
+	Contract *AlastriaContractsCaller // Generic contract caller binding to set the session for
+	CallOpts bind.CallOpts            // Call options to use throughout this session
 }
 
-// AlastriaTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// AlastriaContractsTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type AlastriaTransactorSession struct {
-	Contract     *AlastriaTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
+type AlastriaContractsTransactorSession struct {
+	Contract     *AlastriaContractsTransactor // Generic contract transactor binding to set the session for
+	TransactOpts bind.TransactOpts            // Transaction auth options to use throughout this session
 }
 
-// AlastriaRaw is an auto generated low-level Go binding around an Ethereum contract.
-type AlastriaRaw struct {
-	Contract *Alastria // Generic contract binding to access the raw methods on
+// AlastriaContractsRaw is an auto generated low-level Go binding around an Ethereum contract.
+type AlastriaContractsRaw struct {
+	Contract *AlastriaContracts // Generic contract binding to access the raw methods on
 }
 
-// AlastriaCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type AlastriaCallerRaw struct {
-	Contract *AlastriaCaller // Generic read-only contract binding to access the raw methods on
+// AlastriaContractsCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type AlastriaContractsCallerRaw struct {
+	Contract *AlastriaContractsCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// AlastriaTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type AlastriaTransactorRaw struct {
-	Contract *AlastriaTransactor // Generic write-only contract binding to access the raw methods on
+// AlastriaContractsTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type AlastriaContractsTransactorRaw struct {
+	Contract *AlastriaContractsTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewAlastria creates a new instance of Alastria, bound to a specific deployed contract.
-func NewAlastria(address common.Address, backend bind.ContractBackend) (*Alastria, error) {
-	contract, err := bindAlastria(address, backend, backend, backend)
+// NewAlastriaContracts creates a new instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContracts(address common.Address, backend bind.ContractBackend) (*AlastriaContracts, error) {
+	contract, err := bindAlastriaContracts(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Alastria{AlastriaCaller: AlastriaCaller{contract: contract}, AlastriaTransactor: AlastriaTransactor{contract: contract}, AlastriaFilterer: AlastriaFilterer{contract: contract}}, nil
+	return &AlastriaContracts{AlastriaContractsCaller: AlastriaContractsCaller{contract: contract}, AlastriaContractsTransactor: AlastriaContractsTransactor{contract: contract}, AlastriaContractsFilterer: AlastriaContractsFilterer{contract: contract}}, nil
 }
 
-// NewAlastriaCaller creates a new read-only instance of Alastria, bound to a specific deployed contract.
-func NewAlastriaCaller(address common.Address, caller bind.ContractCaller) (*AlastriaCaller, error) {
-	contract, err := bindAlastria(address, caller, nil, nil)
+// NewAlastriaContractsCaller creates a new read-only instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContractsCaller(address common.Address, caller bind.ContractCaller) (*AlastriaContractsCaller, error) {
+	contract, err := bindAlastriaContracts(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &AlastriaCaller{contract: contract}, nil
+	return &AlastriaContractsCaller{contract: contract}, nil
 }
 
-// NewAlastriaTransactor creates a new write-only instance of Alastria, bound to a specific deployed contract.
-func NewAlastriaTransactor(address common.Address, transactor bind.ContractTransactor) (*AlastriaTransactor, error) {
-	contract, err := bindAlastria(address, nil, transactor, nil)
+// NewAlastriaContractsTransactor creates a new write-only instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContractsTransactor(address common.Address, transactor bind.ContractTransactor) (*AlastriaContractsTransactor, error) {
+	contract, err := bindAlastriaContracts(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &AlastriaTransactor{contract: contract}, nil
+	return &AlastriaContractsTransactor{contract: contract}, nil
 }
 
-// NewAlastriaFilterer creates a new log filterer instance of Alastria, bound to a specific deployed contract.
-func NewAlastriaFilterer(address common.Address, filterer bind.ContractFilterer) (*AlastriaFilterer, error) {
-	contract, err := bindAlastria(address, nil, nil, filterer)
+// NewAlastriaContractsFilterer creates a new log filterer instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContractsFilterer(address common.Address, filterer bind.ContractFilterer) (*AlastriaContractsFilterer, error) {
+	contract, err := bindAlastriaContracts(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &AlastriaFilterer{contract: contract}, nil
+	return &AlastriaContractsFilterer{contract: contract}, nil
 }
 
-// bindAlastria binds a generic wrapper to an already deployed contract.
-func bindAlastria(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(AlastriaABI))
+// bindAlastriaContracts binds a generic wrapper to an already deployed contract.
+func bindAlastriaContracts(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := abi.JSON(strings.NewReader(AlastriaContractsABI))
 	if err != nil {
 		return nil, err
 	}
@@ -145,46 +145,46 @@ func bindAlastria(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Alastria *AlastriaRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Alastria.Contract.AlastriaCaller.contract.Call(opts, result, method, params...)
+func (_AlastriaContracts *AlastriaContractsRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _AlastriaContracts.Contract.AlastriaContractsCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Alastria *AlastriaRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Alastria.Contract.AlastriaTransactor.contract.Transfer(opts)
+func (_AlastriaContracts *AlastriaContractsRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.AlastriaContractsTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Alastria *AlastriaRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Alastria.Contract.AlastriaTransactor.contract.Transact(opts, method, params...)
+func (_AlastriaContracts *AlastriaContractsRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.AlastriaContractsTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Alastria *AlastriaCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Alastria.Contract.contract.Call(opts, result, method, params...)
+func (_AlastriaContracts *AlastriaContractsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _AlastriaContracts.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Alastria *AlastriaTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Alastria.Contract.contract.Transfer(opts)
+func (_AlastriaContracts *AlastriaContractsTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Alastria *AlastriaTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Alastria.Contract.contract.Transact(opts, method, params...)
+func (_AlastriaContracts *AlastriaContractsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.contract.Transact(opts, method, params...)
 }
 
 // Cif is a free data retrieval call binding the contract method 0x7f35d729.
 //
 // Solidity: function cif() view returns(string)
-func (_Alastria *AlastriaCaller) Cif(opts *bind.CallOpts) (string, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) Cif(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "cif")
+	err := _AlastriaContracts.contract.Call(opts, &out, "cif")
 
 	if err != nil {
 		return *new(string), err
@@ -199,23 +199,23 @@ func (_Alastria *AlastriaCaller) Cif(opts *bind.CallOpts) (string, error) {
 // Cif is a free data retrieval call binding the contract method 0x7f35d729.
 //
 // Solidity: function cif() view returns(string)
-func (_Alastria *AlastriaSession) Cif() (string, error) {
-	return _Alastria.Contract.Cif(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) Cif() (string, error) {
+	return _AlastriaContracts.Contract.Cif(&_AlastriaContracts.CallOpts)
 }
 
 // Cif is a free data retrieval call binding the contract method 0x7f35d729.
 //
 // Solidity: function cif() view returns(string)
-func (_Alastria *AlastriaCallerSession) Cif() (string, error) {
-	return _Alastria.Contract.Cif(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) Cif() (string, error) {
+	return _AlastriaContracts.Contract.Cif(&_AlastriaContracts.CallOpts)
 }
 
 // EntitiesList is a free data retrieval call binding the contract method 0x6e7a216b.
 //
 // Solidity: function entitiesList() view returns(address[])
-func (_Alastria *AlastriaCaller) EntitiesList(opts *bind.CallOpts) ([]common.Address, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) EntitiesList(opts *bind.CallOpts) ([]common.Address, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "entitiesList")
+	err := _AlastriaContracts.contract.Call(opts, &out, "entitiesList")
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -230,21 +230,21 @@ func (_Alastria *AlastriaCaller) EntitiesList(opts *bind.CallOpts) ([]common.Add
 // EntitiesList is a free data retrieval call binding the contract method 0x6e7a216b.
 //
 // Solidity: function entitiesList() view returns(address[])
-func (_Alastria *AlastriaSession) EntitiesList() ([]common.Address, error) {
-	return _Alastria.Contract.EntitiesList(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) EntitiesList() ([]common.Address, error) {
+	return _AlastriaContracts.Contract.EntitiesList(&_AlastriaContracts.CallOpts)
 }
 
 // EntitiesList is a free data retrieval call binding the contract method 0x6e7a216b.
 //
 // Solidity: function entitiesList() view returns(address[])
-func (_Alastria *AlastriaCallerSession) EntitiesList() ([]common.Address, error) {
-	return _Alastria.Contract.EntitiesList(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) EntitiesList() ([]common.Address, error) {
+	return _AlastriaContracts.Contract.EntitiesList(&_AlastriaContracts.CallOpts)
 }
 
 // GetEntity is a free data retrieval call binding the contract method 0x75894e8c.
 //
 // Solidity: function getEntity(address _addressEntity) view returns(string _name, string _cif, string _url_logo, string _url_createAID, string _url_AOA, bool _active)
-func (_Alastria *AlastriaCaller) GetEntity(opts *bind.CallOpts, _addressEntity common.Address) (struct {
+func (_AlastriaContracts *AlastriaContractsCaller) GetEntity(opts *bind.CallOpts, _addressEntity common.Address) (struct {
 	Name         string
 	Cif          string
 	UrlLogo      string
@@ -253,7 +253,7 @@ func (_Alastria *AlastriaCaller) GetEntity(opts *bind.CallOpts, _addressEntity c
 	Active       bool
 }, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "getEntity", _addressEntity)
+	err := _AlastriaContracts.contract.Call(opts, &out, "getEntity", _addressEntity)
 
 	outstruct := new(struct {
 		Name         string
@@ -281,7 +281,7 @@ func (_Alastria *AlastriaCaller) GetEntity(opts *bind.CallOpts, _addressEntity c
 // GetEntity is a free data retrieval call binding the contract method 0x75894e8c.
 //
 // Solidity: function getEntity(address _addressEntity) view returns(string _name, string _cif, string _url_logo, string _url_createAID, string _url_AOA, bool _active)
-func (_Alastria *AlastriaSession) GetEntity(_addressEntity common.Address) (struct {
+func (_AlastriaContracts *AlastriaContractsSession) GetEntity(_addressEntity common.Address) (struct {
 	Name         string
 	Cif          string
 	UrlLogo      string
@@ -289,13 +289,13 @@ func (_Alastria *AlastriaSession) GetEntity(_addressEntity common.Address) (stru
 	UrlAOA       string
 	Active       bool
 }, error) {
-	return _Alastria.Contract.GetEntity(&_Alastria.CallOpts, _addressEntity)
+	return _AlastriaContracts.Contract.GetEntity(&_AlastriaContracts.CallOpts, _addressEntity)
 }
 
 // GetEntity is a free data retrieval call binding the contract method 0x75894e8c.
 //
 // Solidity: function getEntity(address _addressEntity) view returns(string _name, string _cif, string _url_logo, string _url_createAID, string _url_AOA, bool _active)
-func (_Alastria *AlastriaCallerSession) GetEntity(_addressEntity common.Address) (struct {
+func (_AlastriaContracts *AlastriaContractsCallerSession) GetEntity(_addressEntity common.Address) (struct {
 	Name         string
 	Cif          string
 	UrlLogo      string
@@ -303,15 +303,15 @@ func (_Alastria *AlastriaCallerSession) GetEntity(_addressEntity common.Address)
 	UrlAOA       string
 	Active       bool
 }, error) {
-	return _Alastria.Contract.GetEntity(&_Alastria.CallOpts, _addressEntity)
+	return _AlastriaContracts.Contract.GetEntity(&_AlastriaContracts.CallOpts, _addressEntity)
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
-func (_Alastria *AlastriaCaller) Name(opts *bind.CallOpts) (string, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) Name(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "name")
+	err := _AlastriaContracts.contract.Call(opts, &out, "name")
 
 	if err != nil {
 		return *new(string), err
@@ -326,23 +326,23 @@ func (_Alastria *AlastriaCaller) Name(opts *bind.CallOpts) (string, error) {
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
-func (_Alastria *AlastriaSession) Name() (string, error) {
-	return _Alastria.Contract.Name(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) Name() (string, error) {
+	return _AlastriaContracts.Contract.Name(&_AlastriaContracts.CallOpts)
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
-func (_Alastria *AlastriaCallerSession) Name() (string, error) {
-	return _Alastria.Contract.Name(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) Name() (string, error) {
+	return _AlastriaContracts.Contract.Name(&_AlastriaContracts.CallOpts)
 }
 
 // UrlAOA is a free data retrieval call binding the contract method 0xbf039d43.
 //
 // Solidity: function url_AOA() view returns(string)
-func (_Alastria *AlastriaCaller) UrlAOA(opts *bind.CallOpts) (string, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) UrlAOA(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "url_AOA")
+	err := _AlastriaContracts.contract.Call(opts, &out, "url_AOA")
 
 	if err != nil {
 		return *new(string), err
@@ -357,23 +357,23 @@ func (_Alastria *AlastriaCaller) UrlAOA(opts *bind.CallOpts) (string, error) {
 // UrlAOA is a free data retrieval call binding the contract method 0xbf039d43.
 //
 // Solidity: function url_AOA() view returns(string)
-func (_Alastria *AlastriaSession) UrlAOA() (string, error) {
-	return _Alastria.Contract.UrlAOA(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) UrlAOA() (string, error) {
+	return _AlastriaContracts.Contract.UrlAOA(&_AlastriaContracts.CallOpts)
 }
 
 // UrlAOA is a free data retrieval call binding the contract method 0xbf039d43.
 //
 // Solidity: function url_AOA() view returns(string)
-func (_Alastria *AlastriaCallerSession) UrlAOA() (string, error) {
-	return _Alastria.Contract.UrlAOA(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) UrlAOA() (string, error) {
+	return _AlastriaContracts.Contract.UrlAOA(&_AlastriaContracts.CallOpts)
 }
 
 // UrlCreateAID is a free data retrieval call binding the contract method 0x3bdf8863.
 //
 // Solidity: function url_createAID() view returns(string)
-func (_Alastria *AlastriaCaller) UrlCreateAID(opts *bind.CallOpts) (string, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) UrlCreateAID(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "url_createAID")
+	err := _AlastriaContracts.contract.Call(opts, &out, "url_createAID")
 
 	if err != nil {
 		return *new(string), err
@@ -388,23 +388,23 @@ func (_Alastria *AlastriaCaller) UrlCreateAID(opts *bind.CallOpts) (string, erro
 // UrlCreateAID is a free data retrieval call binding the contract method 0x3bdf8863.
 //
 // Solidity: function url_createAID() view returns(string)
-func (_Alastria *AlastriaSession) UrlCreateAID() (string, error) {
-	return _Alastria.Contract.UrlCreateAID(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) UrlCreateAID() (string, error) {
+	return _AlastriaContracts.Contract.UrlCreateAID(&_AlastriaContracts.CallOpts)
 }
 
 // UrlCreateAID is a free data retrieval call binding the contract method 0x3bdf8863.
 //
 // Solidity: function url_createAID() view returns(string)
-func (_Alastria *AlastriaCallerSession) UrlCreateAID() (string, error) {
-	return _Alastria.Contract.UrlCreateAID(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) UrlCreateAID() (string, error) {
+	return _AlastriaContracts.Contract.UrlCreateAID(&_AlastriaContracts.CallOpts)
 }
 
 // UrlLogo is a free data retrieval call binding the contract method 0x500bebf3.
 //
 // Solidity: function url_logo() view returns(string)
-func (_Alastria *AlastriaCaller) UrlLogo(opts *bind.CallOpts) (string, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) UrlLogo(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "url_logo")
+	err := _AlastriaContracts.contract.Call(opts, &out, "url_logo")
 
 	if err != nil {
 		return *new(string), err
@@ -419,139 +419,139 @@ func (_Alastria *AlastriaCaller) UrlLogo(opts *bind.CallOpts) (string, error) {
 // UrlLogo is a free data retrieval call binding the contract method 0x500bebf3.
 //
 // Solidity: function url_logo() view returns(string)
-func (_Alastria *AlastriaSession) UrlLogo() (string, error) {
-	return _Alastria.Contract.UrlLogo(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) UrlLogo() (string, error) {
+	return _AlastriaContracts.Contract.UrlLogo(&_AlastriaContracts.CallOpts)
 }
 
 // UrlLogo is a free data retrieval call binding the contract method 0x500bebf3.
 //
 // Solidity: function url_logo() view returns(string)
-func (_Alastria *AlastriaCallerSession) UrlLogo() (string, error) {
-	return _Alastria.Contract.UrlLogo(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) UrlLogo() (string, error) {
+	return _AlastriaContracts.Contract.UrlLogo(&_AlastriaContracts.CallOpts)
 }
 
 // AddEntity is a paid mutator transaction binding the contract method 0x1252a083.
 //
 // Solidity: function addEntity(address _addressEntity, string _name, string _cif, string _url_logo, string _url_createAID, string _url_AOA) returns()
-func (_Alastria *AlastriaTransactor) AddEntity(opts *bind.TransactOpts, _addressEntity common.Address, _name string, _cif string, _url_logo string, _url_createAID string, _url_AOA string) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "addEntity", _addressEntity, _name, _cif, _url_logo, _url_createAID, _url_AOA)
+func (_AlastriaContracts *AlastriaContractsTransactor) AddEntity(opts *bind.TransactOpts, _addressEntity common.Address, _name string, _cif string, _url_logo string, _url_createAID string, _url_AOA string) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "addEntity", _addressEntity, _name, _cif, _url_logo, _url_createAID, _url_AOA)
 }
 
 // AddEntity is a paid mutator transaction binding the contract method 0x1252a083.
 //
 // Solidity: function addEntity(address _addressEntity, string _name, string _cif, string _url_logo, string _url_createAID, string _url_AOA) returns()
-func (_Alastria *AlastriaSession) AddEntity(_addressEntity common.Address, _name string, _cif string, _url_logo string, _url_createAID string, _url_AOA string) (*types.Transaction, error) {
-	return _Alastria.Contract.AddEntity(&_Alastria.TransactOpts, _addressEntity, _name, _cif, _url_logo, _url_createAID, _url_AOA)
+func (_AlastriaContracts *AlastriaContractsSession) AddEntity(_addressEntity common.Address, _name string, _cif string, _url_logo string, _url_createAID string, _url_AOA string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.AddEntity(&_AlastriaContracts.TransactOpts, _addressEntity, _name, _cif, _url_logo, _url_createAID, _url_AOA)
 }
 
 // AddEntity is a paid mutator transaction binding the contract method 0x1252a083.
 //
 // Solidity: function addEntity(address _addressEntity, string _name, string _cif, string _url_logo, string _url_createAID, string _url_AOA) returns()
-func (_Alastria *AlastriaTransactorSession) AddEntity(_addressEntity common.Address, _name string, _cif string, _url_logo string, _url_createAID string, _url_AOA string) (*types.Transaction, error) {
-	return _Alastria.Contract.AddEntity(&_Alastria.TransactOpts, _addressEntity, _name, _cif, _url_logo, _url_createAID, _url_AOA)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) AddEntity(_addressEntity common.Address, _name string, _cif string, _url_logo string, _url_createAID string, _url_AOA string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.AddEntity(&_AlastriaContracts.TransactOpts, _addressEntity, _name, _cif, _url_logo, _url_createAID, _url_AOA)
 }
 
 // SetCifEntity is a paid mutator transaction binding the contract method 0x1e5f6f01.
 //
 // Solidity: function setCifEntity(address _addressEntity, string _cif) returns()
-func (_Alastria *AlastriaTransactor) SetCifEntity(opts *bind.TransactOpts, _addressEntity common.Address, _cif string) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "setCifEntity", _addressEntity, _cif)
+func (_AlastriaContracts *AlastriaContractsTransactor) SetCifEntity(opts *bind.TransactOpts, _addressEntity common.Address, _cif string) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "setCifEntity", _addressEntity, _cif)
 }
 
 // SetCifEntity is a paid mutator transaction binding the contract method 0x1e5f6f01.
 //
 // Solidity: function setCifEntity(address _addressEntity, string _cif) returns()
-func (_Alastria *AlastriaSession) SetCifEntity(_addressEntity common.Address, _cif string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetCifEntity(&_Alastria.TransactOpts, _addressEntity, _cif)
+func (_AlastriaContracts *AlastriaContractsSession) SetCifEntity(_addressEntity common.Address, _cif string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetCifEntity(&_AlastriaContracts.TransactOpts, _addressEntity, _cif)
 }
 
 // SetCifEntity is a paid mutator transaction binding the contract method 0x1e5f6f01.
 //
 // Solidity: function setCifEntity(address _addressEntity, string _cif) returns()
-func (_Alastria *AlastriaTransactorSession) SetCifEntity(_addressEntity common.Address, _cif string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetCifEntity(&_Alastria.TransactOpts, _addressEntity, _cif)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) SetCifEntity(_addressEntity common.Address, _cif string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetCifEntity(&_AlastriaContracts.TransactOpts, _addressEntity, _cif)
 }
 
 // SetNameEntity is a paid mutator transaction binding the contract method 0xeb5c426c.
 //
 // Solidity: function setNameEntity(address _addressEntity, string _name) returns()
-func (_Alastria *AlastriaTransactor) SetNameEntity(opts *bind.TransactOpts, _addressEntity common.Address, _name string) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "setNameEntity", _addressEntity, _name)
+func (_AlastriaContracts *AlastriaContractsTransactor) SetNameEntity(opts *bind.TransactOpts, _addressEntity common.Address, _name string) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "setNameEntity", _addressEntity, _name)
 }
 
 // SetNameEntity is a paid mutator transaction binding the contract method 0xeb5c426c.
 //
 // Solidity: function setNameEntity(address _addressEntity, string _name) returns()
-func (_Alastria *AlastriaSession) SetNameEntity(_addressEntity common.Address, _name string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetNameEntity(&_Alastria.TransactOpts, _addressEntity, _name)
+func (_AlastriaContracts *AlastriaContractsSession) SetNameEntity(_addressEntity common.Address, _name string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetNameEntity(&_AlastriaContracts.TransactOpts, _addressEntity, _name)
 }
 
 // SetNameEntity is a paid mutator transaction binding the contract method 0xeb5c426c.
 //
 // Solidity: function setNameEntity(address _addressEntity, string _name) returns()
-func (_Alastria *AlastriaTransactorSession) SetNameEntity(_addressEntity common.Address, _name string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetNameEntity(&_Alastria.TransactOpts, _addressEntity, _name)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) SetNameEntity(_addressEntity common.Address, _name string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetNameEntity(&_AlastriaContracts.TransactOpts, _addressEntity, _name)
 }
 
 // SetUrlAOA is a paid mutator transaction binding the contract method 0x8e672cf7.
 //
 // Solidity: function setUrlAOA(address _addressEntity, string _url_AOA) returns()
-func (_Alastria *AlastriaTransactor) SetUrlAOA(opts *bind.TransactOpts, _addressEntity common.Address, _url_AOA string) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "setUrlAOA", _addressEntity, _url_AOA)
+func (_AlastriaContracts *AlastriaContractsTransactor) SetUrlAOA(opts *bind.TransactOpts, _addressEntity common.Address, _url_AOA string) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "setUrlAOA", _addressEntity, _url_AOA)
 }
 
 // SetUrlAOA is a paid mutator transaction binding the contract method 0x8e672cf7.
 //
 // Solidity: function setUrlAOA(address _addressEntity, string _url_AOA) returns()
-func (_Alastria *AlastriaSession) SetUrlAOA(_addressEntity common.Address, _url_AOA string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetUrlAOA(&_Alastria.TransactOpts, _addressEntity, _url_AOA)
+func (_AlastriaContracts *AlastriaContractsSession) SetUrlAOA(_addressEntity common.Address, _url_AOA string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetUrlAOA(&_AlastriaContracts.TransactOpts, _addressEntity, _url_AOA)
 }
 
 // SetUrlAOA is a paid mutator transaction binding the contract method 0x8e672cf7.
 //
 // Solidity: function setUrlAOA(address _addressEntity, string _url_AOA) returns()
-func (_Alastria *AlastriaTransactorSession) SetUrlAOA(_addressEntity common.Address, _url_AOA string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetUrlAOA(&_Alastria.TransactOpts, _addressEntity, _url_AOA)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) SetUrlAOA(_addressEntity common.Address, _url_AOA string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetUrlAOA(&_AlastriaContracts.TransactOpts, _addressEntity, _url_AOA)
 }
 
 // SetUrlCreateAID is a paid mutator transaction binding the contract method 0x4b7a1859.
 //
 // Solidity: function setUrlCreateAID(address _addressEntity, string _url_createAID) returns()
-func (_Alastria *AlastriaTransactor) SetUrlCreateAID(opts *bind.TransactOpts, _addressEntity common.Address, _url_createAID string) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "setUrlCreateAID", _addressEntity, _url_createAID)
+func (_AlastriaContracts *AlastriaContractsTransactor) SetUrlCreateAID(opts *bind.TransactOpts, _addressEntity common.Address, _url_createAID string) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "setUrlCreateAID", _addressEntity, _url_createAID)
 }
 
 // SetUrlCreateAID is a paid mutator transaction binding the contract method 0x4b7a1859.
 //
 // Solidity: function setUrlCreateAID(address _addressEntity, string _url_createAID) returns()
-func (_Alastria *AlastriaSession) SetUrlCreateAID(_addressEntity common.Address, _url_createAID string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetUrlCreateAID(&_Alastria.TransactOpts, _addressEntity, _url_createAID)
+func (_AlastriaContracts *AlastriaContractsSession) SetUrlCreateAID(_addressEntity common.Address, _url_createAID string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetUrlCreateAID(&_AlastriaContracts.TransactOpts, _addressEntity, _url_createAID)
 }
 
 // SetUrlCreateAID is a paid mutator transaction binding the contract method 0x4b7a1859.
 //
 // Solidity: function setUrlCreateAID(address _addressEntity, string _url_createAID) returns()
-func (_Alastria *AlastriaTransactorSession) SetUrlCreateAID(_addressEntity common.Address, _url_createAID string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetUrlCreateAID(&_Alastria.TransactOpts, _addressEntity, _url_createAID)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) SetUrlCreateAID(_addressEntity common.Address, _url_createAID string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetUrlCreateAID(&_AlastriaContracts.TransactOpts, _addressEntity, _url_createAID)
 }
 
 // SetUrlLogo is a paid mutator transaction binding the contract method 0x0ff72ef2.
 //
 // Solidity: function setUrlLogo(address _addressEntity, string _url_logo) returns()
-func (_Alastria *AlastriaTransactor) SetUrlLogo(opts *bind.TransactOpts, _addressEntity common.Address, _url_logo string) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "setUrlLogo", _addressEntity, _url_logo)
+func (_AlastriaContracts *AlastriaContractsTransactor) SetUrlLogo(opts *bind.TransactOpts, _addressEntity common.Address, _url_logo string) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "setUrlLogo", _addressEntity, _url_logo)
 }
 
 // SetUrlLogo is a paid mutator transaction binding the contract method 0x0ff72ef2.
 //
 // Solidity: function setUrlLogo(address _addressEntity, string _url_logo) returns()
-func (_Alastria *AlastriaSession) SetUrlLogo(_addressEntity common.Address, _url_logo string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetUrlLogo(&_Alastria.TransactOpts, _addressEntity, _url_logo)
+func (_AlastriaContracts *AlastriaContractsSession) SetUrlLogo(_addressEntity common.Address, _url_logo string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetUrlLogo(&_AlastriaContracts.TransactOpts, _addressEntity, _url_logo)
 }
 
 // SetUrlLogo is a paid mutator transaction binding the contract method 0x0ff72ef2.
 //
 // Solidity: function setUrlLogo(address _addressEntity, string _url_logo) returns()
-func (_Alastria *AlastriaTransactorSession) SetUrlLogo(_addressEntity common.Address, _url_logo string) (*types.Transaction, error) {
-	return _Alastria.Contract.SetUrlLogo(&_Alastria.TransactOpts, _addressEntity, _url_logo)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) SetUrlLogo(_addressEntity common.Address, _url_logo string) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetUrlLogo(&_AlastriaContracts.TransactOpts, _addressEntity, _url_logo)
 }

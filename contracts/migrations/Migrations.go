@@ -1,7 +1,7 @@
 // Code generated - DO NOT EDIT.
 // This file is a generated binding and any manual changes will be lost.
 
-package alastria
+package alastriaContracts
 
 import (
 	"errors"
@@ -28,113 +28,113 @@ var (
 	_ = event.NewSubscription
 )
 
-// AlastriaMetaData contains all meta data concerning the Alastria contract.
-var AlastriaMetaData = &bind.MetaData{
+// AlastriaContractsMetaData contains all meta data concerning the AlastriaContracts contract.
+var AlastriaContractsMetaData = &bind.MetaData{
 	ABI: "[{\"constant\":true,\"inputs\":[],\"name\":\"last_completed_migration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"completed\",\"type\":\"uint256\"}],\"name\":\"setCompleted\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
-// AlastriaABI is the input ABI used to generate the binding from.
-// Deprecated: Use AlastriaMetaData.ABI instead.
-var AlastriaABI = AlastriaMetaData.ABI
+// AlastriaContractsABI is the input ABI used to generate the binding from.
+// Deprecated: Use AlastriaContractsMetaData.ABI instead.
+var AlastriaContractsABI = AlastriaContractsMetaData.ABI
 
-// Alastria is an auto generated Go binding around an Ethereum contract.
-type Alastria struct {
-	AlastriaCaller     // Read-only binding to the contract
-	AlastriaTransactor // Write-only binding to the contract
-	AlastriaFilterer   // Log filterer for contract events
+// AlastriaContracts is an auto generated Go binding around an Ethereum contract.
+type AlastriaContracts struct {
+	AlastriaContractsCaller     // Read-only binding to the contract
+	AlastriaContractsTransactor // Write-only binding to the contract
+	AlastriaContractsFilterer   // Log filterer for contract events
 }
 
-// AlastriaCaller is an auto generated read-only Go binding around an Ethereum contract.
-type AlastriaCaller struct {
+// AlastriaContractsCaller is an auto generated read-only Go binding around an Ethereum contract.
+type AlastriaContractsCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// AlastriaTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type AlastriaTransactor struct {
+// AlastriaContractsTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type AlastriaContractsTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// AlastriaFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type AlastriaFilterer struct {
+// AlastriaContractsFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type AlastriaContractsFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// AlastriaSession is an auto generated Go binding around an Ethereum contract,
+// AlastriaContractsSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type AlastriaSession struct {
-	Contract     *Alastria         // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
+type AlastriaContractsSession struct {
+	Contract     *AlastriaContracts // Generic contract binding to set the session for
+	CallOpts     bind.CallOpts      // Call options to use throughout this session
+	TransactOpts bind.TransactOpts  // Transaction auth options to use throughout this session
 }
 
-// AlastriaCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// AlastriaContractsCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type AlastriaCallerSession struct {
-	Contract *AlastriaCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts   // Call options to use throughout this session
+type AlastriaContractsCallerSession struct {
+	Contract *AlastriaContractsCaller // Generic contract caller binding to set the session for
+	CallOpts bind.CallOpts            // Call options to use throughout this session
 }
 
-// AlastriaTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// AlastriaContractsTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type AlastriaTransactorSession struct {
-	Contract     *AlastriaTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
+type AlastriaContractsTransactorSession struct {
+	Contract     *AlastriaContractsTransactor // Generic contract transactor binding to set the session for
+	TransactOpts bind.TransactOpts            // Transaction auth options to use throughout this session
 }
 
-// AlastriaRaw is an auto generated low-level Go binding around an Ethereum contract.
-type AlastriaRaw struct {
-	Contract *Alastria // Generic contract binding to access the raw methods on
+// AlastriaContractsRaw is an auto generated low-level Go binding around an Ethereum contract.
+type AlastriaContractsRaw struct {
+	Contract *AlastriaContracts // Generic contract binding to access the raw methods on
 }
 
-// AlastriaCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type AlastriaCallerRaw struct {
-	Contract *AlastriaCaller // Generic read-only contract binding to access the raw methods on
+// AlastriaContractsCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type AlastriaContractsCallerRaw struct {
+	Contract *AlastriaContractsCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// AlastriaTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type AlastriaTransactorRaw struct {
-	Contract *AlastriaTransactor // Generic write-only contract binding to access the raw methods on
+// AlastriaContractsTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type AlastriaContractsTransactorRaw struct {
+	Contract *AlastriaContractsTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewAlastria creates a new instance of Alastria, bound to a specific deployed contract.
-func NewAlastria(address common.Address, backend bind.ContractBackend) (*Alastria, error) {
-	contract, err := bindAlastria(address, backend, backend, backend)
+// NewAlastriaContracts creates a new instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContracts(address common.Address, backend bind.ContractBackend) (*AlastriaContracts, error) {
+	contract, err := bindAlastriaContracts(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Alastria{AlastriaCaller: AlastriaCaller{contract: contract}, AlastriaTransactor: AlastriaTransactor{contract: contract}, AlastriaFilterer: AlastriaFilterer{contract: contract}}, nil
+	return &AlastriaContracts{AlastriaContractsCaller: AlastriaContractsCaller{contract: contract}, AlastriaContractsTransactor: AlastriaContractsTransactor{contract: contract}, AlastriaContractsFilterer: AlastriaContractsFilterer{contract: contract}}, nil
 }
 
-// NewAlastriaCaller creates a new read-only instance of Alastria, bound to a specific deployed contract.
-func NewAlastriaCaller(address common.Address, caller bind.ContractCaller) (*AlastriaCaller, error) {
-	contract, err := bindAlastria(address, caller, nil, nil)
+// NewAlastriaContractsCaller creates a new read-only instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContractsCaller(address common.Address, caller bind.ContractCaller) (*AlastriaContractsCaller, error) {
+	contract, err := bindAlastriaContracts(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &AlastriaCaller{contract: contract}, nil
+	return &AlastriaContractsCaller{contract: contract}, nil
 }
 
-// NewAlastriaTransactor creates a new write-only instance of Alastria, bound to a specific deployed contract.
-func NewAlastriaTransactor(address common.Address, transactor bind.ContractTransactor) (*AlastriaTransactor, error) {
-	contract, err := bindAlastria(address, nil, transactor, nil)
+// NewAlastriaContractsTransactor creates a new write-only instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContractsTransactor(address common.Address, transactor bind.ContractTransactor) (*AlastriaContractsTransactor, error) {
+	contract, err := bindAlastriaContracts(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &AlastriaTransactor{contract: contract}, nil
+	return &AlastriaContractsTransactor{contract: contract}, nil
 }
 
-// NewAlastriaFilterer creates a new log filterer instance of Alastria, bound to a specific deployed contract.
-func NewAlastriaFilterer(address common.Address, filterer bind.ContractFilterer) (*AlastriaFilterer, error) {
-	contract, err := bindAlastria(address, nil, nil, filterer)
+// NewAlastriaContractsFilterer creates a new log filterer instance of AlastriaContracts, bound to a specific deployed contract.
+func NewAlastriaContractsFilterer(address common.Address, filterer bind.ContractFilterer) (*AlastriaContractsFilterer, error) {
+	contract, err := bindAlastriaContracts(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &AlastriaFilterer{contract: contract}, nil
+	return &AlastriaContractsFilterer{contract: contract}, nil
 }
 
-// bindAlastria binds a generic wrapper to an already deployed contract.
-func bindAlastria(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(AlastriaABI))
+// bindAlastriaContracts binds a generic wrapper to an already deployed contract.
+func bindAlastriaContracts(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := abi.JSON(strings.NewReader(AlastriaContractsABI))
 	if err != nil {
 		return nil, err
 	}
@@ -145,46 +145,46 @@ func bindAlastria(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Alastria *AlastriaRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Alastria.Contract.AlastriaCaller.contract.Call(opts, result, method, params...)
+func (_AlastriaContracts *AlastriaContractsRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _AlastriaContracts.Contract.AlastriaContractsCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Alastria *AlastriaRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Alastria.Contract.AlastriaTransactor.contract.Transfer(opts)
+func (_AlastriaContracts *AlastriaContractsRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.AlastriaContractsTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Alastria *AlastriaRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Alastria.Contract.AlastriaTransactor.contract.Transact(opts, method, params...)
+func (_AlastriaContracts *AlastriaContractsRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.AlastriaContractsTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Alastria *AlastriaCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Alastria.Contract.contract.Call(opts, result, method, params...)
+func (_AlastriaContracts *AlastriaContractsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _AlastriaContracts.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Alastria *AlastriaTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Alastria.Contract.contract.Transfer(opts)
+func (_AlastriaContracts *AlastriaContractsTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Alastria *AlastriaTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Alastria.Contract.contract.Transact(opts, method, params...)
+func (_AlastriaContracts *AlastriaContractsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.contract.Transact(opts, method, params...)
 }
 
 // LastCompletedMigration is a free data retrieval call binding the contract method 0x445df0ac.
 //
 // Solidity: function last_completed_migration() view returns(uint256)
-func (_Alastria *AlastriaCaller) LastCompletedMigration(opts *bind.CallOpts) (*big.Int, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) LastCompletedMigration(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "last_completed_migration")
+	err := _AlastriaContracts.contract.Call(opts, &out, "last_completed_migration")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -199,23 +199,23 @@ func (_Alastria *AlastriaCaller) LastCompletedMigration(opts *bind.CallOpts) (*b
 // LastCompletedMigration is a free data retrieval call binding the contract method 0x445df0ac.
 //
 // Solidity: function last_completed_migration() view returns(uint256)
-func (_Alastria *AlastriaSession) LastCompletedMigration() (*big.Int, error) {
-	return _Alastria.Contract.LastCompletedMigration(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) LastCompletedMigration() (*big.Int, error) {
+	return _AlastriaContracts.Contract.LastCompletedMigration(&_AlastriaContracts.CallOpts)
 }
 
 // LastCompletedMigration is a free data retrieval call binding the contract method 0x445df0ac.
 //
 // Solidity: function last_completed_migration() view returns(uint256)
-func (_Alastria *AlastriaCallerSession) LastCompletedMigration() (*big.Int, error) {
-	return _Alastria.Contract.LastCompletedMigration(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) LastCompletedMigration() (*big.Int, error) {
+	return _AlastriaContracts.Contract.LastCompletedMigration(&_AlastriaContracts.CallOpts)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
-func (_Alastria *AlastriaCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
+func (_AlastriaContracts *AlastriaContractsCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _Alastria.contract.Call(opts, &out, "owner")
+	err := _AlastriaContracts.contract.Call(opts, &out, "owner")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -230,34 +230,34 @@ func (_Alastria *AlastriaCaller) Owner(opts *bind.CallOpts) (common.Address, err
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
-func (_Alastria *AlastriaSession) Owner() (common.Address, error) {
-	return _Alastria.Contract.Owner(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsSession) Owner() (common.Address, error) {
+	return _AlastriaContracts.Contract.Owner(&_AlastriaContracts.CallOpts)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
-func (_Alastria *AlastriaCallerSession) Owner() (common.Address, error) {
-	return _Alastria.Contract.Owner(&_Alastria.CallOpts)
+func (_AlastriaContracts *AlastriaContractsCallerSession) Owner() (common.Address, error) {
+	return _AlastriaContracts.Contract.Owner(&_AlastriaContracts.CallOpts)
 }
 
 // SetCompleted is a paid mutator transaction binding the contract method 0xfdacd576.
 //
 // Solidity: function setCompleted(uint256 completed) returns()
-func (_Alastria *AlastriaTransactor) SetCompleted(opts *bind.TransactOpts, completed *big.Int) (*types.Transaction, error) {
-	return _Alastria.contract.Transact(opts, "setCompleted", completed)
+func (_AlastriaContracts *AlastriaContractsTransactor) SetCompleted(opts *bind.TransactOpts, completed *big.Int) (*types.Transaction, error) {
+	return _AlastriaContracts.contract.Transact(opts, "setCompleted", completed)
 }
 
 // SetCompleted is a paid mutator transaction binding the contract method 0xfdacd576.
 //
 // Solidity: function setCompleted(uint256 completed) returns()
-func (_Alastria *AlastriaSession) SetCompleted(completed *big.Int) (*types.Transaction, error) {
-	return _Alastria.Contract.SetCompleted(&_Alastria.TransactOpts, completed)
+func (_AlastriaContracts *AlastriaContractsSession) SetCompleted(completed *big.Int) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetCompleted(&_AlastriaContracts.TransactOpts, completed)
 }
 
 // SetCompleted is a paid mutator transaction binding the contract method 0xfdacd576.
 //
 // Solidity: function setCompleted(uint256 completed) returns()
-func (_Alastria *AlastriaTransactorSession) SetCompleted(completed *big.Int) (*types.Transaction, error) {
-	return _Alastria.Contract.SetCompleted(&_Alastria.TransactOpts, completed)
+func (_AlastriaContracts *AlastriaContractsTransactorSession) SetCompleted(completed *big.Int) (*types.Transaction, error) {
+	return _AlastriaContracts.Contract.SetCompleted(&_AlastriaContracts.TransactOpts, completed)
 }
