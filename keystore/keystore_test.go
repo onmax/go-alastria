@@ -62,7 +62,7 @@ func TestImportKs(t *testing.T) {
 			return
 		}
 
-		_, pubKey, err := ImportKs("./test-data/"+files[0].Name(), "password")
+		_, _, pubKey, err := ImportKs("./test-data/"+files[0].Name(), "password")
 		if err != nil {
 			t.Errorf("ImportKs() error = %v", err)
 			return
@@ -75,7 +75,7 @@ func TestImportKs(t *testing.T) {
 	})
 
 	t.Run("Signs and verifies a JWT with same keystore", func(t *testing.T) {
-		privKey, pubKey, err := ImportKs("./test-keystore/keystore1.json", "test")
+		_, privKey, pubKey, err := ImportKs("./test-keystore/keystore1.json", "test")
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return

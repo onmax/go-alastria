@@ -30,29 +30,23 @@ func PublicKeyToString(publicKey *ecdsa.PublicKey) string {
 }
 
 // getKey get a key from KeyStore
-func ImportKs(file string, password string) (string, string, error) {
-	key, err := ImportRawKs(file, password)
+func ImportKs(path string, password string) (*keystore.Key, string, string, error) {
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return "", "", err
+		return nil, "", "", err
+	}
+
+	key, err := keystore.DecryptKey(data, password)
+	if err != nil {
+		return nil, "", "", err
+	}
+
+	if err != nil {
+		return nil, "", "", err
 	}
 
 	privKey := hex.EncodeToString(crypto.FromECDSA(key.PrivateKey))
 	pubKey := PublicKeyToString(&key.PrivateKey.PublicKey)
 
-	return privKey, pubKey, nil
-}
-
-// ImportRawKs imports a key from a file
-func ImportRawKs(file string, password string) (*keystore.Key, error) {
-	data, err := ioutil.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-
-	key, err := keystore.DecryptKey(data, password)
-	if err != nil {
-		return nil, err
-	}
-
-	return key, nil
+	return key, privKey, pubKey, nil
 }
