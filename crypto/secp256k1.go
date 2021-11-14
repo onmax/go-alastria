@@ -83,17 +83,24 @@ func Sign(jwt interface{}, _pk string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	s, err := SignRaw(h64+"."+p64, _pk)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s.%s.%s", h64, p64, s), nil
+}
+
+func SignRaw(message string, _pk string) (string, error) {
 	pk, err := crypto.HexToECDSA(_pk)
 	if err != nil {
 		return "", err
 	}
-
-	s, err := secp256k1.SigningMethodES256K.Sign(h64+"."+p64, pk)
+	s, err := secp256k1.SigningMethodES256K.Sign(message, pk)
 	if err != nil {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s.%s.%s", h64, p64, s), nil
+	return s, nil
 }
 
 func Verify(signed, _pub string) error {
