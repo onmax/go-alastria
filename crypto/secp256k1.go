@@ -1,5 +1,6 @@
 package crypto
 
+// TODO Rename this file to tokens or something
 import (
 	"crypto/ecdsa"
 	b64 "encoding/base64"
