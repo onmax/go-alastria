@@ -32,7 +32,7 @@ func NetworkID(client *ethclient.Client) *big.Int {
 	return chainId
 }
 
-func ConnectToIdentityManagerContract(client *ethclient.Client) *identity.AlastriaContracts {
+func IdentityManagerContract(client *ethclient.Client) *identity.AlastriaContracts {
 	instance, err := identity.NewAlastriaContracts(common.HexToAddress(alastriaIdentityManager), client)
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +40,7 @@ func ConnectToIdentityManagerContract(client *ethclient.Client) *identity.Alastr
 	return instance
 }
 
-func ConnectToPublicKeyRegistryContract(client *ethclient.Client) *pkr.AlastriaContracts {
+func PublicKeyRegistryContract(client *ethclient.Client) *pkr.AlastriaContracts {
 	instance, err := pkr.NewAlastriaContracts(common.HexToAddress(publicKeyRegistry), client)
 	if err != nil {
 		log.Fatal(err)
