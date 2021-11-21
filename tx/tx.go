@@ -1,10 +1,15 @@
 package tx
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"log"
+	"math/big"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/onmax/go-alastria/crypto"
@@ -13,7 +18,7 @@ import (
 )
 
 func PrepareAlastriaId(client *ethclient.Client, entityKeystore *keystore.Key, agentPubKey string) *types.Transaction {
-	fmt.Println("Starting PrepareAlastriaId")
+	fmt.Println("----- Starting PrepareAlastriaId -----")
 
 	instance := network.IdentityManagerContract(client)
 	fmt.Println("Connected to AlastriaIdentityManager contract")
@@ -26,7 +31,7 @@ func PrepareAlastriaId(client *ethclient.Client, entityKeystore *keystore.Key, a
 	signedTx := crypto.SignTx(network.NetworkID(client), tx, entityKeystore.PrivateKey)
 	fmt.Println("Signed tx")
 
-	fmt.Println("End of PrepareAlastriaId")
+	fmt.Println("----- End of PrepareAlastriaId -----")
 
 	return signedTx
 }
@@ -54,6 +59,8 @@ func createAlastriaIdentity(client *ethclient.Client, entityPrivKey *ecdsa.Priva
 
 	opts, _ := TxOpt(entityPrivKey)
 	opts.NoSend = true
+	nonce, _ := client.PendingNonceAt(context.Background(), opts.From)
+	opts.Nonce = new(big.Int).SetUint64(nonce + 1)
 	tx, _ := instance.CreateAlastriaIdentity(opts, data)
 	fmt.Println("Created tx")
 
@@ -64,11 +71,29 @@ func createAlastriaIdentity(client *ethclient.Client, entityPrivKey *ecdsa.Priva
 }
 
 func CreateAlastriaIdentity(client *ethclient.Client, entityKeystore *keystore.Key, agentKeystore *keystore.Key) *types.Transaction {
-	fmt.Println("Starting CreateAlastriaIdentity")
+	fmt.Println("----- Starting CreateAlastriaIdentity -----")
 
 	addKeyTx := addKeyTx(client, entityKeystore.PrivateKey, agentKeystore)
 	createAlastriaIdTx := createAlastriaIdentity(client, entityKeystore.PrivateKey, agentKeystore, addKeyTx.Data())
 
-	fmt.Println("End of CreateAlastriaIdentity")
+	fmt.Println("----- End of CreateAlastriaIdentity -----")
 	return createAlastriaIdTx
+}
+
+func IdentityKeys(client *ethclient.Client, agentAddress common.Address) common.Address {
+	instance := network.IdentityManagerContract(client)
+	fmt.Println("Connected to AlastriaIdentityManager contract")
+
+	address, err := instance.IdentityKeys(&bind.CallOpts{}, agentAddress)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	// opts, _ := TxOpt(entityPrivKey)
+	// opts.NoSend = true
+	// nonce, _ := client.PendingNonceAt(context.Background(), opts.From)
+	// opts.Nonce = new(big.Int).SetUint64(nonce + 1)
+	// tx, _ := instance.CreateAlastriaIdentity(opts, data)
+	fmt.Println("Got address tx")
+	return address
 }
