@@ -3,14 +3,13 @@ package crypto
 import (
 	"crypto/ecdsa"
 	"log"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/onmax/go-alastria/network"
 )
 
-func SignTx(client *ethclient.Client, tx *types.Transaction, privateKey *ecdsa.PrivateKey) *types.Transaction {
-	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(network.NetworkID(client)), privateKey)
+func SignTx(networkId *big.Int, tx *types.Transaction, privateKey *ecdsa.PrivateKey) *types.Transaction {
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(networkId), privateKey)
 	if err != nil {
 		log.Fatal(err)
 	}
