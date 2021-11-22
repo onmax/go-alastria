@@ -1,52 +1,62 @@
 package keystore
 
 import (
-	"crypto/ecdsa"
 	"encoding/hex"
 	"io/ioutil"
 	"os"
 
-	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-// Creates a new keystore and saves it in the path with the given password
-func CreateKs(folder string, password string) (accounts.Account, error) {
-	if _, err := os.Stat(folder); err == nil {
-		return accounts.Account{}, err
-	}
-	ks := keystore.NewKeyStore(folder, keystore.StandardScryptN, keystore.StandardScryptP)
-	account, err := ks.NewAccount(password)
-	if err != nil {
-		return accounts.Account{}, err
-	}
-
-	return account, nil
+type Keypair struct {
+	public_key  string
+	private_key string
 }
 
-func PublicKeyToString(publicKey *ecdsa.PublicKey) string {
-	return hex.EncodeToString(crypto.FromECDSAPub(publicKey))[2:]
+type Keystore struct {
+	account  *keystore.Key
+	key_pair *Keypair
+}
+
+func getKeyPair(key *keystore.Key) *Keypair {
+	publicKey := hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:]
+	return &Keypair{
+		public_key:  publicKey,
+		private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
+	}
+}
+
+// Creates a new keystore and saves it in the path with the given password
+func CreateKs(folder string, password string) (*Keystore, error) {
+	if _, err := os.Stat(folder); err == nil {
+		return nil, err
+	}
+	ks := keystore.NewKeyStore(folder, keystore.StandardScryptN, keystore.StandardScryptP)
+	_, err := ks.NewAccount(password)
+	if err != nil {
+		return nil, err
+	}
+	return ImportKs(folder, password)
 }
 
 // getKey get a key from KeyStore
-func ImportKs(path string, password string) (*keystore.Key, string, string, error) {
+func ImportKs(path string, password string) (*Keystore, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, "", "", err
+		return nil, err
 	}
 
 	key, err := keystore.DecryptKey(data, password)
 	if err != nil {
-		return nil, "", "", err
+		return nil, err
 	}
 
 	if err != nil {
-		return nil, "", "", err
+		return nil, err
 	}
-
-	privKey := hex.EncodeToString(crypto.FromECDSA(key.PrivateKey))
-	pubKey := PublicKeyToString(&key.PrivateKey.PublicKey)
-
-	return key, privKey, pubKey, nil
+	return &Keystore{
+		key_pair: getKeyPair(key),
+		account:  key,
+	}, nil
 }
