@@ -10,26 +10,12 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-type Keypair struct {
+type Keystore struct {
+	account         *keystore.Key
 	hex_public_key  string
 	hex_private_key string
 	private_key     *ecdsa.PrivateKey
 	public_key      *ecdsa.PublicKey
-}
-
-type Keystore struct {
-	account  *keystore.Key
-	key_pair *Keypair
-}
-
-func getKeyPair(key *keystore.Key) *Keypair {
-	publicKey := hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:]
-	return &Keypair{
-		hex_public_key:  publicKey,
-		hex_private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
-		private_key:     key.PrivateKey,
-		public_key:      &key.PrivateKey.PublicKey,
-	}
 }
 
 // Creates a new keystore and saves it in the path with the given password
@@ -58,7 +44,10 @@ func ImportKs(path string, password string) (*Keystore, error) {
 	}
 
 	return &Keystore{
-		key_pair: getKeyPair(key),
-		account:  key,
+		hex_public_key:  hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:],
+		hex_private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
+		private_key:     key.PrivateKey,
+		public_key:      &key.PrivateKey.PublicKey,
+		account:         key,
 	}, nil
 }

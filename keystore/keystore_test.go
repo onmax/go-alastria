@@ -69,7 +69,7 @@ func TestImportKs(t *testing.T) {
 			t.Errorf("ImportKs() error = %v", err)
 			return
 		}
-		pubKey := ks.key_pair.public_key
+		pubKey := ks.hex_public_key
 		if len(pubKey) != 128 {
 			t.Errorf("ImportKs() = %v, want something with 128 chars", pubKey)
 		}
@@ -99,13 +99,13 @@ func TestImportKs(t *testing.T) {
 			},
 		}
 
-		signed, err := crypto.Sign(at, ks.key_pair.private_key)
+		signed, err := crypto.Sign(at, ks.hex_private_key)
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return
 		}
 
-		err = crypto.Verify(signed, ks.key_pair.public_key)
+		err = crypto.Verify(signed, ks.hex_public_key)
 		if err != nil {
 			t.Errorf("Verify() error = %v", err)
 			return
