@@ -74,7 +74,7 @@ func TestImportKs(t *testing.T) {
 			t.Errorf("ImportKs() = %v, want something with 128 chars", pubKey)
 		}
 
-		os.RemoveAll("./test-data")
+		os.RemoveAll(tempFolder)
 	})
 
 	t.Run("Signs and verifies a JWT with same keystore", func(t *testing.T) {

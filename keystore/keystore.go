@@ -1,6 +1,7 @@
 package keystore
 
 import (
+	"crypto/ecdsa"
 	"encoding/hex"
 	"io/ioutil"
 	"os"
@@ -10,8 +11,10 @@ import (
 )
 
 type Keypair struct {
-	public_key  string
-	private_key string
+	hex_public_key  string
+	hex_private_key string
+	private_key     *ecdsa.PrivateKey
+	public_key      *ecdsa.PublicKey
 }
 
 type Keystore struct {
@@ -22,8 +25,10 @@ type Keystore struct {
 func getKeyPair(key *keystore.Key) *Keypair {
 	publicKey := hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:]
 	return &Keypair{
-		public_key:  publicKey,
-		private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
+		hex_public_key:  publicKey,
+		hex_private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
+		private_key:     key.PrivateKey,
+		public_key:      &key.PrivateKey.PublicKey,
 	}
 }
 
