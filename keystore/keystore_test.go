@@ -34,11 +34,13 @@ func TestCreateKs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ks, err := CreateKs(tt.args.folder, tt.args.password)
 			if (err != nil) != tt.wantErr {
+				os.RemoveAll(tt.args.folder)
 				t.Errorf("CreateKs() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if len(ks.Address.Hex()) != 42 {
-				t.Errorf("CreateKs() = %v, want something with 42 chars", ks.Address.Hex())
+			if len(ks.account.Address.Hex()) != 42 {
+				os.RemoveAll(tt.args.folder)
+				t.Errorf("CreateKs() = %v, want something with 42 chars", ks.account.Address.Hex())
 			}
 
 			// remove the folder
@@ -50,23 +52,24 @@ func TestCreateKs(t *testing.T) {
 func TestImportKs(t *testing.T) {
 
 	t.Run("Creates and imports the keystore", func(t *testing.T) {
-		_, err := CreateKs("test-data", "password")
+		_, err := CreateKs(tempFolder, "password")
 		if err != nil {
 			t.Errorf("CreateKs() error = %v", err)
 			return
 		}
 
-		files, err := ioutil.ReadDir("./test-data")
+		files, err := ioutil.ReadDir(tempFolder)
 		if err != nil {
 			t.Errorf("ImportKs() error = %v", err)
 			return
 		}
 
-		_, _, pubKey, err := ImportKs("./test-data/"+files[0].Name(), "password")
+		ks, err := ImportKs(tempFolder+"/"+files[0].Name(), "password")
 		if err != nil {
 			t.Errorf("ImportKs() error = %v", err)
 			return
 		}
+		pubKey := ks.key_pair.public_key
 		if len(pubKey) != 128 {
 			t.Errorf("ImportKs() = %v, want something with 128 chars", pubKey)
 		}
@@ -75,7 +78,7 @@ func TestImportKs(t *testing.T) {
 	})
 
 	t.Run("Signs and verifies a JWT with same keystore", func(t *testing.T) {
-		_, privKey, pubKey, err := ImportKs("./test-keystore/keystore1.json", "test")
+		ks, err := ImportKs("../assets/keystores/keystore1.json", "test")
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return
@@ -96,13 +99,13 @@ func TestImportKs(t *testing.T) {
 			},
 		}
 
-		signed, err := crypto.Sign(at, privKey)
+		signed, err := crypto.Sign(at, ks.key_pair.private_key)
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return
 		}
 
-		err = crypto.Verify(signed, pubKey)
+		err = crypto.Verify(signed, ks.key_pair.public_key)
 		if err != nil {
 			t.Errorf("Verify() error = %v", err)
 			return

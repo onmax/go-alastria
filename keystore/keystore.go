@@ -28,16 +28,16 @@ func getKeyPair(key *keystore.Key) *Keypair {
 }
 
 // Creates a new keystore and saves it in the path with the given password
-func CreateKs(folder string, password string) (*Keystore, error) {
-	if _, err := os.Stat(folder); err == nil {
-		return nil, err
+func CreateKs(path string, password string) (*Keystore, error) {
+	if _, err := os.Stat(path); err != nil {
+		os.Mkdir(path, 0700)
 	}
-	ks := keystore.NewKeyStore(folder, keystore.StandardScryptN, keystore.StandardScryptP)
-	_, err := ks.NewAccount(password)
+	ks := keystore.NewKeyStore(path, keystore.StandardScryptN, keystore.StandardScryptP)
+	data, err := ks.NewAccount(password)
 	if err != nil {
 		return nil, err
 	}
-	return ImportKs(folder, password)
+	return ImportKs(data.URL.Path, password)
 }
 
 // getKey get a key from KeyStore
@@ -52,9 +52,6 @@ func ImportKs(path string, password string) (*Keystore, error) {
 		return nil, err
 	}
 
-	if err != nil {
-		return nil, err
-	}
 	return &Keystore{
 		key_pair: getKeyPair(key),
 		account:  key,
