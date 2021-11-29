@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/onmax/go-alastria/pkg/crypto"
-	"github.com/onmax/go-alastria/pkg/tokens"
+	"github.com/onmax/go-alastria/crypto"
+	"github.com/onmax/go-alastria/tokens"
 )
 
 var tempFolder string = "test-data__temp"
@@ -38,9 +38,9 @@ func TestCreateKs(t *testing.T) {
 				t.Errorf("CreateKs() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if len(ks.account.Address.Hex()) != 42 {
+			if len(ks.Account.Address.Hex()) != 42 {
 				os.RemoveAll(tt.args.folder)
-				t.Errorf("CreateKs() = %v, want something with 42 chars", ks.account.Address.Hex())
+				t.Errorf("CreateKs() = %v, want something with 42 chars", ks.Account.Address.Hex())
 			}
 
 			// remove the folder
@@ -69,7 +69,7 @@ func TestImportKs(t *testing.T) {
 			t.Errorf("ImportKs() error = %v", err)
 			return
 		}
-		pubKey := ks.hex_public_key
+		pubKey := ks.HexPublicKey
 		if len(pubKey) != 128 {
 			t.Errorf("ImportKs() = %v, want something with 128 chars", pubKey)
 		}
@@ -99,13 +99,13 @@ func TestImportKs(t *testing.T) {
 			},
 		}
 
-		signed, err := crypto.Sign(at, ks.hex_private_key)
+		signed, err := crypto.Sign(at, ks.HexPrivateKey)
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
 			return
 		}
 
-		err = crypto.Verify(signed, ks.hex_public_key)
+		err = crypto.Verify(signed, ks.HexPublicKey)
 		if err != nil {
 			t.Errorf("Verify() error = %v", err)
 			return

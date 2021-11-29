@@ -11,11 +11,11 @@ import (
 )
 
 type AlastriaKeystore struct {
-	account         *keystore.Key
-	hex_public_key  string
-	hex_private_key string
-	private_key     *ecdsa.PrivateKey
-	public_key      *ecdsa.PublicKey
+	Account       *keystore.Key
+	HexPublicKey  string
+	HexPrivateKey string
+	PrivateKey    *ecdsa.PrivateKey
+	PublicKey     *ecdsa.PublicKey
 }
 
 // Creates a new keystore and saves it in the path with the given password
@@ -44,10 +44,10 @@ func ImportKs(path string, password string) (*AlastriaKeystore, error) {
 	}
 
 	return &AlastriaKeystore{
-		hex_public_key:  hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:],
-		hex_private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
-		private_key:     key.PrivateKey,
-		public_key:      &key.PrivateKey.PublicKey,
-		account:         key,
+		HexPublicKey:  hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:],
+		HexPrivateKey: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
+		PrivateKey:    key.PrivateKey,
+		PublicKey:     &key.PrivateKey.PublicKey,
+		Account:       key,
 	}, nil
 }
