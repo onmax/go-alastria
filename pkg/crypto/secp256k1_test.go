@@ -3,7 +3,7 @@ package crypto
 import (
 	"testing"
 
-	"github.com/onmax/go-alastria/tokens"
+	"github.com/onmax/go-alastria/pkg/tokens"
 )
 
 func TestSign(t *testing.T) {

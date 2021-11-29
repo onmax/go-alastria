@@ -4,15 +4,20 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/onmax/go-alastria/keystore"
+	"github.com/onmax/go-alastria/pkg/keystore"
 
-	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
-	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
+	identity "github.com/onmax/go-alastria/pkg/contracts/alastria-identity-manager"
+	pkr "github.com/onmax/go-alastria/pkg/contracts/alastria-public-key-registry"
 )
 
 type AlastriaContracts struct {
 	identity_manager    *identity.AlastriaContracts
 	public_key_registry *pkr.AlastriaContracts
+}
+
+type Person struct {
+	name string
+	age  int
 }
 
 type AlastriaNetwork struct {

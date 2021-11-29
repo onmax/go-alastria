@@ -1,44 +1,60 @@
 package tx
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
-	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
-	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
-	"github.com/onmax/go-alastria/crypto"
-	"github.com/onmax/go-alastria/keystore"
-	"github.com/onmax/go-alastria/network"
+	"github.com/onmax/go-alastria/pkg/app"
+	"github.com/onmax/go-alastria/pkg/pkg/crypto"
+	"github.com/onmax/go-alastria/pkg/pkg/network"
 )
 
-type AlastriaContracts struct {
-	identity_manager    *identity.AlastriaContracts
-	public_key_registry *pkr.AlastriaContracts
+func NewAlastriaClient(node string) (*app.AlastriaConnection, error) {
+	// client, err := network.ConnectToNetwork(node)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	client := &app.AlastriaClient{
+		eth: nil,
+		ks:  nil,
+	}
+	p := app.Person{name: ""}
+	fmt.Printf("p: %v\n", p)
+	return &app.AlastriaConnection{
+		client: &app.AlastriaClient{
+			eth: nil,
+			ks:  nil,
+		},
+		contracts: &app.AlastriaContracts{
+			identity_manager:    nil,
+			public_key_registry: nil,
+		},
+		network: &app.AlastriaNetwork{
+			id:       big.NewInt(0),
+			node_url: node,
+		},
+	}, nil
 }
 
-type AlastriaNetwork struct {
-	id       *big.Int
-	node_url string
-}
+func newClient(node string) (*app.AlastriaClient, error) {
 
-type AlastriaClient struct {
-	eth *ethclient.Client
-	ks  *keystore.Keystore
-}
-
-type AlastriaConnection struct {
-	contracts *AlastriaContracts
-	network   *AlastriaNetwork
-	client    *AlastriaClient
-}
-
-func (conn *AlastriaConnection) PrepareAlastriaId(client *ethclient.Client, newAgentPubKey string) (*types.Transaction, error) {
-	instance, err := network.IdentityManagerContract(client)
+	client, err := network.ConnectToNetwork(node)
 	if err != nil {
 		return nil, err
 	}
-	opts, _ := TxOpt(conn.client.ks.)
+	return &app.AlastriaClient{
+		eth: client,
+		ks:  nil,
+	}, nil
+}
+
+func (conn *app.AlastriaConnection) PrepareAlastriaId(newAgentPubKey string, a *app.AlastriaClient) (*types.Transaction, error) {
+	instance, err := network.IdentityManagerContract(conn.client.eth)
+	if err != nil {
+		return nil, err
+	}
+	opts, _ := TxOpt(conn.client.ks)
 	opts.NoSend = true
 	tx, _ := instance.CreateAlastriaIdentity(opts, []byte(newAgentPubKey))
 	signedTx := crypto.SignTx(conn.network.id, tx, conn.client.ks.private_key)

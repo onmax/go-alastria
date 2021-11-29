@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-type Keystore struct {
+type AlastriaKeystore struct {
 	account         *keystore.Key
 	hex_public_key  string
 	hex_private_key string
@@ -19,7 +19,7 @@ type Keystore struct {
 }
 
 // Creates a new keystore and saves it in the path with the given password
-func CreateKs(path string, password string) (*Keystore, error) {
+func CreateKs(path string, password string) (*AlastriaKeystore, error) {
 	if _, err := os.Stat(path); err != nil {
 		os.Mkdir(path, 0700)
 	}
@@ -32,7 +32,7 @@ func CreateKs(path string, password string) (*Keystore, error) {
 }
 
 // getKey get a key from KeyStore
-func ImportKs(path string, password string) (*Keystore, error) {
+func ImportKs(path string, password string) (*AlastriaKeystore, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func ImportKs(path string, password string) (*Keystore, error) {
 		return nil, err
 	}
 
-	return &Keystore{
+	return &AlastriaKeystore{
 		hex_public_key:  hex.EncodeToString(crypto.FromECDSAPub(&key.PrivateKey.PublicKey))[2:],
 		hex_private_key: hex.EncodeToString(crypto.FromECDSA(key.PrivateKey)),
 		private_key:     key.PrivateKey,

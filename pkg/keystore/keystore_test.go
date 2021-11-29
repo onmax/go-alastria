@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/onmax/go-alastria/crypto"
-	"github.com/onmax/go-alastria/tokens"
+	"github.com/onmax/go-alastria/pkg/crypto"
+	"github.com/onmax/go-alastria/pkg/tokens"
 )
 
 var tempFolder string = "test-data__temp"

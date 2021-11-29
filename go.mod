@@ -1,4 +1,4 @@
-module github.com/onmax/go-alastria
+module github.com/onmax/go-alastria/pkg
 
 go 1.16
 

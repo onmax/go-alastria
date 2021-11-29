@@ -6,8 +6,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
-	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
+	identity "github.com/onmax/go-alastria/pkg/contracts/alastria-identity-manager"
+	pkr "github.com/onmax/go-alastria/pkg/contracts/alastria-public-key-registry"
 )
 
 // var alastriaIdentityManager = "0x3bFe9aAFc360a31D4060ef3E8cb5013Da197015a"
