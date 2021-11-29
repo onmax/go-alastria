@@ -1,6 +1,6 @@
-module github.com/onmax/go-alastria/pkg
+module github.com/onmax/go-alastria
 
-go 1.16
+go 1.17
 
 require (
 	github.com/btcsuite/btcd v0.22.0-beta // indirect
