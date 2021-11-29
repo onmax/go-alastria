@@ -11,9 +11,9 @@
 // 	"github.com/ethereum/go-ethereum/core/types"
 // 	"github.com/ethereum/go-ethereum/ethclient"
 
-// 	"github.com/onmax/go-alastria/pkg/crypto"
-// 	"github.com/onmax/go-alastria/pkg/keystore"
-// 	"github.com/onmax/go-alastria/pkg/tokens"
+// 	"github.com/onmax/go-alastria/crypto"
+// 	"github.com/onmax/go-alastria/keystore"
+// 	"github.com/onmax/go-alastria/tokens"
 // )
 
 // // var alastriaIdentityManager = "0x3bFe9aAFc360a31D4060ef3E8cb5013Da197015a"

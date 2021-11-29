@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/onmax/go-alastria/pkg/tokens"
+	"github.com/onmax/go-alastria/tokens"
 	secp256k1 "github.com/ureeves/jwt-go-secp256k1"
 )
 

@@ -4,34 +4,64 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/onmax/go-alastria/pkg/keystore"
+	"github.com/onmax/go-alastria/keystore"
+	"github.com/onmax/go-alastria/network"
 
-	identity "github.com/onmax/go-alastria/pkg/contracts/alastria-identity-manager"
-	pkr "github.com/onmax/go-alastria/pkg/contracts/alastria-public-key-registry"
+	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
+	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
 )
 
 type AlastriaContracts struct {
-	identity_manager    *identity.AlastriaContracts
-	public_key_registry *pkr.AlastriaContracts
+	IdentityManager   *identity.AlastriaContracts
+	PublicKeyRegistry *pkr.AlastriaContracts
 }
 
 type Person struct {
-	name string
-	age  int
+	Name string
+	Age  int
 }
 
 type AlastriaNetwork struct {
-	id       *big.Int
-	node_url string
+	Id *big.Int
 }
 
 type AlastriaClient struct {
-	eth *ethclient.Client
-	ks  *keystore.AlastriaKeystore
+	Eth *ethclient.Client
+	Ks  *keystore.AlastriaKeystore
 }
 
 type AlastriaConnection struct {
-	contracts *AlastriaContracts
-	network   *AlastriaNetwork
-	client    *AlastriaClient
+	Contracts *AlastriaContracts
+	Network   *AlastriaNetwork
+	Client    *AlastriaClient
+}
+
+type AlastriaConnectionArgs struct {
+	NodeUrl  string
+	Keystore *keystore.AlastriaKeystore
+}
+
+func NewAlastriaClient(args AlastriaConnectionArgs) (*AlastriaConnection, error) {
+	client, err := network.ConnectToNetwork(args.NodeUrl)
+	if err != nil {
+		return nil, err
+	}
+	networkId, err := network.NetworkID(client)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AlastriaConnection{
+		Client: &AlastriaClient{
+			Eth: client,
+			Ks:  args.Keystore,
+		},
+		Contracts: &AlastriaContracts{
+			IdentityManager:   nil,
+			PublicKeyRegistry: nil,
+		},
+		Network: &AlastriaNetwork{
+			Id: networkId,
+		},
+	}, nil
 }

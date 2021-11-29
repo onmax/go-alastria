@@ -2,31 +2,40 @@ package network
 
 import (
 	"context"
+	"errors"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	identity "github.com/onmax/go-alastria/pkg/contracts/alastria-identity-manager"
-	pkr "github.com/onmax/go-alastria/pkg/contracts/alastria-public-key-registry"
+	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
+	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
+	"github.com/onmax/go-alastria/internal/addresses"
 )
 
-// var alastriaIdentityManager = "0x3bFe9aAFc360a31D4060ef3E8cb5013Da197015a"
-var alastriaIdentityManager = "0xeafCAf8c3f9016B14ec65105677658f3D6Eb9079" // Upgradeable contract
-// var publicKeyRegistry = "0x017B0F93d1F31666Ae0bfb35f2e35bC1b0AC43C1"
-var publicKeyRegistry = "0x1cd13Dc5161Bf2d5A83AAB4e7b66A6542D10Ab5B" // Upgradeable contract
-
-func ConnectToNetwork(node string) (*ethclient.Client, error) {
-	return ethclient.Dial("http://34.91.211.67:22000")
+func ConnectToNetwork(nodeUrl string) (*ethclient.Client, error) {
+	if nodeUrl == "" {
+		return nil, errors.New("no node url specified")
+	}
+	return ethclient.Dial(nodeUrl)
 }
 
 func NetworkID(client *ethclient.Client) (*big.Int, error) {
+	if client == nil {
+		return nil, errors.New("no client specified")
+	}
 	return client.NetworkID(context.Background())
 }
 
 func IdentityManagerContract(client *ethclient.Client) (*identity.AlastriaContracts, error) {
-	return identity.NewAlastriaContracts(common.HexToAddress(alastriaIdentityManager), client)
+	if client == nil {
+		return nil, errors.New("no client specified")
+	}
+	return identity.NewAlastriaContracts(common.HexToAddress(addresses.AlastriaIdentityManager), client)
 }
 
 func PublicKeyRegistryContract(client *ethclient.Client) (*pkr.AlastriaContracts, error) {
-	return pkr.NewAlastriaContracts(common.HexToAddress(publicKeyRegistry), client)
+	if client == nil {
+		return nil, errors.New("no client specified")
+	}
+	return pkr.NewAlastriaContracts(common.HexToAddress(addresses.PublicKeyRegistry), client)
 }

@@ -1,60 +1,22 @@
 package tx
 
 import (
-	"fmt"
-	"math/big"
-
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/onmax/go-alastria/pkg/app"
-	"github.com/onmax/go-alastria/pkg/pkg/crypto"
-	"github.com/onmax/go-alastria/pkg/pkg/network"
+	"github.com/onmax/go-alastria/app"
+	"github.com/onmax/go-alastria/crypto"
+	"github.com/onmax/go-alastria/network"
 )
 
-func NewAlastriaClient(node string) (*app.AlastriaConnection, error) {
-	// client, err := network.ConnectToNetwork(node)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	client := &app.AlastriaClient{
-		eth: nil,
-		ks:  nil,
-	}
-	p := app.Person{name: ""}
-	fmt.Printf("p: %v\n", p)
-	return &app.AlastriaConnection{
-		client: &app.AlastriaClient{
-			eth: nil,
-			ks:  nil,
-		},
-		contracts: &app.AlastriaContracts{
-			identity_manager:    nil,
-			public_key_registry: nil,
-		},
-		network: &app.AlastriaNetwork{
-			id:       big.NewInt(0),
-			node_url: node,
-		},
-	}, nil
+type AlastriaConnection struct {
+	*app.AlastriaConnection
 }
 
-func newClient(node string) (*app.AlastriaClient, error) {
-
-	client, err := network.ConnectToNetwork(node)
+func (conn AlastriaConnection) PrepareAlastriaId(newAgentPubKey string, a *app.AlastriaClient) (*types.Transaction, error) {
+	instance, err := network.IdentityManagerContract(conn.Client.Eth)
 	if err != nil {
 		return nil, err
 	}
-	return &app.AlastriaClient{
-		eth: client,
-		ks:  nil,
-	}, nil
-}
-
-func (conn *app.AlastriaConnection) PrepareAlastriaId(newAgentPubKey string, a *app.AlastriaClient) (*types.Transaction, error) {
-	instance, err := network.IdentityManagerContract(conn.client.eth)
-	if err != nil {
-		return nil, err
-	}
-	opts, _ := TxOpt(conn.client.ks)
+	opts, _ := TxOpt(conn.Client.Ks.PrivateKey)
 	opts.NoSend = true
 	tx, _ := instance.CreateAlastriaIdentity(opts, []byte(newAgentPubKey))
 	signedTx := crypto.SignTx(conn.network.id, tx, conn.client.ks.private_key)

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/onmax/go-alastria/pkg/keystore"
+	"github.com/onmax/go-alastria/keystore"
 )
 
 func main() {
