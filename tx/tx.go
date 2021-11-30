@@ -1,88 +1,57 @@
 package tx
 
 import (
+	"fmt"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/onmax/go-alastria/app"
-	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/network"
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
-type AlastriaConnection struct {
-	*app.AlastriaConnection
-}
-
-func (conn AlastriaConnection) PrepareAlastriaId(newAgentPubKey string, a *app.AlastriaClient) (*types.Transaction, error) {
-	instance, err := network.IdentityManagerContract(conn.Client.Eth)
+func CreateAlastriaIdentity(conn *alaTypes.Connection, nonce uint64) (*types.Transaction, error) {
+	// TODO Check for txOpts, contracts and keystore
+	if conn.Contracts.IdentityManager == nil {
+		instance, err := network.IdentityManagerContract(conn.Client.Eth)
+		if err != nil {
+			return nil, err
+		}
+		conn.Contracts.IdentityManager = instance
+	}
+	if conn.Contracts.PublicKeyRegistry == nil {
+		instance, err := network.PublicKeyRegistryContract(conn.Client.Eth)
+		if err != nil {
+			return nil, err
+		}
+		conn.Contracts.PublicKeyRegistry = instance
+	}
+	addKeyTx, err := conn.Contracts.PublicKeyRegistry.AddKey(conn.Tx.Opts, conn.Client.Ks.HexPublicKey)
 	if err != nil {
 		return nil, err
 	}
-	opts, _ := TxOpt(conn.Client.Ks.PrivateKey)
-	opts.NoSend = true
-	tx, _ := instance.CreateAlastriaIdentity(opts, []byte(newAgentPubKey))
-	signedTx := crypto.SignTx(conn.network.id, tx, conn.client.ks.private_key)
-	return signedTx, nil
+	// signedTxAddKey, _ := crypto.SignTx(addKeyTx, conn.Tx.Signer, conn.Client.Ks.PrivateKey, conn.Network.Id)
+	fmt.Printf("addKeyTx.Data(): %v\n", addKeyTx.Data())
+	// Update nonce by hand
+	// TODO Check if this is right!
+	// conn.Tx.Opts.Nonce = new(big.Int).SetUint64(nonce + 1)
+
+	return conn.Contracts.IdentityManager.CreateAlastriaIdentity(conn.Tx.Opts, addKeyTx.Data())
 }
 
-// func addKeyTx(client *ethclient.Client, entityPrivKey *ecdsa.PrivateKey, agentKeystore *keystore.Key) *types.Transaction {
-// 	instance := network.PublicKeyRegistryContract(client)
-// 	fmt.Println("Connected to PublicKeyRegistry contract")
+func PrepareAlastriaId(conn *alaTypes.Connection, newAgentPubKey string) (*types.Transaction, error) {
+	// TODO Check for txOpts, contracts and keystore
+	if conn.Contracts.IdentityManager == nil {
+		instance, err := network.IdentityManagerContract(conn.Client.Eth)
+		if err != nil {
+			return nil, err
+		}
+		conn.Contracts.IdentityManager = instance
+	}
 
-// 	agentPrivKey := agentKeystore.PrivateKey
+	return conn.Contracts.IdentityManager.PrepareAlastriaID(conn.Tx.Opts, common.HexToAddress(newAgentPubKey))
+}
 
-// 	opts, _ := TxOpt(entityPrivKey)
-// 	opts.NoSend = true
-// 	tx, _ := instance.AddKey(opts, alastriaKs.PublicKeyToString(&agentPrivKey.PublicKey))
-// 	fmt.Println("Created tx")
-
-// 	signedTxAddKey := crypto.SignTx(network.NetworkID(client), tx, agentPrivKey)
-// 	fmt.Println("Signed Add Key Tx")
-// 	return signedTxAddKey
-// }
-
-// func createAlastriaIdentity(client *ethclient.Client, entityPrivKey *ecdsa.PrivateKey, agentKeystore *keystore.Key, data []byte) (*types.Transaction, error) {
-
-// 	instance, err := network.IdentityManagerContract(client)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	opts, _ := TxOpt(entityPrivKey)
-// 	opts.NoSend = true
-// 	nonce, _ := client.PendingNonceAt(context.Background(), opts.From)
-// 	opts.Nonce = new(big.Int).SetUint64(nonce + 1)
-// 	tx, _ := instance.CreateAlastriaIdentity(opts, data)
-// 	fmt.Println("Created tx")
-
-// 	signedTx := crypto.SignTx(network.NetworkID(client), tx, entityPrivKey)
-// 	fmt.Println("Signed Add Key Tx")
-// 	return signedTx
-
-// }
-
-// func CreateAlastriaIdentity(client *ethclient.Client, entityKeystore *keystore.Key, agentKeystore *keystore.Key) *types.Transaction {
-// 	fmt.Println("----- Starting CreateAlastriaIdentity -----")
-
-// 	addKeyTx := addKeyTx(client, entityKeystore.PrivateKey, agentKeystore)
-// 	createAlastriaIdTx := createAlastriaIdentity(client, entityKeystore.PrivateKey, agentKeystore, addKeyTx.Data())
-
-// 	fmt.Println("----- End of CreateAlastriaIdentity -----")
-// 	return createAlastriaIdTx
-// }
-
-// func IdentityKeys(client *ethclient.Client, agentAddress common.Address) common.Address {
-// 	instance := network.IdentityManagerContract(client)
-// 	fmt.Println("Connected to AlastriaIdentityManager contract")
-
-// 	address, err := instance.IdentityKeys(&bind.CallOpts{}, agentAddress)
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	// opts, _ := TxOpt(entityPrivKey)
-// 	// opts.NoSend = true
-// 	// nonce, _ := client.PendingNonceAt(context.Background(), opts.From)
-// 	// opts.Nonce = new(big.Int).SetUint64(nonce + 1)
-// 	// tx, _ := instance.CreateAlastriaIdentity(opts, data)
-// 	fmt.Println("Got address tx")
-// 	return address
-// }
+func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (common.Address, error) {
+	return conn.Contracts.IdentityManager.IdentityKeys(&bind.CallOpts{}, agentAddress)
+}
