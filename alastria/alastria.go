@@ -3,6 +3,7 @@ package alastria
 import (
 	"context"
 	"fmt"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -30,8 +31,7 @@ func NewClient(args *alaTypes.ConnectionArgs) (*alaTypes.Connection, error) {
 			return nil, err
 		}
 	}
-
-	return &alaTypes.Connection{
+	conn := &alaTypes.Connection{
 		Client: &alaTypes.Client{
 			Eth: client,
 			Ks:  args.Keystore,
@@ -47,11 +47,17 @@ func NewClient(args *alaTypes.ConnectionArgs) (*alaTypes.Connection, error) {
 			Opts:   opts,
 			Signer: types.NewEIP155Signer(networkId),
 		},
-	}, nil
+	}
+	nonce, _ := Nonce(conn, args.Keystore.Account.Address)
+	conn.Tx.Opts.Nonce = new(big.Int).SetUint64(nonce)
+	fmt.Printf("nonce: %v\n", nonce)
+	return conn, nil
 }
 
-func PrepareAlastriaId(conn *alaTypes.Connection, newAgentPubKey string) (*types.Transaction, error) {
-	return tx.PrepareAlastriaId(conn, newAgentPubKey)
+func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address) (*types.Transaction, error) {
+	nonce, _ := Nonce(conn, conn.Client.Ks.Account.Address)
+	fmt.Printf("PrepareAlastriaId nonce: %v\n", nonce)
+	return tx.PrepareAlastriaId(conn, newActorAddress, nonce)
 }
 
 func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, error) {
@@ -59,6 +65,8 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, erro
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("createaid nonce: %v\n", nonce)
 
 	return tx.CreateAlastriaIdentity(conn, nonce)
 }

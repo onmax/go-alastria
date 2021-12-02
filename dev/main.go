@@ -13,8 +13,10 @@ import (
 
 func main() {
 	// The new agent needs to create their own keystore
+
+	// keystoreNewActor, err := keystore.ImportKs("../assets/keystores/new-subject/UTC--2021-12-01T14-42-33.940663073Z--827f23019ae7bce33939477e6bd9dd1c8a067e25", "Passw0rd")
 	// keystoreNewActor, err := keystore.ImportKs("../assets/keystores/new-subject.json/UTC--2021-11-30T15-08-53.335386742Z--d0a0d5a1310a715157c3f81b789d6d9dc447aef5", "Passw0rd")
-	keystoreNewActor, err := keystore.ImportKs("../assets/keystores/subject1.json", "Passw0rd")
+	keystoreNewActor, err := keystore.ImportKs("../assets/keystores/subject.json", "Passw0rd")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -39,7 +41,6 @@ func main() {
 		return
 	}
 	fmt.Printf("signedTxCreateAID: %v\n", signedTxCreateAID.Hash().Hex())
-	fmt.Printf("signedTxCreateAID: %v\n", signedTxCreateAID)
 
 	// The entity needs to connect to the network
 	keystoreEntity, err := keystore.ImportKs("../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json", "Passw0rd")
@@ -53,16 +54,18 @@ func main() {
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	// The entity needs to connect to the network
-	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, keystoreNewActor.HexPublicKey)
+	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, keystoreNewActor.Account.Address)
 	fmt.Printf("signedPrepareAITx: %v\n", signedPrepareAITx.Hash().Hex())
-	fmt.Printf("newAgentClient.Client.Ks.Account.Address: %v\n", newAgentClient.Client.Ks.Account.Address)
 
 	// At the end, the entity 1 should send both tx (signedPrepareAITx and signedTxCreateAID, in that order) to the blockchain as follows:
 	entityClient.Client.Eth.SendTransaction(context.Background(), signedPrepareAITx)
-	time.Sleep(10 * time.Second)
+	time.Sleep(7 * time.Second)
 	entityClient.Client.Eth.SendTransaction(context.Background(), signedTxCreateAID)
-	time.Sleep(10 * time.Second)
-
+	time.Sleep(7 * time.Second)
+	r, _ := entityClient.Client.Eth.TransactionReceipt(context.Background(), signedTxCreateAID.Hash())
+	r2, _ := entityClient.Client.Eth.TransactionReceipt(context.Background(), signedPrepareAITx.Hash())
+	fmt.Printf("signedTxCreateAID: %v\n", r)
+	fmt.Printf("signedPrepareAITx: %v\n", r2)
 	// Now, retrieve the proxy from new subject to display it which is part of the did
 	agentProxy, _ := alastria.IdentityKeys(entityClient, newAgentClient.Client.Ks.Account.Address)
 
