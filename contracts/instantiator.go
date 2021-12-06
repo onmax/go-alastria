@@ -8,19 +8,18 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/onmax/go-alastria/internal/addresses"
 )
 
-func IdentityManagerContract(client *ethclient.Client) (*identity.AlastriaContracts, error) {
+func IdentityManagerContract(client *ethclient.Client, contract common.Address) (*identity.AlastriaContracts, error) {
 	if client == nil {
 		return nil, errors.New("no client specified")
 	}
-	return identity.NewAlastriaContracts(common.HexToAddress(addresses.AlastriaIdentityManager), client)
+	return identity.NewAlastriaContracts(contract, client)
 }
 
-func PublicKeyRegistryContract(client *ethclient.Client) (*pkr.AlastriaContracts, error) {
+func PublicKeyRegistryContract(client *ethclient.Client, contract common.Address) (*pkr.AlastriaContracts, error) {
 	if client == nil {
 		return nil, errors.New("no client specified")
 	}
-	return pkr.NewAlastriaContracts(common.HexToAddress(addresses.PublicKeyRegistry), client)
+	return pkr.NewAlastriaContracts(contract, client)
 }

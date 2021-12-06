@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 
+	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
+	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/types"
 )
@@ -49,7 +51,11 @@ func main() {
 	alastria.SendTx(entityClient, signedPrepareAITx)
 	alastria.SendTx(entityClient, signedTxCreateAID)
 
-	agentProxy, _ := alastria.IdentityKeys(entityClient, newAgentClient.Client.Ks.Account.Address)
+	actorProxy, _ := alastria.IdentityKeys(entityClient, newAgentClient.Client.Ks.Account.Address)
 
-	fmt.Printf("agentProxy: %v\n", agentProxy)
+	actorProxySanitazed := hex.Remove0x(actorProxy.Hash().Hex())
+
+	did := alaDid.NewDid(configuration.Network, configuration.NetworkId, actorProxySanitazed)
+
+	fmt.Printf("DID of the new actor: %v\n", did)
 }

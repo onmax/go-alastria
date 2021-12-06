@@ -1,8 +1,6 @@
 package alastria
 
 import (
-	"errors"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/client"
@@ -26,14 +24,14 @@ func SetKeystore(conn *alaTypes.Connection, ksConfig *alaTypes.KeystoreConfig) e
 }
 
 // Sends a transaction to the network. It will wait until the transaction is mined blocking
-// the current thread checking once every second
-// conn needs to have a client set.
+// the current thread checking once every second.
+// conn needs to have a client and keystore set
 func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
 	if conn.Client.Eth == nil {
-		return errors.New("conn.Client.Eth is nil")
+		return alaTypes.ErrEthClientNotSet
 	}
 	if conn.Client.Ks == nil {
-		return errors.New("conn.Client.Ks is nil. Add a Keystore")
+		return alaTypes.ErrKeystoreNotSet
 	}
 	return network.SendTx(conn, tx)
 }

@@ -38,7 +38,7 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, erro
 func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address) (*types.Transaction, error) {
 	// TODO Check for txOpts, contracts and keystore
 	if conn.Contracts.IdentityManager == nil {
-		instance, err := contracts.IdentityManagerContract(conn.Client.Eth)
+		instance, err := contracts.IdentityManagerContract(conn.Client.Eth, conn.Contracts.IdentityManager)
 		if err != nil {
 			return nil, err
 		}

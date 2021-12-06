@@ -58,6 +58,7 @@ type ConnectionArgs struct {
 }
 
 var (
-	ErrNodeUrlNotSet  = errors.New("node url not set")
-	ErrKeystoreNotSet = errors.New("keystore not set")
+	ErrNodeUrlNotSet   = errors.New("node url not set")
+	ErrKeystoreNotSet  = errors.New("keystore not set")
+	ErrEthClientNotSet = errors.New("eth client not set")
 )
