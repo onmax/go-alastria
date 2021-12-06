@@ -56,6 +56,7 @@ type Connection struct {
 	Network   *Network
 	Client    *Client
 	Tx        *TxClient
+	Connected bool
 }
 
 type KeystoreConfig struct {

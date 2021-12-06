@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/keystore"
 	"github.com/onmax/go-alastria/network"
@@ -14,23 +15,14 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
-// Initialites the client that any actor interacting with the network should use. It can be:
+// Initializes the client that any actor interacting with the network should use. It can be:
 // subject, issuer, or service provider.
-// args.NodeUrl is mandatory
+// if args.NodeUrl, then the client will not connect to the network
 // args.Keystore is not mandatory, but it is required if you want to sign JWT or tx
 func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
-	if args.NodeUrl == "" {
-		return nil, alaTypes.ErrNodeUrlNotSet
-	}
-
-	client, err := network.ConnectToNetwork(args.NodeUrl)
-	if err != nil {
-		return nil, err
-	}
-
 	conn := &alaTypes.Connection{
 		Client: &alaTypes.Client{
-			Eth: client,
+			Eth: &ethclient.Client{},
 			Ks:  &alaTypes.Keystore{},
 		},
 		Tx: &alaTypes.TxClient{
@@ -38,9 +30,15 @@ func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
 		},
 		Contracts: &alaTypes.Contracts{},
 		Network:   &alaTypes.Network{},
+		Connected: false,
 	}
 
-	err = SetKeystore(conn, args.Keystore)
+	// Only connects to the network if NodeUrl is set
+	if args.NodeUrl != "" {
+		ConnectToNetwork(conn, args.NodeUrl)
+	}
+
+	err := SetKeystore(conn, args.Keystore)
 	if err != nil {
 		return nil, err
 	}
@@ -130,5 +128,16 @@ func SetKeystore(conn *alaTypes.Connection, ksConfig *alaTypes.KeystoreConfig) e
 		return err
 	}
 	conn.Client.Ks = ks
+	return nil
+}
+
+// Connects to the network
+func ConnectToNetwork(conn *alaTypes.Connection, nodeUrl string) error {
+	client, err := network.ConnectToNetwork(nodeUrl)
+	if err != nil {
+		return err
+	}
+	conn.Client.Eth = client
+	conn.Connected = true
 	return nil
 }
