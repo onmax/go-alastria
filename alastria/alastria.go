@@ -4,6 +4,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/client"
+	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/network"
 	"github.com/onmax/go-alastria/tx"
 	alaTypes "github.com/onmax/go-alastria/types"
@@ -43,6 +44,11 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, erro
 	return tx.CreateAlastriaIdentity(conn)
 }
 
-func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (common.Address, error) {
-	return tx.IdentityKeys(conn, agentAddress)
+func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (string, error) {
+	proxyAddress, err := tx.IdentityKeys(conn, agentAddress)
+	if err != nil {
+		return "", err
+	}
+
+	return hex.Remove0x(proxyAddress.Hash().Hex())[24:], nil
 }
