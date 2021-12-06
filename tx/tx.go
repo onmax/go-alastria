@@ -2,7 +2,6 @@ package tx
 
 import (
 	"math/big"
-	"reflect"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -10,10 +9,6 @@ import (
 	"github.com/onmax/go-alastria/contracts"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
-
-func isNil(i interface{}) bool {
-	return i == nil || reflect.ValueOf(i).IsNil()
-}
 
 func checkTxOpts(conn *alaTypes.Connection) error {
 	if conn.Tx.Opts == nil {
@@ -31,7 +26,7 @@ func checkKeystore(conn *alaTypes.Connection) error {
 
 func checkIdentityManager(conn *alaTypes.Connection) error {
 	if conn.Contracts.Instances.IdentityManager == nil {
-		if isNil(conn.Contracts.Addresses.IdentityManager) {
+		if conn.Contracts.Addresses.IdentityManager == (common.Address{}) {
 			return alaTypes.ErrAddressNotSet
 		}
 		instance, err := contracts.IdentityManagerContract(conn.Client.Eth, conn.Contracts.Addresses.IdentityManager)
@@ -45,7 +40,7 @@ func checkIdentityManager(conn *alaTypes.Connection) error {
 
 func checkPublickeyRegistry(conn *alaTypes.Connection) error {
 	if conn.Contracts.Instances.PublicKeyRegistry == nil {
-		if isNil(conn.Contracts.Addresses.PublicKeyRegistry) {
+		if conn.Contracts.Addresses.PublicKeyRegistry == (common.Address{}) {
 			return alaTypes.ErrAddressNotSet
 		}
 		instance, err := contracts.PublicKeyRegistryContract(conn.Client.Eth, conn.Contracts.Addresses.PublicKeyRegistry)
