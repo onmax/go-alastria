@@ -26,7 +26,7 @@ func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 	newAgentArgs := &types.ConnectionConf{
 		NodeUrl: configuration.NodeUrl,
 		Keystore: &types.KeystoreConfig{
-			Path:     "../../assets/keystores/subject.json",
+			Path:     ,
 			Password: "Passw0rd",
 		},
 		ContractAddresses: &types.Addresses{
@@ -34,6 +34,7 @@ func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 			PublicKeyRegistry: configuration.PublicKeyRegistry,
 		},
 	}
+	newAgentConnConf = ("../../assets/keystores/subject.json")
 	newAgentClient, _ := alastria.NewClient(newAgentArgs)
 
 	// The subject, from the wallet, should build the tx createAlastriaId and sign it
