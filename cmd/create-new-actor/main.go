@@ -7,6 +7,7 @@ import (
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
+	"github.com/onmax/go-alastria/cmd"
 	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/types"
@@ -23,19 +24,8 @@ func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 
 	// TODO: Then, the Entity 1 should create an AT, sign it and send it to the wallet
 	// The new agent needs to connect to the network
-	newAgentArgs := &types.ConnectionConf{
-		NodeUrl: configuration.NodeUrl,
-		Keystore: &types.KeystoreConfig{
-			Path:     ,
-			Password: "Passw0rd",
-		},
-		ContractAddresses: &types.Addresses{
-			IdentityManager:   configuration.AlastriaIdentityManager,
-			PublicKeyRegistry: configuration.PublicKeyRegistry,
-		},
-	}
-	newAgentConnConf = ("../../assets/keystores/subject.json")
-	newAgentClient, _ := alastria.NewClient(newAgentArgs)
+	newAgentConnConf := cmd.GetConnectionConf("../../assets/keystores/subject.json")
+	newAgentClient, _ := alastria.NewClient(newAgentConnConf)
 
 	// The subject, from the wallet, should build the tx createAlastriaId and sign it
 	signedTxCreateAID, _ := alastria.CreateAlastriaIdentity(newAgentClient)
