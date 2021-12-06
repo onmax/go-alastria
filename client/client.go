@@ -5,7 +5,9 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/keystore"
 	"github.com/onmax/go-alastria/network"
 	"github.com/onmax/go-alastria/tx"
@@ -53,16 +55,7 @@ func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
 		return nil, err
 	}
 
-	// Instances of the contracts. This is the only way to interact with the contracts.
-	// They will be initialized before the first interaction with the contract and the
-	// instance of the contract will be cached.
-	conn.Contracts = &alaTypes.Contracts{
-		Instances: &alaTypes.Instances{},
-		Addresses: &alaTypes.Addresses{
-			IdentityManager:   args.ContractAddresses.IdentityManager,
-			PublicKeyRegistry: args.ContractAddresses.PublicKeyRegistry,
-		},
-	}
+	setContracts(conn, args)
 
 	return conn, nil
 }
@@ -98,6 +91,33 @@ func setNetwork(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error 
 		Id: networkId,
 	}
 	return nil
+}
+
+// Instances of the contracts. This is the only way to interact with the contracts.
+// They will be initialized before the first interaction with the contract and the
+// instance of the contract will be cached.
+// The user using args can set the address of the contract to interact with. If no
+// address is set, the default address of the contract will be used
+func setContracts(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) {
+	var identityManager, publicKeyRegistry common.Address
+	if args.ContractAddresses.IdentityManager != (common.Address{}) {
+		identityManager = args.ContractAddresses.IdentityManager
+	} else {
+		identityManager = configuration.AlastriaIdentityManager
+	}
+	if args.ContractAddresses.PublicKeyRegistry != (common.Address{}) {
+		publicKeyRegistry = args.ContractAddresses.PublicKeyRegistry
+	} else {
+		publicKeyRegistry = configuration.PublicKeyRegistry
+	}
+
+	conn.Contracts = &alaTypes.Contracts{
+		Instances: &alaTypes.Instances{},
+		Addresses: &alaTypes.Addresses{
+			IdentityManager:   identityManager,
+			PublicKeyRegistry: publicKeyRegistry,
+		},
+	}
 }
 
 // Set the keystore that will be used to sign the transactions and JWTs
