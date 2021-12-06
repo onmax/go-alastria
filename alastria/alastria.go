@@ -4,7 +4,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/client"
-	"github.com/onmax/go-alastria/contracts"
 	"github.com/onmax/go-alastria/network"
 	"github.com/onmax/go-alastria/tx"
 	alaTypes "github.com/onmax/go-alastria/types"
@@ -45,12 +44,5 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, erro
 }
 
 func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (common.Address, error) {
-	if conn.Contracts.IdentityManager == nil {
-		instance, err := contracts.IdentityManagerContract(conn.Client.Eth)
-		if err != nil {
-			return common.Address{}, err
-		}
-		conn.Contracts.IdentityManager = instance
-	}
 	return tx.IdentityKeys(conn, agentAddress)
 }

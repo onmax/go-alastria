@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/ethereum/go-ethereum/common"
+	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
 	"github.com/onmax/go-alastria/hex"
@@ -11,6 +13,12 @@ import (
 )
 
 func main() {
+	signedTxCreateAID, newActorAddress := step1__newAgentSignsTx()
+	step2__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID, newActorAddress)
+	step3__buildNewAgentDid(newActorAddress)
+}
+
+func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 	// The new agent needs to create their own keystore
 
 	// TODO: Then, the Entity 1 should create an AT, sign it and send it to the wallet
@@ -21,20 +29,20 @@ func main() {
 			Path:     "../../assets/keystores/subject.json",
 			Password: "Passw0rd",
 		},
+		ContractAddresses: &types.Addresses{
+			IdentityManager:   configuration.AlastriaIdentityManager,
+			PublicKeyRegistry: configuration.PublicKeyRegistry,
+		},
 	}
-	newAgentClient, err := alastria.NewClient(newAgentArgs)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	newAgentClient, _ := alastria.NewClient(newAgentArgs)
 
 	// The subject, from the wallet, should build the tx createAlastriaId and sign it
-	signedTxCreateAID, err := alastria.CreateAlastriaIdentity(newAgentClient)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	signedTxCreateAID, _ := alastria.CreateAlastriaIdentity(newAgentClient)
 
+	return signedTxCreateAID, newAgentClient.Client.Ks.Account.Address
+}
+
+func step2__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *ethTypes.Transaction, newActorAddress common.Address) {
 	// The entity needs to connect to the network
 	entityArgs := &types.ConnectionArgs{
 		NodeUrl: configuration.NodeUrl,
@@ -46,12 +54,24 @@ func main() {
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	// The entity needs to connect to the network
-	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, newAgentClient.Client.Ks.Account.Address)
+	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, newActorAddress)
 
 	alastria.SendTx(entityClient, signedPrepareAITx)
 	alastria.SendTx(entityClient, signedTxCreateAID)
+}
 
-	actorProxy, _ := alastria.IdentityKeys(entityClient, newAgentClient.Client.Ks.Account.Address)
+func step3__buildNewAgentDid(newActorAddress common.Address) {
+	// The entity needs to connect to the network
+	entityArgs := &types.ConnectionArgs{
+		NodeUrl: configuration.NodeUrl,
+		Keystore: &types.KeystoreConfig{
+			Path:     "../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json",
+			Password: "Passw0rd",
+		},
+	}
+	entityClient, _ := alastria.NewClient(entityArgs)
+
+	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
 
 	actorProxySanitazed := hex.Remove0x(actorProxy.Hash().Hex())
 

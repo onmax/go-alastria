@@ -7,6 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 
@@ -22,9 +23,18 @@ type Keystore struct {
 	PublicKey     *ecdsa.PublicKey
 }
 
-type Contracts struct {
+type Instances struct {
 	IdentityManager   *identity.AlastriaContracts
 	PublicKeyRegistry *pkr.AlastriaContracts
+}
+type Addresses struct {
+	IdentityManager   common.Address
+	PublicKeyRegistry common.Address
+}
+
+type Contracts struct {
+	Instances *Instances
+	Addresses *Addresses
 }
 
 type Network struct {
@@ -53,12 +63,15 @@ type KeystoreConfig struct {
 	Password string
 }
 type ConnectionArgs struct {
-	NodeUrl  string
-	Keystore *KeystoreConfig
+	NodeUrl           string
+	Keystore          *KeystoreConfig
+	ContractAddresses *Addresses
 }
 
 var (
 	ErrNodeUrlNotSet   = errors.New("node url not set")
 	ErrKeystoreNotSet  = errors.New("keystore not set")
+	ErrAddressNotSet   = errors.New("address not set")
 	ErrEthClientNotSet = errors.New("eth client not set")
+	ErrTxOptsNotSet    = errors.New("eth tx opts not set")
 )

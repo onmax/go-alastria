@@ -56,7 +56,13 @@ func NewClient(args *alaTypes.ConnectionArgs) (*alaTypes.Connection, error) {
 	// Instances of the contracts. This is the only way to interact with the contracts.
 	// They will be initialized before the first interaction with the contract and the
 	// instance of the contract will be cached.
-	conn.Contracts = &alaTypes.Contracts{}
+	conn.Contracts = &alaTypes.Contracts{
+		Instances: &alaTypes.Instances{},
+		Addresses: &alaTypes.Addresses{
+			IdentityManager:   args.ContractAddresses.IdentityManager,
+			PublicKeyRegistry: args.ContractAddresses.PublicKeyRegistry,
+		},
+	}
 
 	return conn, nil
 }
