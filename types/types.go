@@ -2,6 +2,7 @@ package types
 
 import (
 	"crypto/ecdsa"
+	"errors"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -47,7 +48,16 @@ type Connection struct {
 	Tx        *TxClient
 }
 
+type KeystoreConfig struct {
+	Path     string
+	Password string
+}
 type ConnectionArgs struct {
 	NodeUrl  string
-	Keystore *Keystore
+	Keystore *KeystoreConfig
 }
+
+var (
+	ErrNodeUrlNotSet  = errors.New("node url not set")
+	ErrKeystoreNotSet = errors.New("keystore not set")
+)

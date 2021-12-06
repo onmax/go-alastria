@@ -1,79 +1,54 @@
 package alastria
 
 import (
-	"context"
-	"fmt"
-	"math/big"
+	"errors"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/onmax/go-alastria/client"
+	"github.com/onmax/go-alastria/contracts"
 	"github.com/onmax/go-alastria/network"
 	"github.com/onmax/go-alastria/tx"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+// Initialites the client that any actor interacting with the network should use. It can be:
+// subject, issuer, or service provider.
+// args.NodeUrl is mandatory
+// args.Keystore is not mandatory, but it is required if you want to sign JWT or tx
 func NewClient(args *alaTypes.ConnectionArgs) (*alaTypes.Connection, error) {
-	client, err := network.ConnectToNetwork(args.NodeUrl)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("Connected!: client: %v\n", client)
-	networkId, err := network.NetworkID(client)
-	if err != nil {
-		return nil, err
-	}
+	return client.NewClient(args)
+}
 
-	opts := &bind.TransactOpts{}
-	if args.Keystore != nil {
-		opts, err = tx.TxOpt(args.Keystore.PrivateKey, networkId)
-		if err != nil {
-			return nil, err
-		}
+// Set the keystore that will be used to sign the transactions and JWTs
+func SetKeystore(conn *alaTypes.Connection, ksConfig *alaTypes.KeystoreConfig) error {
+	return client.SetKeystore(conn, ksConfig)
+}
+
+// Sends a transaction to the network. It will wait until the transaction is mined blocking
+// the current thread checking once every second
+// conn needs to have a client set.
+func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
+	if conn.Client.Eth == nil {
+		return errors.New("conn.Client.Eth is nil")
 	}
-	conn := &alaTypes.Connection{
-		Client: &alaTypes.Client{
-			Eth: client,
-			Ks:  args.Keystore,
-		},
-		Contracts: &alaTypes.Contracts{
-			IdentityManager:   nil,
-			PublicKeyRegistry: nil,
-		},
-		Network: &alaTypes.Network{
-			Id: networkId,
-		},
-		Tx: &alaTypes.TxClient{
-			Opts:   opts,
-			Signer: types.NewEIP155Signer(networkId),
-		},
+	if conn.Client.Ks == nil {
+		return errors.New("conn.Client.Ks is nil. Add a Keystore")
 	}
-	nonce, _ := Nonce(conn, args.Keystore.Account.Address)
-	conn.Tx.Opts.Nonce = new(big.Int).SetUint64(nonce)
-	fmt.Printf("nonce: %v\n", nonce)
-	return conn, nil
+	return network.SendTx(conn, tx)
 }
 
 func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address) (*types.Transaction, error) {
-	nonce, _ := Nonce(conn, conn.Client.Ks.Account.Address)
-	fmt.Printf("PrepareAlastriaId nonce: %v\n", nonce)
-	return tx.PrepareAlastriaId(conn, newActorAddress, nonce)
+	return tx.PrepareAlastriaId(conn, newActorAddress)
 }
 
 func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, error) {
-	nonce, err := Nonce(conn, conn.Client.Ks.Account.Address)
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("createaid nonce: %v\n", nonce)
-
-	return tx.CreateAlastriaIdentity(conn, nonce)
+	return tx.CreateAlastriaIdentity(conn)
 }
 
 func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (common.Address, error) {
 	if conn.Contracts.IdentityManager == nil {
-		instance, err := network.IdentityManagerContract(conn.Client.Eth)
+		instance, err := contracts.IdentityManagerContract(conn.Client.Eth)
 		if err != nil {
 			return common.Address{}, err
 		}
@@ -81,11 +56,3 @@ func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (commo
 	}
 	return tx.IdentityKeys(conn, agentAddress)
 }
-
-func Nonce(conn *alaTypes.Connection, from common.Address) (uint64, error) {
-	return conn.Client.Eth.PendingNonceAt(context.Background(), from)
-}
-
-// func SignTx(conn *alaTypes.Connection, tx *types.Transaction) (*types.Transaction, error) {
-// 	return crypto.SignTx(tx, conn.Tx.Signer, conn.Client.Ks.PrivateKey, conn.Network.Id)
-// }

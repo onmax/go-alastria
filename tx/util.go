@@ -3,7 +3,6 @@ package tx
 import (
 	"context"
 	"crypto/ecdsa"
-	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -20,7 +19,6 @@ func TxOpt(privateKey *ecdsa.PrivateKey, chainId *big.Int) (*bind.TransactOpts, 
 	opts.GasLimit = 600000
 	opts.GasPrice = big.NewInt(0)
 	opts.NoSend = true
-	fmt.Printf("opts: %+v\n", opts)
 	return opts, nil
 }
 

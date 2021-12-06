@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
-	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
-	"github.com/onmax/go-alastria/internal/addresses"
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func ConnectToNetwork(nodeUrl string) (*ethclient.Client, error) {
@@ -26,16 +26,29 @@ func NetworkID(client *ethclient.Client) (*big.Int, error) {
 	return client.NetworkID(context.Background())
 }
 
-func IdentityManagerContract(client *ethclient.Client) (*identity.AlastriaContracts, error) {
-	if client == nil {
-		return nil, errors.New("no client specified")
+func checkTransactionReceipt(conn *alaTypes.Connection, txHash common.Hash) uint64 {
+	tx, err := conn.Client.Eth.TransactionReceipt(context.Background(), txHash)
+	if err != nil {
+		return 0
 	}
-	return identity.NewAlastriaContracts(common.HexToAddress(addresses.AlastriaIdentityManager), client)
+	return tx.Status
 }
 
-func PublicKeyRegistryContract(client *ethclient.Client) (*pkr.AlastriaContracts, error) {
-	if client == nil {
-		return nil, errors.New("no client specified")
+// Sends a transaction to the network. It will wait until the transaction is mined blocking
+// the current thread checking once every second
+// conn needs to have a client set.
+func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
+	err := conn.Client.Eth.SendTransaction(context.Background(), tx)
+
+	if err != nil {
+		return err
 	}
-	return pkr.NewAlastriaContracts(common.HexToAddress(addresses.PublicKeyRegistry), client)
+
+	for {
+		status := checkTransactionReceipt(conn, tx.Hash())
+		if status == 1 {
+			return nil
+		}
+		time.Sleep(time.Second)
+	}
 }
