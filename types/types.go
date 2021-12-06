@@ -62,7 +62,7 @@ type KeystoreConfig struct {
 	Path     string
 	Password string
 }
-type ConnectionArgs struct {
+type ConnectionConf struct {
 	NodeUrl           string
 	Keystore          *KeystoreConfig
 	ContractAddresses *Addresses

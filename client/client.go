@@ -16,7 +16,7 @@ import (
 // subject, issuer, or service provider.
 // args.NodeUrl is mandatory
 // args.Keystore is not mandatory, but it is required if you want to sign JWT or tx
-func NewClient(args *alaTypes.ConnectionArgs) (*alaTypes.Connection, error) {
+func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
 	if args.NodeUrl == "" {
 		return nil, alaTypes.ErrNodeUrlNotSet
 	}
@@ -68,7 +68,7 @@ func NewClient(args *alaTypes.ConnectionArgs) (*alaTypes.Connection, error) {
 }
 
 // Configuration of all the tx that the client will make
-func setOpts(conn *alaTypes.Connection, args *alaTypes.ConnectionArgs) error {
+func setOpts(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error {
 	if conn.Client.Ks == nil {
 		return nil
 	}
@@ -89,7 +89,7 @@ func setOpts(conn *alaTypes.Connection, args *alaTypes.ConnectionArgs) error {
 }
 
 // Settings network configurations
-func setNetwork(conn *alaTypes.Connection, args *alaTypes.ConnectionArgs) error {
+func setNetwork(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error {
 	networkId, err := network.NetworkID(conn.Client.Eth)
 	if err != nil {
 		return err

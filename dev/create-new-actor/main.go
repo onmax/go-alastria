@@ -23,7 +23,7 @@ func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 
 	// TODO: Then, the Entity 1 should create an AT, sign it and send it to the wallet
 	// The new agent needs to connect to the network
-	newAgentArgs := &types.ConnectionArgs{
+	newAgentArgs := &types.ConnectionConf{
 		NodeUrl: configuration.NodeUrl,
 		Keystore: &types.KeystoreConfig{
 			Path:     "../../assets/keystores/subject.json",
@@ -44,7 +44,7 @@ func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 
 func step2__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *ethTypes.Transaction, newActorAddress common.Address) {
 	// The entity needs to connect to the network
-	entityArgs := &types.ConnectionArgs{
+	entityArgs := &types.ConnectionConf{
 		NodeUrl: configuration.NodeUrl,
 		Keystore: &types.KeystoreConfig{
 			Path:     "../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json",
@@ -62,7 +62,7 @@ func step2__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *ethTypes.Trans
 
 func step3__buildNewAgentDid(newActorAddress common.Address) {
 	// The entity needs to connect to the network
-	entityArgs := &types.ConnectionArgs{
+	entityArgs := &types.ConnectionConf{
 		NodeUrl: configuration.NodeUrl,
 		Keystore: &types.KeystoreConfig{
 			Path:     "../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json",
