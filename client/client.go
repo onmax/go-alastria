@@ -19,7 +19,7 @@ import (
 // subject, issuer, or service provider.
 // if args.NodeUrl, then the client will not connect to the network
 // args.Keystore is not mandatory, but it is required if you want to sign JWT or tx
-func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
+func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 	conn := &alaTypes.Connection{
 		Client: &alaTypes.Client{
 			Eth: &ethclient.Client{},
@@ -59,7 +59,7 @@ func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
 }
 
 // Configuration of all the tx that the client will make
-func setOpts(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error {
+func setOpts(conn *alaTypes.Connection, args *alaTypes.ClientConf) error {
 	if conn.Client.Ks == nil {
 		return nil
 	}
@@ -80,7 +80,7 @@ func setOpts(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error {
 }
 
 // Settings network configurations
-func setNetwork(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error {
+func setNetwork(conn *alaTypes.Connection, args *alaTypes.ClientConf) error {
 	networkId, err := network.NetworkID(conn.Client.Eth)
 	if err != nil {
 		return err
@@ -96,7 +96,7 @@ func setNetwork(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) error 
 // instance of the contract will be cached.
 // The user using args can set the address of the contract to interact with. If no
 // address is set, the default address of the contract will be used
-func setContracts(conn *alaTypes.Connection, args *alaTypes.ConnectionConf) {
+func setContracts(conn *alaTypes.Connection, args *alaTypes.ClientConf) {
 	var identityManager, publicKeyRegistry common.Address
 	if args.ContractAddresses.IdentityManager != (common.Address{}) {
 		identityManager = args.ContractAddresses.IdentityManager

@@ -5,8 +5,8 @@ import (
 	"github.com/onmax/go-alastria/types"
 )
 
-func GetConnectionConf(ksPath string) *types.ConnectionConf {
-	return &types.ConnectionConf{
+func GetClientConf(ksPath string) *types.ClientConf {
+	return &types.ClientConf{
 		NodeUrl: configuration.NodeUrl,
 		Keystore: &types.KeystoreConfig{
 			Path:     ksPath,
@@ -15,6 +15,15 @@ func GetConnectionConf(ksPath string) *types.ConnectionConf {
 		ContractAddresses: &types.Addresses{
 			IdentityManager:   configuration.AlastriaIdentityManager,
 			PublicKeyRegistry: configuration.PublicKeyRegistry,
+		},
+	}
+}
+
+func GetDisconnectedClientConf(ksPath string) *types.ClientConf {
+	return &types.ClientConf{
+		Keystore: &types.KeystoreConfig{
+			Path:     ksPath,
+			Password: "Passw0rd",
 		},
 	}
 }

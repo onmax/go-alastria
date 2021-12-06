@@ -14,7 +14,7 @@ import (
 // subject, issuer, or service provider.
 // args.NodeUrl is mandatory
 // args.Keystore is not mandatory, but it is required if you want to sign JWT or tx
-func NewClient(args *alaTypes.ConnectionConf) (*alaTypes.Connection, error) {
+func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 	return client.NewClient(args)
 }
 
