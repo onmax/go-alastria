@@ -8,9 +8,7 @@ import (
 	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
 	"github.com/onmax/go-alastria/cmd"
-	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/internal/configuration"
-	"github.com/onmax/go-alastria/types"
 )
 
 func main() {
@@ -35,13 +33,7 @@ func step1__newAgentSignsTx() (*ethTypes.Transaction, common.Address) {
 
 func step2__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *ethTypes.Transaction, newActorAddress common.Address) {
 	// The entity needs to connect to the network
-	entityArgs := &types.ConnectionConf{
-		NodeUrl: configuration.NodeUrl,
-		Keystore: &types.KeystoreConfig{
-			Path:     "../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json",
-			Password: "Passw0rd",
-		},
-	}
+	entityArgs := cmd.GetConnectionConf("../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	// The entity needs to connect to the network
@@ -52,21 +44,12 @@ func step2__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *ethTypes.Trans
 }
 
 func step3__buildNewAgentDid(newActorAddress common.Address) {
-	// The entity needs to connect to the network
-	entityArgs := &types.ConnectionConf{
-		NodeUrl: configuration.NodeUrl,
-		Keystore: &types.KeystoreConfig{
-			Path:     "../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json",
-			Password: "Passw0rd",
-		},
-	}
+	entityArgs := cmd.GetConnectionConf("../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
 
-	actorProxySanitazed := hex.Remove0x(actorProxy.Hash().Hex())
-
-	did := alaDid.NewDid(configuration.Network, configuration.NetworkId, actorProxySanitazed)
+	did := alaDid.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
 
 	fmt.Printf("DID of the new actor: %v\n", did)
 }
