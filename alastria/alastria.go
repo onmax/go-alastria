@@ -10,7 +10,7 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
-// Initialites the client that any actor interacting with the network should use. It can be:
+// Initializes the client that any actor interacting with the network should use. It can be:
 // subject, issuer, or service provider.
 // args.NodeUrl is mandatory
 // args.Keystore is not mandatory, but it is required if you want to sign JWT or tx
