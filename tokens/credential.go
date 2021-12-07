@@ -1,9 +1,13 @@
 package tokens
 
-import "fmt"
+import (
+	"fmt"
+
+	alaTypes "github.com/onmax/go-alastria/types"
+)
 
 type Credential struct {
-	Header  *Header            `json:"header,omitempty"`
+	Header  *alaTypes.Header   `json:"header,omitempty"`
 	Payload *CredentialPayload `json:"payload,omitempty"`
 }
 
@@ -33,7 +37,7 @@ var defaultCredentialContextURLs = [2]string{"https://www.w3.org/2018/credential
 // Sets default values if they are empty and they are required
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.AlastriaToken, payload.CreateAlastriaTX and payload.PublicKey
-func CreateCredential(header *Header, payload *CredentialPayload) (*Credential, error) {
+func CreateCredential(header *alaTypes.Header, payload *CredentialPayload) (*Credential, error) {
 	if err := ValidateHeader(header); err != nil {
 		return nil, err
 	}
@@ -46,6 +50,31 @@ func CreateCredential(header *Header, payload *CredentialPayload) (*Credential, 
 			Header:  header,
 			Payload: payload},
 		nil
+}
+
+// Decodes an Credential from a signed JWT
+func DecodeCredential(signedCredential string) (*Credential, error) {
+	header64, payload64, _, err := SplitJWT(signedCredential)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := b64ToJwt(header64, payload64, "Credential")
+	if err != nil {
+		return nil, err
+	}
+	credential := &jwt.Credential
+
+	errH := ValidateHeader(credential.Header)
+	if errH != nil {
+		return nil, errH
+	}
+
+	errP := ValidateCredentialPayload(credential.Payload)
+	if errP != nil {
+		return nil, errP
+	}
+
+	return credential, nil
 }
 
 // Validates the Credential according to the specification

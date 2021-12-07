@@ -1,15 +1,12 @@
 package tokens
 
 import (
+	"encoding/json"
 	"fmt"
-)
+	"strconv"
 
-type Header struct {
-	Algorithm    string `json:"alg,omitempty"`
-	Type         string `json:"typ,omitempty"`
-	JSONWebToken string `json:"jwk,omitempty"`
-	KeyID        string `json:"kid,omitempty"`
-}
+	alaTypes "github.com/onmax/go-alastria/types"
+)
 
 // Checks if list contains the given string
 func stringInSlice(a string, list []string) bool {
@@ -30,7 +27,7 @@ var validHeaderAlgorithms = [...]string{"ES256K"}
 // https://github.com/alastria/alastria-identity/wiki/Artifacts-and-User-Stories-Definitions#0-artifacts-definition
 // Sets default values to header.Type and header.Algorithm if they are empty.
 // If header.Type or header.Algorithm are invalid also throws an error.
-func ValidateHeader(header *Header) error {
+func ValidateHeader(header *alaTypes.Header) error {
 
 	if header == nil {
 		return fmt.Errorf("header is nil")
@@ -113,12 +110,46 @@ func checkLevelOfAssurance(_data *map[string]interface{}) error {
 	if loaI == nil {
 		return fmt.Errorf("levelOfAssurance is empty")
 	}
-	loa, ok := loaI.(int)
-	if !ok {
-		return fmt.Errorf("levelOfAssurance is not a int")
+	loa, err := interfaceToInt(loaI)
+	if err != nil {
+		return err
 	}
-	if loa > 3 {
+
+	if loa < 0 || loa > 3 {
 		return fmt.Errorf("levelOfAssurance is invalid. Only 0, 1, 2, 3 are valid")
 	}
 	return nil
+}
+
+func interfaceToInt(data interface{}) (float64, error) {
+	var res string
+	switch v := data.(type) {
+	case float64:
+		res = strconv.FormatFloat(data.(float64), 'f', 6, 64)
+	case float32:
+		res = strconv.FormatFloat(float64(data.(float32)), 'f', 6, 32)
+	case int:
+		res = strconv.FormatInt(int64(data.(int)), 10)
+	case int64:
+		res = strconv.FormatInt(data.(int64), 10)
+	case uint:
+		res = strconv.FormatUint(uint64(data.(uint)), 10)
+	case uint64:
+		res = strconv.FormatUint(data.(uint64), 10)
+	case uint32:
+		res = strconv.FormatUint(uint64(data.(uint32)), 10)
+	case json.Number:
+		res = data.(json.Number).String()
+	case string:
+		res = data.(string)
+	case []byte:
+		res = string(v)
+	default:
+		res = ""
+	}
+	v, e := strconv.ParseFloat(res, 32)
+	if e != nil {
+		return 0, e
+	}
+	return v, nil
 }

@@ -2,11 +2,13 @@ package tokens
 
 import (
 	"fmt"
+
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 type PR struct {
-	Header  *Header    `json:"header,omitempty"`
-	Payload *PRPayload `json:"payload,omitempty"`
+	Header  *alaTypes.Header `json:"header,omitempty"`
+	Payload *PRPayload       `json:"payload,omitempty"`
 }
 
 type PRPayload struct {
@@ -51,7 +53,7 @@ var defaultPresentationRequestContextURLs = [1]string{"https://alastria.github.i
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.Issuer, payload.CallbackURL, payload.VerifiableCredential.ProcessHash,
 // payload.VerifiablePresentation.ProcessUrl and payload.VerifiablePresentation.Data
-func CreatePresentationRequest(header *Header, payload *PRPayload) (*PR, error) {
+func CreatePresentationRequest(header *alaTypes.Header, payload *PRPayload) (*PR, error) {
 	if err := ValidateHeader(header); err != nil {
 		return nil, err
 	}
@@ -64,6 +66,27 @@ func CreatePresentationRequest(header *Header, payload *PRPayload) (*PR, error) 
 			Header:  header,
 			Payload: payload},
 		nil
+}
+
+// Decodes an PR from a signed JWT
+func DecodePR(signedPr string) (*PR, error) {
+	header64, payload64, _, err := SplitJWT(signedPr)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := b64ToJwt(header64, payload64, "PR")
+	if err != nil {
+		return nil, err
+	}
+	pr := &jwt.PR
+
+	errH := ValidateHeader(pr.Header)
+	errP := ValidatePRPayload(pr.Payload)
+
+	if errH != nil || errP != nil {
+		return nil, err
+	}
+	return pr, nil
 }
 
 // Validates the PresentationRequest according to the specification

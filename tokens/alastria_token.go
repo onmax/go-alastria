@@ -1,8 +1,10 @@
 package tokens
 
+import alaTypes "github.com/onmax/go-alastria/types"
+
 type AT struct {
-	Header  *Header    `json:"header,omitempty"`
-	Payload *ATPayload `json:"payload,omitempty"`
+	Header  *alaTypes.Header `json:"header,omitempty"`
+	Payload *ATPayload       `json:"payload,omitempty"`
 }
 
 type ATPayload struct {
@@ -13,7 +15,7 @@ type ATPayload struct {
 	NotBefore                 uint64   `json:"nbf,omitempty"`
 	Issuer                    string   `json:"iss,omitempty"`
 	Types                     []string `json:"type,omitempty"`
-	AlastriaNetworkId         string   `json:"any,omitempty"`
+	AlastriaNetworkId         string   `json:"ani,omitempty"`
 	CallbackURL               string   `json:"cbu,omitempty"`
 	GatewayURL                string   `json:"gwu,omitempty"`
 	MultiFactorAuthentication string   `json:"mfau,omitempty"` // ! probably better with just 3 letter "mfa" as the rest of properties
@@ -29,7 +31,7 @@ var validATTypes = append([]string{"US12", "US211", "US221", "US231", "US142"}, 
 // Sets default values if they are empty and they are required
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: AlastriaToken.GatewayURL, AlastriaToken.Issuer, AlastriaToken.CallbackURL, AlastriaToken.AlastriaNetworkId
-func CreateAlastriaToken(header *Header, payload *ATPayload) (*AT, error) {
+func CreateAlastriaToken(header *alaTypes.Header, payload *ATPayload) (*AT, error) {
 	if err := ValidateHeader(header); err != nil {
 		return nil, err
 	}
@@ -42,6 +44,27 @@ func CreateAlastriaToken(header *Header, payload *ATPayload) (*AT, error) {
 			Header:  header,
 			Payload: payload},
 		nil
+}
+
+// Decodes an AlastriaToken from a signed JWT
+func DecodeAlastriaToken(signedAT string) (*AT, error) {
+	header64, payload64, _, err := SplitJWT(signedAT)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := b64ToJwt(header64, payload64, "AT")
+	if err != nil {
+		return nil, err
+	}
+	at := &jwt.AlastriaToken
+
+	errH := ValidateHeader(at.Header)
+	errP := ValidateATPayload(at.Payload)
+
+	if errH != nil || errP != nil {
+		return nil, err
+	}
+	return at, nil
 }
 
 // Validates the AlastriaToken according to the specification

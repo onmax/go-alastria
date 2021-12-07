@@ -6,11 +6,13 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func TestCreateAlastriaIdentityCreation(t *testing.T) {
 	type args struct {
-		header  *Header
+		header  *alaTypes.Header
 		payload *AICPayload
 	}
 	tests := []struct {
@@ -23,7 +25,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 		{
 			name: "test with all values",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -42,7 +44,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 				},
 			},
 			want: &AIC{
-				Header: &Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -65,7 +67,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 		{
 			name: "test with optional values",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -77,7 +79,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 				},
 			},
 			want: &AIC{
-				Header: &Header{
+				Header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -95,7 +97,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 		{
 			name: "test without AlastriaToken which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -111,7 +113,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 		{
 			name: "test without PublicKey which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -126,7 +128,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 		{
 			name: "test without CreateAlastriaTX which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -141,7 +143,7 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 		{
 			name: "test invalid type",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -171,6 +173,55 @@ func TestCreateAlastriaIdentityCreation(t *testing.T) {
 				a, _ := json.Marshal(got)
 				b, _ := json.Marshal(tt.want)
 				t.Errorf("CreateAlastriaIdentityCreation() -> %s \n\tgot:  %s,\n\twant: %s", tt.name, string(a), string(b))
+			}
+		})
+	}
+}
+
+func TestDecodeAIC(t *testing.T) {
+	type args struct {
+		signedAIC string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *AIC
+		wantErr bool
+	}{
+		{
+			name: "Should decode an AIC successfully",
+			args: args{
+				signedAIC: "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsInB1YmxpY0tleSI6InB1YmxpYy1rZXkiLCJqdGkiOiJqc29uLXRva2VuLWlkIiwiY3JlYXRlQWxhc3RyaWFUWCI6ImNyZWF0ZS1hbGFzdHJpYS10eCIsImFsYXN0cmlhVG9rZW4iOiJhbGFzdHJpYS10b2tlbiIsIkBjb250ZXh0IjpbImh0dHBzOi8vYWxhc3RyaWEuZ2l0aHViLmlvL2lkZW50aXR5L2FydGlmYWN0cy92MSJdLCJ0eXBlIjpbIkFsYXN0cmlhSWRlbnRpdHlDcmVhdGlvbiIsIlVTMTIiXX0.Fjjy_24sitUYVpLnsQkqet7nl6zb70wg7A2QvZAkHO0cCZGQzoTOA4CAvTNn2-b0QPR_vgoNJ--PuZlxBEBBBg",
+			},
+			want: &AIC{
+				Header: &alaTypes.Header{
+					Algorithm:    "ES256K",
+					Type:         "JWT",
+					KeyID:        "key-id",
+					JSONWebToken: "json-web-token",
+				},
+				Payload: &AICPayload{
+					IssuedAt:         1,
+					PublicKey:        "public-key",
+					JSONTokenId:      "json-token-id",
+					CreateAlastriaTX: "create-alastria-tx",
+					AlastriaToken:    "alastria-token",
+					Contexts:         []string{"https://alastria.github.io/identity/artifacts/v1"},
+					Types:            []string{"AlastriaIdentityCreation", "US12"},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := DecodeAIC(tt.args.signedAIC)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DecodeAIC() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DecodeAIC() = %v, want %v", got, tt.want)
 			}
 		})
 	}

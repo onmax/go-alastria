@@ -7,6 +7,7 @@ import (
 
 	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/tokens"
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 var tempFolder string = "test-data__temp"
@@ -84,7 +85,7 @@ func TestImportKs(t *testing.T) {
 			return
 		}
 		at := tokens.AT{
-			Header: &tokens.Header{
+			Header: &alaTypes.Header{
 				Algorithm:    "ES256K",
 				Type:         "JWT",
 				KeyID:        "key-id",

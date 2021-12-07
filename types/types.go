@@ -15,6 +15,13 @@ import (
 	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
 )
 
+type Header struct {
+	Algorithm    string `json:"alg,omitempty"`
+	Type         string `json:"typ,omitempty"`
+	JSONWebToken string `json:"jwk,omitempty"`
+	KeyID        string `json:"kid,omitempty"`
+}
+
 type Keystore struct {
 	Account       *keystore.Key
 	HexPublicKey  string
@@ -75,4 +82,5 @@ var (
 	ErrAddressNotSet   = errors.New("address not set")
 	ErrEthClientNotSet = errors.New("eth client not set")
 	ErrTxOptsNotSet    = errors.New("eth tx opts not set")
+	ErrInvalidJWT      = errors.New("invalid jwt")
 )

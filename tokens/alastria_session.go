@@ -1,8 +1,10 @@
 package tokens
 
+import alaTypes "github.com/onmax/go-alastria/types"
+
 type AS struct {
-	Header  *Header    `json:"header,omitempty"`
-	Payload *ASPayload `json:"payload,omitempty"`
+	Header  *alaTypes.Header `json:"header,omitempty"`
+	Payload *ASPayload       `json:"payload,omitempty"`
 }
 
 type ASPayload struct {
@@ -27,7 +29,7 @@ var validASTypes = append([]string{"US211", "US221", "US142"}, defaultASType[:].
 // Sets default values if they are empty and they are required
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.AlastriaToken and AlastriaToken.Issuer
-func CreateAlastriaSession(header *Header, payload *ASPayload) (*AS, error) {
+func CreateAlastriaSession(header *alaTypes.Header, payload *ASPayload) (*AS, error) {
 	if err := ValidateHeader(header); err != nil {
 		return nil, err
 	}
@@ -40,6 +42,27 @@ func CreateAlastriaSession(header *Header, payload *ASPayload) (*AS, error) {
 			Header:  header,
 			Payload: payload},
 		nil
+}
+
+// Decodes an AlastriaSession from a signed JWT
+func DecodeAlastriaSession(signedAS string) (*AS, error) {
+	header64, payload64, _, err := SplitJWT(signedAS)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := b64ToJwt(header64, payload64, "AS")
+	if err != nil {
+		return nil, err
+	}
+	as := &jwt.AlastriaSession
+
+	errH := ValidateHeader(as.Header)
+	errP := ValidateASPayload(as.Payload)
+
+	if errH != nil || errP != nil {
+		return nil, err
+	}
+	return as, nil
 }
 
 // Validates the AlastriaSession according to the specification

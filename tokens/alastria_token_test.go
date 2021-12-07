@@ -6,11 +6,13 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func TestCreateAlastriaToken(t *testing.T) {
 	type args struct {
-		header  *Header
+		header  *alaTypes.Header
 		payload *ATPayload
 	}
 	tests := []struct {
@@ -23,7 +25,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test with all values",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -42,7 +44,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 				},
 			},
 			want: &AT{
-				Header: &Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -65,7 +67,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test with optional values",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -78,7 +80,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 				},
 			},
 			want: &AT{
-				Header: &Header{
+				Header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -96,7 +98,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test without Issuer which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -112,7 +114,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test without AlastriaNetworkId which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -128,7 +130,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test without CallbackURL which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -144,7 +146,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test without GatewayURL which is mandatory",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -160,7 +162,7 @@ func TestCreateAlastriaToken(t *testing.T) {
 		{
 			name: "test invalid type",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -191,6 +193,74 @@ func TestCreateAlastriaToken(t *testing.T) {
 				a, _ := json.Marshal(got)
 				b, _ := json.Marshal(tt.want)
 				t.Errorf("CreateAlastriaToken() -> %s \n\tgot:  %s,\n\twant: %s", tt.name, string(a), string(b))
+			}
+		})
+	}
+}
+
+func TestDecodeAlastriaToken(t *testing.T) {
+	type args struct {
+		signedAT string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *AT
+		wantErr bool
+	}{
+		{
+			name: "Should decode an AT successfully",
+			args: args{
+				signedAT: "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsInR5cGUiOlsiQWxhc3RyaWFUb2tlbiJdLCJhbmkiOiJhbGFzdHJpYS1uZXR3b3JrLWlkIiwiY2J1IjoiY2FsbGJhY2stdXJsIiwiZ3d1IjoiZ2F0ZXdheS11cmwifQ.Y8q5Le6LGBxY8BhYZMWe2KJOzWqD_Mroy7PTiqlHsnBJXqLn7je_F8lPjqMv4l9_bdHrdz2eXh3ra3M_XPfJJA",
+			},
+			want: &AT{
+				Header: &alaTypes.Header{
+					Algorithm:    "ES256K",
+					Type:         "JWT",
+					KeyID:        "key-id",
+					JSONWebToken: "json-web-token",
+				},
+				Payload: &ATPayload{
+					IssuedAt:          1,
+					Issuer:            "issuer",
+					AlastriaNetworkId: "alastria-network-id",
+					CallbackURL:       "callback-url",
+					GatewayURL:        "gateway-url",
+					Types:             []string{"AlastriaToken"},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := DecodeAlastriaToken(tt.args.signedAT)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DecodeAlastriaToken() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DecodeAlastriaToken() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestValidateATPayload(t *testing.T) {
+	type args struct {
+		payload *ATPayload
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := ValidateATPayload(tt.args.payload); (err != nil) != tt.wantErr {
+				t.Errorf("ValidateATPayload() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

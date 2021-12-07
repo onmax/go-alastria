@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func TestStringInSlice(t *testing.T) {
@@ -43,13 +45,13 @@ func TestStringInSlice(t *testing.T) {
 
 func TestValidateHeader(t *testing.T) {
 	type args struct {
-		header *Header
+		header *alaTypes.Header
 	}
 	tests := []struct {
 		name             string
 		args             args
 		wantErr          bool
-		expectedHeader   *Header
+		expectedHeader   *alaTypes.Header
 		errorMsgContains string
 	}{
 		{
@@ -61,10 +63,10 @@ func TestValidateHeader(t *testing.T) {
 		{
 			name: "without default types",
 			args: args{
-				header: &Header{},
+				header: &alaTypes.Header{},
 			},
 			wantErr: false,
-			expectedHeader: &Header{
+			expectedHeader: &alaTypes.Header{
 				Algorithm: "ES256K",
 				Type:      "JWT",
 			},
@@ -72,7 +74,7 @@ func TestValidateHeader(t *testing.T) {
 		{
 			name: "invalid type",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Type: "invalid",
 				},
 			},
@@ -82,7 +84,7 @@ func TestValidateHeader(t *testing.T) {
 		{
 			name: "invalid algorithm",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "invalid",
 				},
 			},
@@ -92,13 +94,13 @@ func TestValidateHeader(t *testing.T) {
 		{
 			name: "valid",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
 			},
 			wantErr: false,
-			expectedHeader: &Header{
+			expectedHeader: &alaTypes.Header{
 				Algorithm: "ES256K",
 				Type:      "JWT",
 			},
@@ -106,7 +108,7 @@ func TestValidateHeader(t *testing.T) {
 		{
 			name: "valid with all values",
 			args: args{
-				header: &Header{
+				header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -114,7 +116,7 @@ func TestValidateHeader(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			expectedHeader: &Header{
+			expectedHeader: &alaTypes.Header{
 				Algorithm:    "ES256K",
 				Type:         "JWT",
 				KeyID:        "key-id",
@@ -324,20 +326,26 @@ func TestCheckLevelOfAssurance(t *testing.T) {
 			errorMsgContains: "levelOfAssurance is empty",
 		},
 		{
+			name:             "levelOfAssurance is negative",
+			args:             args{data: &map[string]interface{}{"levelOfAssurance": -1}},
+			wantErr:          true,
+			errorMsgContains: "levelOfAssurance is not a uint8",
+		},
+		{
 			name:             "levelOfAssurance is not a uint8",
 			args:             args{data: &map[string]interface{}{"levelOfAssurance": 10}},
 			wantErr:          true,
-			errorMsgContains: "levelOfAssurance is not a int",
+			errorMsgContains: "levelOfAssurance is not a uint8",
 		},
 		{
 			name:             "levelOfAssurance is not in the valid range",
-			args:             args{data: &map[string]interface{}{"levelOfAssurance": int(4)}},
+			args:             args{data: &map[string]interface{}{"levelOfAssurance": 4}},
 			wantErr:          true,
 			errorMsgContains: "levelOfAssurance is invalid. Only 0, 1, 2, 3 are valid",
 		},
 		{
 			name:             "levelOfAssurance is valid",
-			args:             args{data: &map[string]interface{}{"levelOfAssurance": int(0)}},
+			args:             args{data: &map[string]interface{}{"levelOfAssurance": 0}},
 			wantErr:          false,
 			errorMsgContains: "",
 		},

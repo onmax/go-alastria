@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/onmax/go-alastria/tokens"
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func TestSign(t *testing.T) {
@@ -20,7 +21,7 @@ func TestSign(t *testing.T) {
 		{
 			name: "Should sign an AIC successfully",
 			args: args{jwt: tokens.AIC{
-				Header: &tokens.Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -44,7 +45,7 @@ func TestSign(t *testing.T) {
 		{
 			name: "Should sign an AT successfully",
 			args: args{jwt: tokens.AT{
-				Header: &tokens.Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -61,13 +62,13 @@ func TestSign(t *testing.T) {
 			},
 				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
 			},
-			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsInR5cGUiOlsiQWxhc3RyaWFUb2tlbiJdLCJhbnkiOiJhbGFzdHJpYS1uZXR3b3JrLWlkIiwiY2J1IjoiY2FsbGJhY2stdXJsIiwiZ3d1IjoiZ2F0ZXdheS11cmwifQ.FqgrhuoWdAc0niL0o9RnO_yxIqZl5y_TGC-ulZ8j6iZjmz2uL8x_Q6ssY5ZAaOa1XlZBD4ZJWAjC5oyMEnPaPw",
+			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsInR5cGUiOlsiQWxhc3RyaWFUb2tlbiJdLCJhbmkiOiJhbGFzdHJpYS1uZXR3b3JrLWlkIiwiY2J1IjoiY2FsbGJhY2stdXJsIiwiZ3d1IjoiZ2F0ZXdheS11cmwifQ.Y8q5Le6LGBxY8BhYZMWe2KJOzWqD_Mroy7PTiqlHsnBJXqLn7je_F8lPjqMv4l9_bdHrdz2eXh3ra3M_XPfJJA",
 			wantErr: false,
 		},
 		{
 			name: "Should sign an AS successfully",
 			args: args{jwt: tokens.AS{
-				Header: &tokens.Header{
+				Header: &alaTypes.Header{
 					Algorithm: "ES256K",
 					Type:      "JWT",
 				},
@@ -87,7 +88,7 @@ func TestSign(t *testing.T) {
 		{
 			name: "Should sign an Credential successfully",
 			args: args{jwt: tokens.Credential{
-				Header: &tokens.Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -112,7 +113,7 @@ func TestSign(t *testing.T) {
 		{
 			name: "Should sign an Presentation successfully",
 			args: args{jwt: tokens.Presentation{
-				Header: &tokens.Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",
@@ -137,7 +138,7 @@ func TestSign(t *testing.T) {
 		{
 			name: "Should sign an PresentationRequest successfully",
 			args: args{jwt: tokens.PR{
-				Header: &tokens.Header{
+				Header: &alaTypes.Header{
 					Algorithm:    "ES256K",
 					Type:         "JWT",
 					KeyID:        "key-id",

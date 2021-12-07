@@ -1,8 +1,10 @@
 package tokens
 
+import alaTypes "github.com/onmax/go-alastria/types"
+
 type AIC struct {
-	Header  *Header     `json:"header,omitempty"`
-	Payload *AICPayload `json:"payload,omitempty"`
+	Header  *alaTypes.Header `json:"header,omitempty"`
+	Payload *AICPayload      `json:"payload,omitempty"`
 }
 
 type AICPayload struct {
@@ -28,7 +30,7 @@ var validAICTypes = append([]string{"US12"}, defaultAICType[:]...)
 // Sets default values if they are empty and they are required
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.AlastriaToken, payload.CreateAlastriaTX and payload.PublicKey
-func CreateAlastriaIdentityCreation(header *Header, payload *AICPayload) (*AIC, error) {
+func CreateAlastriaIdentityCreation(header *alaTypes.Header, payload *AICPayload) (*AIC, error) {
 	if err := ValidateHeader(header); err != nil {
 		return nil, err
 	}
@@ -41,6 +43,27 @@ func CreateAlastriaIdentityCreation(header *Header, payload *AICPayload) (*AIC, 
 			Header:  header,
 			Payload: payload},
 		nil
+}
+
+// Decodes an AIC from a signed JWT
+func DecodeAIC(signedAIC string) (*AIC, error) {
+	header64, payload64, _, err := SplitJWT(signedAIC)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := b64ToJwt(header64, payload64, "AIC")
+	if err != nil {
+		return nil, err
+	}
+	aic := &jwt.AIC
+
+	errH := ValidateHeader(aic.Header)
+	errP := ValidateAICPayload(aic.Payload)
+
+	if errH != nil || errP != nil {
+		return nil, err
+	}
+	return aic, nil
 }
 
 // Validates the AIC according to the specification

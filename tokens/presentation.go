@@ -1,9 +1,13 @@
 package tokens
 
-import "fmt"
+import (
+	"fmt"
+
+	alaTypes "github.com/onmax/go-alastria/types"
+)
 
 type Presentation struct {
-	Header  *Header              `json:"header,omitempty"`
+	Header  *alaTypes.Header     `json:"header,omitempty"`
 	Payload *PresentationPayload `json:"payload,omitempty"`
 }
 
@@ -38,7 +42,7 @@ var defaultPresentationContextURLs = [2]string{"https://www.w3.org/2018/credenti
 // Returns an error if a mandatory field is empty
 // Mandatory fields are: payload.Issuer, payload.Audience, payload.VerifiablePresentation.ProcessHash,
 // payload.VerifiablePresentation.ProcessUrl and payload.VerifiableCredential.VerifiableCredentials
-func CreatePresentation(header *Header, payload *PresentationPayload) (*Presentation, error) {
+func CreatePresentation(header *alaTypes.Header, payload *PresentationPayload) (*Presentation, error) {
 	if err := ValidateHeader(header); err != nil {
 		return nil, err
 	}
@@ -51,6 +55,27 @@ func CreatePresentation(header *Header, payload *PresentationPayload) (*Presenta
 			Header:  header,
 			Payload: payload},
 		nil
+}
+
+// Decodes an Presentation from a signed JWT
+func DecodePresentation(signedPresenation string) (*Presentation, error) {
+	header64, payload64, _, err := SplitJWT(signedPresenation)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := b64ToJwt(header64, payload64, "Presentation")
+	if err != nil {
+		return nil, err
+	}
+	p := &jwt.Presentation
+
+	errH := ValidateHeader(p.Header)
+	errP := ValidatePresentationPayload(p.Payload)
+
+	if errH != nil || errP != nil {
+		return nil, err
+	}
+	return p, nil
 }
 
 // Validates the Presentation according to the specification

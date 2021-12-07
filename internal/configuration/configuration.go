@@ -31,3 +31,18 @@ var (
 //
 // End of configuration for network package
 //
+
+// Configuration for tokens
+var (
+	Kid         = "did:ala:quor:redt:d2f868f056ef3a48bbc8d446dfed411e9bf93ab0#keys-1"
+	DidEntity   = "did:ala:quor:redT:d2f868f056ef3a48bbc8d446dfed411e9bf93ab0"
+	ProviderURL = "https://your-provider-url.com"
+	CallbackUrl = "https://your-backend-url.com"
+	Exp         = uint64(2036798552159)
+	Iat         = uint64(1636798552159)
+	Jti         = "your-unique-at-id"
+
+	TypesAT12     = []string{"AlastriaToken", "US12"}
+	TypesAIC12    = []string{"AlastriaIdentityCreation", "US12"}
+	ContextsAIC12 = []string{"https://alastria.github.io/identity/artifacts/v1"}
+)

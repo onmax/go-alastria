@@ -160,7 +160,7 @@ package tx
 // 	iat := uint64(1636798552159)
 // 	jti := "ze298y42sba"
 // 	at := tokens.AT{
-// 		Header: &tokens.Header{
+// 		Header: &alaTypes.Header{
 // 			Algorithm:    "ES256K",
 // 			Type:         "JWT",
 // 			KeyID:        kidCredential,
@@ -191,7 +191,7 @@ package tx
 // 	createAlastriaIdTx := "0x" + hex.EncodeToString(b)
 
 // 	aic := tokens.AIC{
-// 		Header: &tokens.Header{
+// 		Header: &alaTypes.Header{
 // 			Algorithm:    "ES256K",
 // 			Type:         "JWT",
 // 			KeyID:        "key-id",
