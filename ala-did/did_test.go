@@ -65,10 +65,11 @@ func TestDid_String(t *testing.T) {
 			name: "did ok",
 			fields: fields{
 				Protocol:     "ala",
-				Network:      "test",
-				NetworkId:    "test",
-				ProxyAddress: "test",
+				Network:      "net",
+				NetworkId:    "netid",
+				ProxyAddress: "0123456789abcdef0123456789abcdef01234567",
 			},
+			want: "did:ala:net:netid:0123456789abcdef0123456789abcdef01234567",
 		},
 	}
 	for _, tt := range tests {
