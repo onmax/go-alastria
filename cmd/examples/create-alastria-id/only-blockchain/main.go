@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
-	"github.com/onmax/go-alastria/cmd"
+	exampleutil "github.com/onmax/go-alastria/cmd/examples"
 	"github.com/onmax/go-alastria/internal/configuration"
 )
 
@@ -35,7 +35,7 @@ func main() {
 
 func step2__newAgentSignsTx() (*types.Transaction, string) {
 	// The new agent needs to connect to the network
-	newAgentConnConf := cmd.GetClientConf("../../../assets/keystores/subject.json")
+	newAgentConnConf := exampleutil.GetClientConf("../../../assets/keystores/subject.json")
 	newAgentClient, _ := alastria.NewClient(newAgentConnConf)
 
 	// The subject, from the wallet, should build the tx createAlastriaId and sign it
@@ -45,7 +45,7 @@ func step2__newAgentSignsTx() (*types.Transaction, string) {
 
 func step3__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *types.Transaction, newActorPublicKey string) {
 	// The entity needs to connect to the network
-	entityArgs := cmd.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, newActorPublicKey)
@@ -56,7 +56,7 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *types.Transact
 
 func step4__buildNewAgentDid(newActorPub string) {
 	// Any member can connect to the network to do this step, in this case will be the entity
-	entityArgs := cmd.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	newActorAddress, _ := alastria.PublicKeyToAddress(newActorPub)

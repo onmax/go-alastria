@@ -5,7 +5,7 @@ import (
 
 	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
-	"github.com/onmax/go-alastria/cmd"
+	exampleutil "github.com/onmax/go-alastria/cmd/examples"
 	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/internal/configuration"
@@ -51,7 +51,7 @@ func main() {
 }
 
 func step1__entityGeneratesAT() string {
-	entityConf := cmd.GetDisconnectedClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityConf := exampleutil.GetDisconnectedClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityConf)
 
 	at := tokens.AT{
@@ -78,7 +78,7 @@ func step1__entityGeneratesAT() string {
 
 func step2(signedAT string) string {
 	// The new agent needs to connect to the network
-	newAgentConnConf := cmd.GetClientConf("../../../assets/keystores/subject.json")
+	newAgentConnConf := exampleutil.GetClientConf("../../../assets/keystores/subject.json")
 	newAgentClient, _ := alastria.NewClient(newAgentConnConf)
 
 	crypto.Verify(signedAT, newAgentClient.Client.Ks.HexPublicKey) // Remember to check the return value
@@ -122,7 +122,7 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedAIC string) {
 	crypto.Verify(signedAIC, aic.Payload.PublicKey) // Remember to check the return value of Verify
 
 	// The entity needs to connect to the network if not already is
-	entityArgs := cmd.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	// Convert hex tx to tx struct
@@ -138,7 +138,7 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedAIC string) {
 
 func step4__buildNewAgentDid(newActorPub string) *alaDid.Did {
 	// Any member can connect to the network to do this step, in this case will be the entity
-	entityArgs := cmd.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	newActorAddress, _ := alastria.PublicKeyToAddress(newActorPub)
