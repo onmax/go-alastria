@@ -9,4 +9,4 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 
 ### How to use it?
 
-For now, you can go to [examples](./cmd)
+For now, you can go to [examples](./cmd/examples) to see how you can use it.
