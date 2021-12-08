@@ -38,6 +38,12 @@ An `entity` wants to create a new DID for a new actor(`newActor`). This new acto
 
 > Info: The Alastria ID framework is a complex specification that uses many technologies/layers. At least, it has the following layers: blockchain, JWTs(artifacts) and `HTTP API`. The official docs do not emphasize in its differences and its requirements and there is not really much documentation except for the JWTs (See [other resources](#other-resources)). Therefore, in this examples, there are some parts of the algorithm that are highly opinionated and others developers could implement in other ways.
 
+### Code
+
+You can check two examples on how to create new DID on Alastria:
+- [Full code](./full-example/main.go): Shows how to use `go-alastria` with tokens(`AT` and `AIC`) to send the information between entity and the new actor through any mean of communication. And then, it shows how to generate and send transactions to the blockchain.
+- [Only blockchain interaction](./only-blockchain/main.go): Shows only the code that is required to generates and send the transactions. This is a simplified version of `Full code`
+
 ## Other resources
 
 - The code in this folder is heavily based on the [official Alastria examples/CreateAlastriaID](https://github.com/alastria/alastria-identity-example/tree/master/exampleCreateAlastriaID)

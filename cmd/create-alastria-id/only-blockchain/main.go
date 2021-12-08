@@ -10,6 +10,8 @@ import (
 	"github.com/onmax/go-alastria/internal/configuration"
 )
 
+// More information about this process in the ../README.md
+
 func main() {
 	fmt.Printf("\n------ Creating new actor | Only blockchain part ------ \n\n")
 	fmt.Printf("To simplify the code, errors are not being checked\n\n")

@@ -13,7 +13,7 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
-// More information about this process in the README.md
+// More information about this process in the ../README.md
 
 func main() {
 	fmt.Printf("\n------ Creating new actor ------ \n\n")
