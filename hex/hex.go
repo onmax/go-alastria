@@ -1,11 +1,8 @@
 package hex
 
 import (
-	"crypto/ecdsa"
-	"fmt"
-	"math/big"
-
-	"github.com/ethereum/go-ethereum/crypto"
+	"encoding/hex"
+	ehex "encoding/hex"
 )
 
 func Remove0x(input string) string {
@@ -15,20 +12,23 @@ func Remove0x(input string) string {
 	return input
 }
 
-func HexToECDSAPub(_pub string) (*ecdsa.PublicKey, error) {
-	var ok bool
-
-	x := new(big.Int)
-	x, ok = x.SetString(_pub[:len(_pub)/2], 16)
-	if !ok {
-		return nil, fmt.Errorf("invalid hex")
+func Add0x(input string) string {
+	if len(input) > 0 && input[:2] != "0x" {
+		return "0x" + input
 	}
+	return input
+}
 
-	y := new(big.Int)
-	y, ok = y.SetString(_pub[len(_pub)/2:], 16)
-	if !ok {
-		return nil, fmt.Errorf("invalid hex")
+// Converts byte array to hex string
+func ByteArrToHex(input []byte) string {
+	return ehex.EncodeToString(input)
+}
+
+// Converts input hex string to byte array
+func HexToByteArr(input string) ([]byte, error) {
+	decodedByteArray, err := hex.DecodeString(Remove0x(input))
+	if err != nil {
+		return nil, err
 	}
-
-	return &ecdsa.PublicKey{X: x, Y: y, Curve: crypto.S256()}, nil
+	return decodedByteArray, nil
 }

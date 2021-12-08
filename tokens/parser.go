@@ -179,6 +179,7 @@ func JwtToB64(jwt interface{}) (string, string, error) {
 }
 
 func SplitJWT(signedJWT string) (string, string, string, error) {
+	// TODO Check that has string length of at least 2
 	parts := strings.Split(signedJWT, ".")
 
 	if len(parts) != 3 {

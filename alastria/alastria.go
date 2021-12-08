@@ -4,6 +4,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/client"
+	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/network"
 	"github.com/onmax/go-alastria/tx"
@@ -36,7 +37,23 @@ func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
 	return network.SendTx(conn, tx)
 }
 
-func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address) (*types.Transaction, error) {
+func PublicKeyToAddress(publicKey string) (common.Address, error) {
+	return crypto.PublicKeyToAddress(publicKey)
+}
+
+func HexToTx(txStr string) (*types.Transaction, error) {
+	return tx.HexToTx(txStr)
+}
+
+func TxToHex(tx_ *types.Transaction) (string, error) {
+	return tx.TxToHex(tx_)
+}
+
+func PrepareAlastriaId(conn *alaTypes.Connection, newActorPublicKey string) (*types.Transaction, error) {
+	newActorAddress, err := crypto.PublicKeyToAddress(newActorPublicKey)
+	if err != nil {
+		return nil, err
+	}
 	return tx.PrepareAlastriaId(conn, newActorAddress)
 }
 

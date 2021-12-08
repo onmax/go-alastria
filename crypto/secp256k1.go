@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/tokens"
 	secp256k1 "github.com/ureeves/jwt-go-secp256k1"
 )
@@ -39,7 +38,7 @@ func Verify(signed, _pub string) error {
 	if err != nil {
 		return err
 	}
-	pub, err := hex.HexToECDSAPub(_pub)
+	pub, err := HexToECDSAPub(_pub)
 	if err != nil {
 		return err
 	}
