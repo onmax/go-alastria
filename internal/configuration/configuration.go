@@ -1,6 +1,10 @@
 package configuration
 
-import "github.com/ethereum/go-ethereum/common"
+import (
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/common"
+)
 
 //
 // Configuration for network package
@@ -32,7 +36,9 @@ var (
 // End of configuration for network package
 //
 
-// Configuration for tokens
+//
+// Configuration for tokens package
+//
 var (
 	Kid         = "did:ala:quor:redt:d2f868f056ef3a48bbc8d446dfed411e9bf93ab0#keys-1"
 	DidEntity   = "did:ala:quor:redT:d2f868f056ef3a48bbc8d446dfed411e9bf93ab0"
@@ -46,3 +52,21 @@ var (
 	TypesAIC12    = []string{"AlastriaIdentityCreation", "US12"}
 	ContextsAIC12 = []string{"https://alastria.github.io/identity/artifacts/v1"}
 )
+
+//
+// End of configuration for tokens package
+//
+
+//
+// Configuration for tx package
+//
+var (
+	TxValue    = big.NewInt(0)
+	TxGasLimit = uint64(600000)
+	TxGasPrice = big.NewInt(0)
+	TxNoSend   = true
+)
+
+//
+// End of configuration for tx package
+//
