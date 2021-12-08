@@ -28,14 +28,12 @@ func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 		Tx: &alaTypes.TxClient{
 			Opts: &bind.TransactOpts{},
 		},
-		Contracts: &alaTypes.Contracts{},
+		Contracts: &alaTypes.Contracts{
+			Instances: &alaTypes.Instances{},
+			Addresses: &alaTypes.Addresses{},
+		},
 		Network:   &alaTypes.Network{},
 		Connected: false,
-	}
-
-	// Only connects to the network if NodeUrl is set
-	if args.NodeUrl != "" {
-		ConnectToNetwork(conn, args.NodeUrl)
 	}
 
 	err := SetKeystore(conn, args.Keystore)
@@ -43,17 +41,22 @@ func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 		return nil, err
 	}
 
-	err = setNetwork(conn, args)
-	if err != nil {
-		return nil, err
-	}
+	// Only connects to the network if NodeUrl is set
+	if args.NodeUrl != "" {
+		ConnectToNetwork(conn, args.NodeUrl)
 
-	err = setOpts(conn, args)
-	if err != nil {
-		return nil, err
-	}
+		err := setNetwork(conn, args)
+		if err != nil {
+			return nil, err
+		}
 
-	setContracts(conn, args)
+		err = setOpts(conn, args)
+		if err != nil {
+			return nil, err
+		}
+
+		setContracts(conn, args)
+	}
 
 	return conn, nil
 }
