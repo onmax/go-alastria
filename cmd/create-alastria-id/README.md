@@ -34,9 +34,9 @@ An `entity` wants to create a new DID for a new actor(`newActor`). This new acto
 
 --- 
 
-4. At this point, `Create Alastria ID - US1.2` is complete it. But, you need to call `IdentityKeys` to get the `did` given a public key of the `newActor`
+4. At this point, `Create Alastria ID - US1.2` is complete. But, you need to call `IdentityKeys` to get the `did` given the public key of the `newActor`
 
-> Info: The Alastria ID framework is a complex specification that uses many technologies/layer. At least, it has the following layers: blockchain, JWTs(artifacts) and `HTTP API`. The official docs do not emphasize in its differences and its requirements and there is not really much documentation except for the JWTs (See [other resources](#other-resources)). Therefore, in this examples, there are some parts of the algorithm that are highly opinionated and others developers could implement in other ways.
+> Info: The Alastria ID framework is a complex specification that uses many technologies/layers. At least, it has the following layers: blockchain, JWTs(artifacts) and `HTTP API`. The official docs do not emphasize in its differences and its requirements and there is not really much documentation except for the JWTs (See [other resources](#other-resources)). Therefore, in this examples, there are some parts of the algorithm that are highly opinionated and others developers could implement in other ways.
 
 ## Other resources
 
