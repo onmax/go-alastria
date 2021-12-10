@@ -1,10 +1,14 @@
 package alastria
 
 import (
+	"fmt"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/client"
 	"github.com/onmax/go-alastria/crypto"
+	"github.com/onmax/go-alastria/did"
+	"github.com/onmax/go-alastria/hash"
 	"github.com/onmax/go-alastria/hex"
 	"github.com/onmax/go-alastria/network"
 	"github.com/onmax/go-alastria/tx"
@@ -68,4 +72,36 @@ func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (strin
 	}
 
 	return hex.Remove0x(proxyAddress.Hash().Hex())[24:], nil
+}
+
+func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address) (string, error) {
+	return tx.GetCurrentPublicKey(conn, agentAddress)
+}
+
+func AddSubjectCredential(conn *alaTypes.Connection, signedJWT string, subjectDid string, URI string) (string, string, error) {
+	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, subjectDid)
+	addSubjectCredentialTx, err := tx.AddSubjectCredential(conn, psmHashByteArr, URI)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return "", "", err
+	}
+	return addSubjectCredentialTx.Hash().Hex(), psmHash, nil
+}
+
+func SignJWT(conn *alaTypes.Connection, jwt interface{}) (string, error) {
+	// TODO Check Keystore
+	return crypto.Sign(jwt, conn.Client.Ks.HexPrivateKey)
+}
+
+func VerifyJWT(signedJWT string, publicKey string) (bool, error) {
+	e := crypto.Verify(signedJWT, publicKey)
+	return e == nil, e
+}
+
+func NewDid(network, networkId, proxyAddress string) *alaTypes.Did {
+	return did.NewDid(network, networkId, proxyAddress)
+}
+
+func NewDidFromString(didStr string) (*alaTypes.Did, error) {
+	return did.NewDidFromString(didStr)
 }

@@ -3,6 +3,8 @@ package did
 import (
 	"reflect"
 	"testing"
+
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func TestNewDid(t *testing.T) {
@@ -14,7 +16,7 @@ func TestNewDid(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *Did
+		want *alaTypes.Did
 	}{
 		{
 			name: "did ok",
@@ -23,7 +25,7 @@ func TestNewDid(t *testing.T) {
 				networkId:    "test",
 				proxyAddress: "test",
 			},
-			want: &Did{
+			want: &alaTypes.Did{
 				Protocol:     "ala",
 				Network:      "test",
 				NetworkId:    "test",
@@ -66,15 +68,15 @@ func TestDid_String(t *testing.T) {
 			fields: fields{
 				Protocol:     "ala",
 				Network:      "net",
-				NetworkId:    "netid",
+				NetworkId:    "netId",
 				ProxyAddress: "0123456789abcdef0123456789abcdef01234567",
 			},
-			want: "did:ala:net:netid:0123456789abcdef0123456789abcdef01234567",
+			want: "did:ala:net:netId:0123456789abcdef0123456789abcdef01234567",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := &Did{
+			d := &alaTypes.Did{
 				Protocol:     tt.fields.Protocol,
 				Network:      tt.fields.Network,
 				NetworkId:    tt.fields.NetworkId,
