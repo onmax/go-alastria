@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/onmax/go-alastria/tx/txsender"
+	"github.com/onmax/go-alastria/blockchain/txsender"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
