@@ -36,9 +36,11 @@ func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 		Connected: false,
 	}
 
-	err := SetKeystore(conn, args.Keystore)
-	if err != nil {
-		return nil, err
+	if args.Keystore != nil {
+		err := SetKeystore(conn, args.Keystore)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Only connects to the network if NodeUrl is set
@@ -50,9 +52,11 @@ func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 			return nil, err
 		}
 
-		err = setOpts(conn, args)
-		if err != nil {
-			return nil, err
+		if args.Keystore != nil {
+			err = setOpts(conn, args)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		setContracts(conn, args)
@@ -100,7 +104,7 @@ func setNetwork(conn *alaTypes.Connection, args *alaTypes.ClientConf) error {
 // The user using args can set the address of the contract to interact with. If no
 // address is set, the default address of the contract will be used
 func setContracts(conn *alaTypes.Connection, args *alaTypes.ClientConf) {
-	var identityManager, publicKeyRegistry common.Address
+	var identityManager, publicKeyRegistry, credentialRegistry common.Address
 	if args.ContractAddresses.IdentityManager != (common.Address{}) {
 		identityManager = args.ContractAddresses.IdentityManager
 	} else {
@@ -111,12 +115,18 @@ func setContracts(conn *alaTypes.Connection, args *alaTypes.ClientConf) {
 	} else {
 		publicKeyRegistry = configuration.PublicKeyRegistry
 	}
+	if args.ContractAddresses.PublicKeyRegistry != (common.Address{}) {
+		credentialRegistry = args.ContractAddresses.CredentialRegistry
+	} else {
+		credentialRegistry = configuration.CredentialRegistry
+	}
 
 	conn.Contracts = &alaTypes.Contracts{
 		Instances: &alaTypes.Instances{},
 		Addresses: &alaTypes.Addresses{
-			IdentityManager:   identityManager,
-			PublicKeyRegistry: publicKeyRegistry,
+			IdentityManager:    identityManager,
+			PublicKeyRegistry:  publicKeyRegistry,
+			CredentialRegistry: credentialRegistry,
 		},
 	}
 }

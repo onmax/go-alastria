@@ -40,7 +40,7 @@ func PublicKeyToAddress(publicKeyStr string) (common.Address, error) {
 	var buf []byte
 
 	hash := sha3.NewLegacyKeccak256()
-	hash.Write(publicKey[:]) // remove EC prefix 04
+	hash.Write(publicKey[:])
 	buf = hash.Sum(nil)
 	publicAddress := hexutil.Encode(buf[12:])
 

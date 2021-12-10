@@ -34,10 +34,13 @@ func checkTransactionReceipt(conn *alaTypes.Connection, txHash common.Hash) uint
 	return tx.Status
 }
 
+// TODO Make another function async option and return channel
+
 // Sends a transaction to the network. It will wait until the transaction is mined blocking
 // the current thread checking once every second
 // conn needs to have a client set.
 func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
+	// TODO Add timeout
 	err := conn.Client.Eth.SendTransaction(context.Background(), tx)
 
 	if err != nil {
