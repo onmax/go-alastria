@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/core/types"
-	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
 	exampleutil "github.com/onmax/go-alastria/cmd/examples"
 	"github.com/onmax/go-alastria/internal/configuration"
+	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 // More information about this process in the ../README.md
@@ -29,8 +29,11 @@ func main() {
 	step3__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID, newActorPublicKey)
 
 	// This is not part of the US per se, but it is to show the DID of the new actor
+	did := step4__buildNewAgentDid(newActorPublicKey)
+
 	fmt.Printf("\tStep 4: Get the full DID\n")
-	step4__buildNewAgentDid(newActorPublicKey)
+	fmt.Printf("DID of the new actor: %v\n", did)
+
 }
 
 func step2__newAgentSignsTx() (*types.Transaction, string) {
@@ -54,15 +57,13 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *types.Transact
 	alastria.SendTx(entityClient, signedTxCreateAID)
 }
 
-func step4__buildNewAgentDid(newActorPub string) {
-	// Any member can connect to the network to do this step, in this case will be the entity
-	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+func step4__buildNewAgentDid(newActorPub string) *alaTypes.Did {
+	entityArgs := exampleutil.GetReaderClientConf()
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	newActorAddress, _ := alastria.PublicKeyToAddress(newActorPub)
 	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
 
-	did := alaDid.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
+	return alastria.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
 
-	fmt.Printf("DID of the new actor: %v\n", did)
 }

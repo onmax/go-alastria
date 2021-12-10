@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	alaDid "github.com/onmax/go-alastria/ala-did"
 	"github.com/onmax/go-alastria/alastria"
 	exampleutil "github.com/onmax/go-alastria/cmd/examples"
 	"github.com/onmax/go-alastria/crypto"
@@ -68,7 +67,7 @@ func step1__entityGeneratesAT() string {
 			AlastriaNetworkId: configuration.NetworkId,
 			CallbackURL:       configuration.CallbackUrl,
 			GatewayURL:        configuration.ProviderURL,
-			JSONTokenId:       configuration.Jti,
+			JSONTokenId:       configuration.JtiAT,
 			Types:             configuration.TypesAT12,
 		},
 	}
@@ -105,21 +104,21 @@ func step2__newActorGeneratesAIC(newAgentClient *alaTypes.Connection, at string,
 		Payload: &tokens.AICPayload{
 			IssuedAt:         configuration.Iat,
 			PublicKey:        hex.Add0x(newAgentClient.Client.Ks.HexPublicKey),
-			JSONTokenId:      configuration.Jti,
+			JSONTokenId:      configuration.JtiAIC,
 			CreateAlastriaTX: hex.Add0x(createAlastriaTX),
 			AlastriaToken:    at,
 			Contexts:         configuration.ContextsAIC12,
 			Types:            configuration.TypesAIC12,
 		},
 	}
-	signedAIC, _ := crypto.Sign(aic, newAgentClient.Client.Ks.HexPrivateKey)
+	signedAIC, _ := alastria.SignJWT(newAgentClient, aic)
 	return signedAIC
 }
 
 func step3__entitySignsPrepareAID_And_SendsTxs(signedAIC string) {
 	aic, _ := tokens.DecodeAIC(signedAIC)
 
-	crypto.Verify(signedAIC, aic.Payload.PublicKey) // Remember to check the return value of Verify
+	alastria.VerifyJWT(signedAIC, aic.Payload.PublicKey) // Remember to check the return value of Verify
 
 	// The entity needs to connect to the network if not already is
 	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
@@ -136,13 +135,12 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedAIC string) {
 	alastria.SendTx(entityClient, signedCreateAIDTx)
 }
 
-func step4__buildNewAgentDid(newActorPub string) *alaDid.Did {
-	// Any member can connect to the network to do this step, in this case will be the entity
-	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+func step4__buildNewAgentDid(newActorPub string) *alaTypes.Did {
+	entityArgs := exampleutil.GetReaderClientConf()
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	newActorAddress, _ := alastria.PublicKeyToAddress(newActorPub)
 	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
 
-	return alaDid.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
+	return alastria.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
 }
