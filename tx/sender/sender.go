@@ -1,4 +1,4 @@
-package txSender
+package sender
 
 import (
 	"math/big"
@@ -49,7 +49,7 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection, addPublicKeyCallData []by
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return conn.Contracts.Instances.IdentityManager.CreateAlastriaIdentity(conn.Tx.Opts, addPublicKeyCallData)
 }
 
