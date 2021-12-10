@@ -1,4 +1,4 @@
-package tx
+package txbuilder
 
 import (
 	"crypto/ecdsa"
@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/onmax/go-alastria/blockchain/txutil"
 	"github.com/onmax/go-alastria/internal/configuration"
 )
 
@@ -24,7 +25,7 @@ func TxOpt(privateKey *ecdsa.PrivateKey, chainId *big.Int) (*bind.TransactOpts, 
 }
 
 func TxFromString(eth *ethclient.Client, tx []byte, from common.Address, to *common.Address) (*types.Transaction, error) {
-	nonce, err := Nonce(eth, from)
+	nonce, err := txutil.Nonce(eth, from)
 	if err != nil {
 		return nil, err
 	}

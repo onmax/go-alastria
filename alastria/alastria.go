@@ -5,13 +5,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/onmax/go-alastria/blockchain/network"
+	"github.com/onmax/go-alastria/blockchain/tx"
+	"github.com/onmax/go-alastria/blockchain/txutil"
 	"github.com/onmax/go-alastria/client"
 	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/did"
 	"github.com/onmax/go-alastria/hash"
 	"github.com/onmax/go-alastria/hex"
-	"github.com/onmax/go-alastria/network"
-	"github.com/onmax/go-alastria/tx"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
@@ -46,11 +47,11 @@ func PublicKeyToAddress(publicKey string) (common.Address, error) {
 }
 
 func HexToTx(txStr string) (*types.Transaction, error) {
-	return tx.HexToTx(txStr)
+	return txutil.HexToTx(txStr)
 }
 
 func TxToHex(tx_ *types.Transaction) (string, error) {
-	return tx.TxToHex(tx_)
+	return txutil.TxToHex(tx_)
 }
 
 func PrepareAlastriaId(conn *alaTypes.Connection, newActorPublicKey string) (*types.Transaction, error) {
@@ -81,6 +82,29 @@ func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address)
 func AddSubjectCredential(conn *alaTypes.Connection, signedJWT string, subjectDid string, URI string) (string, string, error) {
 	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, subjectDid)
 	addSubjectCredentialTx, err := tx.AddSubjectCredential(conn, psmHashByteArr, URI)
+	if err != nil {
+		return "", "", err
+	}
+	return addSubjectCredentialTx.Hash().Hex(), psmHash, nil
+}
+
+func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address) ([]common.Address, error) {
+	_, credentialsByteArray, err := tx.GetSubjectCredentialList(conn, subject)
+	if err != nil {
+		return []common.Address{}, err
+	}
+
+	var credentials []common.Address
+	for _, credentialByteArray := range credentialsByteArray {
+		credential := common.BytesToAddress(credentialByteArray[:])
+		credentials = append(credentials, credential)
+	}
+	return credentials, nil
+}
+
+func AddIssuerCredential(conn *alaTypes.Connection, signedJWT string, subjectDid string) (string, string, error) {
+	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, subjectDid)
+	addSubjectCredentialTx, err := tx.AddIssuerCredential(conn, psmHashByteArr)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
 		return "", "", err

@@ -13,6 +13,9 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+var entityKsPath = "../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json"
+var subjectKsPath = "../../../../../assets/keystores/subject.json"
+
 // See assumptions in README.md
 var subjectAddress = common.HexToAddress("d0a0d5a1310a715157c3f81b789d6d9dc447aef5")
 var subjectDid = exampleutil.GetDIDGivenAddress(subjectAddress)
@@ -49,12 +52,12 @@ func main() {
 	fmt.Printf("\n------ Entity issues credentials to subject ------ \n\n")
 	fmt.Printf("To simplify the code, errors are not being checked\n\n")
 
-	subjectDid, credentials := step1__subjectSelectCredentials()
+	subjectDid, credentialsKeys := step1__subjectSelectsCredentials()
 	fmt.Printf("\tStep 1: The subject selects credentials\n")
-	fmt.Printf("In this case, the subject DID is %s and has selected the credentials %v\n", subjectDid.String(), credentials)
+	fmt.Printf("In this case, the subject DID is %s and has selected the credentials %v\n", subjectDid.String(), credentialsKeys)
 	fmt.Printf("The subject will send a request to the backend to start the process\n\n")
 
-	signedAT := step2(subjectDid.String(), credentials)
+	signedAT := step2(subjectDid.String(), credentialsKeys)
 	fmt.Printf("\tStep 2: The entity receives the request\n")
 	fmt.Printf("The credentials that will be issued will be: %s\n", credentialsToIssueTemp)
 	fmt.Printf("The entity generates an AT: %v. You can check its contents in https://jwt.io\n", signedAT)
@@ -67,19 +70,22 @@ func main() {
 	fmt.Printf("The subject will send the AS to the entity to the URL in the at.Payload.cbu. In this case: %s\n\n", at.Payload.CallbackURL)
 
 	fmt.Printf("\tStep 4: The entity generates and send signed credentials to subject\n")
-	step4(signedAS)
+	credentials := step4(signedAS)
 
 	fmt.Printf("As a response of the HTTP request made by the subject, the credential will send the signed credentials\n\n")
 
-	fmt.Printf("\tStep 5: The subject receives the signed credentials and store them somewhere secure\n\n")
+	fmt.Printf("\tStep 5: The subject receives the signed credentials and store them somewhere secure. Optionally, the user could write in blockchain that he has received the credentials\n\n")
+
+	step5__subjectWriteInBlockchain(credentials)
 
 	// Clear temp data
 	jti = ""
 	credentialsToIssueTemp = []string{}
 }
 
-func step1__subjectSelectCredentials() (*alaTypes.Did, []string) {
+func step1__subjectSelectsCredentials() (*alaTypes.Did, []string) {
 	// This step can be done in any platform: website of the entity, mobile app, etc...
+	// In this example, we hardcode the credentials that the subject has selected
 	return subjectDid, []string{"passport", "email", "home_address"}
 }
 
@@ -102,7 +108,7 @@ func step2__filterCredentials(subjectDid string, credentials []string) {
 }
 
 func step2__entityGeneratesAT() string {
-	entityConf := exampleutil.GetDisconnectedClientConf("../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityConf := exampleutil.GetDisconnectedClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
 	at := tokens.AT{
@@ -168,7 +174,7 @@ func step4(signedAS string) []string {
 
 	// Optional step
 	// Right now, the function is blocking until the transactions are made. You might want to use TxSendAsync
-	step4__writeInBlockchain(credentials)
+	step4__issuerWriteInBlockchain(credentials)
 
 	return credentials
 }
@@ -221,7 +227,7 @@ func generateCredential(entityDid string, subjectDid string, key string, value s
 func step4__generateCredentials() []string {
 	var credentials []string
 
-	entityConf := exampleutil.GetDisconnectedClientConf("../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityConf := exampleutil.GetDisconnectedClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
 	for _, credentialKey := range credentialsToIssueTemp {
@@ -234,8 +240,8 @@ func step4__generateCredentials() []string {
 	return credentials
 }
 
-func step4__writeInBlockchain(credentials []string) {
-	entityConf := exampleutil.GetClientConf("../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+func step4__issuerWriteInBlockchain(credentials []string) {
+	entityConf := exampleutil.GetClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
 	var (
@@ -246,7 +252,29 @@ func step4__writeInBlockchain(credentials []string) {
 	for _, credential := range credentials {
 		// Right now, the function is blocking until the transactions are made. You might want to use
 		// another thread for this
-		tx, psmHash, _ := alastria.AddSubjectCredential(entityClient, credential, entityDid.String(), "URI")
+		tx, psmHash, _ := alastria.AddIssuerCredential(entityClient, credential, entityDid.String())
+		txs = append(txs, tx)
+		psmHashes = append(psmHashes, psmHash)
+	}
+
+	fmt.Printf("The entity has added %v credentials to the blockchain\n", len(credentials))
+	fmt.Printf("The transaction hashes are: %v\n", txs)
+	fmt.Printf("The PSMHashes are: %v\n", psmHashes)
+}
+
+func step5__subjectWriteInBlockchain(credentials []string) {
+	subjectConf := exampleutil.GetClientConf(subjectKsPath)
+	subjectClient, _ := alastria.NewClient(subjectConf)
+
+	var (
+		txs       []string = make([]string, len(credentials))
+		psmHashes []string = make([]string, len(credentials))
+	)
+
+	for _, credential := range credentials {
+		// Right now, the function is blocking until the transactions are made. You might want to use
+		// another thread for this
+		tx, psmHash, _ := alastria.AddSubjectCredential(subjectClient, credential, entityDid.String(), "URI")
 		txs = append(txs, tx)
 		psmHashes = append(psmHashes, psmHash)
 	}

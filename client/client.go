@@ -8,10 +8,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/onmax/go-alastria/blockchain/network"
+	"github.com/onmax/go-alastria/blockchain/txbuilder"
 	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/keystore"
-	"github.com/onmax/go-alastria/network"
-	"github.com/onmax/go-alastria/tx"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
@@ -70,7 +70,7 @@ func setOpts(conn *alaTypes.Connection, args *alaTypes.ClientConf) error {
 	if conn.Client.Ks == nil {
 		return nil
 	}
-	opts, err := tx.TxOpt(conn.Client.Ks.PrivateKey, conn.Network.Id)
+	opts, err := txbuilder.TxOpt(conn.Client.Ks.PrivateKey, conn.Network.Id)
 	if err != nil {
 		return err
 	}

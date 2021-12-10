@@ -1,4 +1,4 @@
-package sender
+package txsender
 
 import (
 	"math/big"
