@@ -47,3 +47,17 @@ func checkPublickeyRegistry(conn *alaTypes.Connection) error {
 	}
 	return nil
 }
+
+func checkCredentialRegistry(conn *alaTypes.Connection) error {
+	if conn.Contracts.Instances.CredentialRegistry == nil {
+		if conn.Contracts.Addresses.CredentialRegistry == (common.Address{}) {
+			return alaTypes.ErrAddressNotSet
+		}
+		instance, err := contracts.CredentialRegistryContract(conn.Client.Eth, conn.Contracts.Addresses.CredentialRegistry)
+		if err != nil {
+			return err
+		}
+		conn.Contracts.Instances.CredentialRegistry = instance
+	}
+	return nil
+}

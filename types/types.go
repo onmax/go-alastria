@@ -3,6 +3,7 @@ package types
 import (
 	"crypto/ecdsa"
 	"errors"
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -11,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 
+	credential "github.com/onmax/go-alastria/contracts/alastria-credential-registry"
 	identity "github.com/onmax/go-alastria/contracts/alastria-identity-manager"
 	pkr "github.com/onmax/go-alastria/contracts/alastria-public-key-registry"
 )
@@ -31,12 +33,14 @@ type Keystore struct {
 }
 
 type Instances struct {
-	IdentityManager   *identity.AlastriaContracts
-	PublicKeyRegistry *pkr.AlastriaContracts
+	IdentityManager    *identity.AlastriaContracts
+	PublicKeyRegistry  *pkr.AlastriaContracts
+	CredentialRegistry *credential.AlastriaContracts
 }
 type Addresses struct {
-	IdentityManager   common.Address
-	PublicKeyRegistry common.Address
+	IdentityManager    common.Address
+	PublicKeyRegistry  common.Address
+	CredentialRegistry common.Address
 }
 
 type Contracts struct {
@@ -76,6 +80,17 @@ type ClientConf struct {
 	ContractAddresses *Addresses
 }
 
+type Did struct {
+	Protocol     string
+	Network      string
+	NetworkId    string
+	ProxyAddress string
+}
+
+func (d *Did) String() string {
+	return fmt.Sprintf("did:%s:%s:%s:%s", d.Protocol, d.Network, d.NetworkId, d.ProxyAddress)
+}
+
 var (
 	ErrNodeUrlNotSet   = errors.New("node url not set")
 	ErrKeystoreNotSet  = errors.New("keystore not set")
@@ -84,3 +99,5 @@ var (
 	ErrTxOptsNotSet    = errors.New("eth tx opts not set")
 	ErrInvalidJWT      = errors.New("invalid jwt")
 )
+
+// TODO Separate the types in files

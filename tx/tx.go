@@ -74,3 +74,20 @@ func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (commo
 
 	return conn.Contracts.Instances.IdentityManager.IdentityKeys(&bind.CallOpts{}, agentAddress)
 }
+
+func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address) (string, error) {
+	err := checkPublickeyRegistry(conn)
+	if err != nil {
+		return "", err
+	}
+
+	return conn.Contracts.Instances.PublicKeyRegistry.GetCurrentPublicKey(&bind.CallOpts{}, agentAddress)
+}
+
+func AddSubjectCredential(conn *alaTypes.Connection, psmHash [32]byte, URI string) (*types.Transaction, error) {
+	err := checkCredentialRegistry(conn)
+	if err != nil {
+		return &types.Transaction{}, err
+	}
+	return conn.Contracts.Instances.CredentialRegistry.AddSubjectCredential(conn.Tx.Opts, psmHash, URI)
+}
