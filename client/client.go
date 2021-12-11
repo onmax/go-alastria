@@ -43,8 +43,8 @@ func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 	}
 
 	// Only connects to the network if NodeUrl is set
-	if args.NodeUrl != "" {
-		ConnectToNetwork(conn, args.NodeUrl)
+	if args.Network.NodeUrl != "" {
+		ConnectToNetwork(conn, args.Network.NodeUrl)
 
 		err := setNetwork(conn, args)
 		if err != nil {
@@ -92,7 +92,10 @@ func setNetwork(conn *alaTypes.Connection, args *alaTypes.ClientConf) error {
 		return err
 	}
 	conn.Network = &alaTypes.Network{
-		Id: networkId,
+		Id:        networkId,
+		NodeUrl:   args.Network.NodeUrl,
+		Network:   args.Network.Network,
+		NetworkId: args.Network.NetworkId,
 	}
 	return nil
 }

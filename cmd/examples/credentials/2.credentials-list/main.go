@@ -9,8 +9,10 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+var readerClient, _ = alastria.NewClient(exampleutil.GetReaderClientConf())
+
 var subjectAddress = common.HexToAddress("d0a0d5a1310a715157c3f81b789d6d9dc447aef5")
-var subjectDid = exampleutil.GetDIDGivenAddress(subjectAddress)
+var subjectDid, _ = alastria.GetDIDGivenAddress(readerClient, subjectAddress)
 
 // More information about this process in the ./README.md
 // To simplify the code, errors are not being checked

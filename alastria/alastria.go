@@ -11,6 +11,7 @@ import (
 	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/did"
 	"github.com/onmax/go-alastria/hex"
+	"github.com/onmax/go-alastria/internal/configuration"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
@@ -104,4 +105,22 @@ func NewDid(network, networkId, proxyAddress string) *alaTypes.Did {
 
 func NewDidFromString(didStr string) (*alaTypes.Did, error) {
 	return did.NewDidFromString(didStr)
+}
+
+func GetDIDGivenAddress(conn *alaTypes.Connection, address common.Address) (*alaTypes.Did, error) {
+	actorProxy, err := IdentityKeys(conn, address)
+	if err != nil {
+		return nil, err
+	}
+	did := did.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
+	return did, nil
+}
+
+func GetDIDGivenPublicKey(conn *alaTypes.Connection, publicKey string) (*alaTypes.Did, error) {
+	address, err := PublicKeyToAddress(publicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return GetDIDGivenAddress(conn, address)
 }

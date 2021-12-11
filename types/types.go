@@ -49,7 +49,10 @@ type Contracts struct {
 }
 
 type Network struct {
-	Id *big.Int
+	Id        *big.Int
+	NodeUrl   string
+	Network   string
+	NetworkId string
 }
 
 type Client struct {
@@ -74,9 +77,9 @@ type KeystoreConfig struct {
 	Password string
 }
 type ClientConf struct {
-	NodeUrl           string
 	Keystore          *KeystoreConfig
 	ContractAddresses *Addresses
+	Network           *Network
 }
 
 type Did struct {

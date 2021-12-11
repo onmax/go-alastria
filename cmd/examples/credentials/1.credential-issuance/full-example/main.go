@@ -14,15 +14,17 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+var readerClient, _ = alastria.NewClient(exampleutil.GetReaderClientConf())
+
 var entityKsPath = "../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json"
 var subjectKsPath = "../../../../../assets/keystores/subject.json"
 
 // See assumptions in README.md
 var subjectAddress = common.HexToAddress("d0a0d5a1310a715157c3f81b789d6d9dc447aef5")
-var subjectDid = exampleutil.GetDIDGivenAddress(subjectAddress)
+var subjectDid, _ = alastria.GetDIDGivenAddress(readerClient, subjectAddress)
 
 var entityAddress = common.HexToAddress("a9728125c573924b2b1ad6a8a8cd9bf6858ced49")
-var entityDid = exampleutil.GetDIDGivenAddress(entityAddress)
+var entityDid, _ = alastria.GetDIDGivenAddress(readerClient, entityAddress)
 
 // entityDatabase simulates the data that the entity should store somewhere in the backend
 // database

@@ -141,8 +141,6 @@ func step4__buildNewAgentDid(newActorPub string) *alaTypes.Did {
 	entityArgs := exampleutil.GetReaderClientConf()
 	entityClient, _ := alastria.NewClient(entityArgs)
 
-	newActorAddress, _ := alastria.PublicKeyToAddress(newActorPub)
-	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
-
-	return alastria.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
+	did, _ := alastria.GetDIDGivenPublicKey(entityClient, newActorPub)
+	return did
 }

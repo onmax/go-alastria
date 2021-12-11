@@ -6,7 +6,6 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/alastria"
 	exampleutil "github.com/onmax/go-alastria/cmd/examples"
-	"github.com/onmax/go-alastria/internal/configuration"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
@@ -65,8 +64,6 @@ func step4__buildNewAgentDid(newActorPub string) *alaTypes.Did {
 	entityArgs := exampleutil.GetReaderClientConf()
 	entityClient, _ := alastria.NewClient(entityArgs)
 
-	newActorAddress, _ := alastria.PublicKeyToAddress(newActorPub)
-	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
-
-	return alastria.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
+	did, _ := alastria.GetDIDGivenPublicKey(entityClient, newActorPub)
+	return did
 }
