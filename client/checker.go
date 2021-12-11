@@ -1,4 +1,4 @@
-package txsender
+package client
 
 import (
 	"github.com/ethereum/go-ethereum/common"
@@ -6,21 +6,21 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
-func checkTxOpts(conn *alaTypes.Connection) error {
+func CheckTxOpts(conn *alaTypes.Connection) error {
 	if conn.Tx.Opts == nil {
 		return alaTypes.ErrTxOptsNotSet
 	}
 	return nil
 }
 
-func checkKeystore(conn *alaTypes.Connection) error {
+func CheckKeystore(conn *alaTypes.Connection) error {
 	if conn.Client.Ks == nil {
 		return alaTypes.ErrKeystoreNotSet
 	}
 	return nil
 }
 
-func checkIdentityManager(conn *alaTypes.Connection) error {
+func CheckIdentityManager(conn *alaTypes.Connection) error {
 	if conn.Contracts.Instances.IdentityManager == nil {
 		if conn.Contracts.Addresses.IdentityManager == (common.Address{}) {
 			return alaTypes.ErrAddressNotSet
@@ -34,7 +34,7 @@ func checkIdentityManager(conn *alaTypes.Connection) error {
 	return nil
 }
 
-func checkPublickeyRegistry(conn *alaTypes.Connection) error {
+func CheckPublickeyRegistry(conn *alaTypes.Connection) error {
 	if conn.Contracts.Instances.PublicKeyRegistry == nil {
 		if conn.Contracts.Addresses.PublicKeyRegistry == (common.Address{}) {
 			return alaTypes.ErrAddressNotSet
@@ -48,7 +48,7 @@ func checkPublickeyRegistry(conn *alaTypes.Connection) error {
 	return nil
 }
 
-func checkCredentialRegistry(conn *alaTypes.Connection) error {
+func CheckCredentialRegistry(conn *alaTypes.Connection) error {
 	if conn.Contracts.Instances.CredentialRegistry == nil {
 		if conn.Contracts.Addresses.CredentialRegistry == (common.Address{}) {
 			return alaTypes.ErrAddressNotSet

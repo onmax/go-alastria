@@ -73,7 +73,7 @@ func step1__entityGeneratesAT() string {
 			Types:             configuration.TypesAT12,
 		},
 	}
-	signedAT, _ := crypto.Sign(at, entityClient.Client.Ks.HexPrivateKey)
+	signedAT, _ := crypto.Sign(entityClient, at)
 	return signedAT
 }
 

@@ -4,26 +4,27 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/onmax/go-alastria/client"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func AddKey(conn *alaTypes.Connection) (*types.Transaction, error) {
-	err := checkIdentityManager(conn)
+	err := client.CheckIdentityManager(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkPublickeyRegistry(conn)
+	err = client.CheckPublickeyRegistry(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkTxOpts(conn)
+	err = client.CheckTxOpts(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkKeystore(conn)
+	err = client.CheckKeystore(conn)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +32,7 @@ func AddKey(conn *alaTypes.Connection) (*types.Transaction, error) {
 }
 
 func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address) (string, error) {
-	err := checkPublickeyRegistry(conn)
+	err := client.CheckPublickeyRegistry(conn)
 	if err != nil {
 		return "", err
 	}

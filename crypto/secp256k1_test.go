@@ -7,10 +7,18 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+var conn = &alaTypes.Connection{
+	Client: &alaTypes.Client{
+		Ks: &alaTypes.Keystore{
+			HexPrivateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+		},
+	},
+}
+
 func TestSign(t *testing.T) {
 	type args struct {
-		jwt        interface{}
-		privateKey string
+		client *alaTypes.Connection
+		jwt    interface{}
 	}
 	tests := []struct {
 		name    string
@@ -37,7 +45,7 @@ func TestSign(t *testing.T) {
 					Types:            []string{"AlastriaIdentityCreation", "US12"},
 				},
 			},
-				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+				client: conn,
 			},
 			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsInB1YmxpY0tleSI6InB1YmxpYy1rZXkiLCJqdGkiOiJqc29uLXRva2VuLWlkIiwiY3JlYXRlQWxhc3RyaWFUWCI6ImNyZWF0ZS1hbGFzdHJpYS10eCIsImFsYXN0cmlhVG9rZW4iOiJhbGFzdHJpYS10b2tlbiIsIkBjb250ZXh0IjpbImh0dHBzOi8vYWxhc3RyaWEuZ2l0aHViLmlvL2lkZW50aXR5L2FydGlmYWN0cy92MSJdLCJ0eXBlIjpbIkFsYXN0cmlhSWRlbnRpdHlDcmVhdGlvbiIsIlVTMTIiXX0.Fjjy_24sitUYVpLnsQkqet7nl6zb70wg7A2QvZAkHO0cCZGQzoTOA4CAvTNn2-b0QPR_vgoNJ--PuZlxBEBBBg",
 			wantErr: false,
@@ -60,7 +68,7 @@ func TestSign(t *testing.T) {
 					Types:             []string{"AlastriaToken"},
 				},
 			},
-				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+				client: conn,
 			},
 			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsInR5cGUiOlsiQWxhc3RyaWFUb2tlbiJdLCJhbmkiOiJhbGFzdHJpYS1uZXR3b3JrLWlkIiwiY2J1IjoiY2FsbGJhY2stdXJsIiwiZ3d1IjoiZ2F0ZXdheS11cmwifQ.Y8q5Le6LGBxY8BhYZMWe2KJOzWqD_Mroy7PTiqlHsnBJXqLn7je_F8lPjqMv4l9_bdHrdz2eXh3ra3M_XPfJJA",
 			wantErr: false,
@@ -80,7 +88,7 @@ func TestSign(t *testing.T) {
 					Types:         []string{"AlastriaSession"},
 				},
 			},
-				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+				client: conn,
 			},
 			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsImFsYXN0cmlhVG9rZW4iOiJhbGFzdHJpYS10b2tlbiIsIkBjb250ZXh0IjpbImh0dHBzOi8vYWxhc3RyaWEuZ2l0aHViLmlvL2lkZW50aXR5L2FydGlmYWN0cy92MSJdLCJ0eXBlIjpbIkFsYXN0cmlhU2Vzc2lvbiJdfQ.BOGmAzAAyk3pBWUoffi_F5DV3cqgK1Dz9VIBOLv86gdi0slwF8sYfFBUzCkz7ee1zLUXLTfcFOxbkhIxmNeOSQ",
 			wantErr: false,
@@ -105,7 +113,7 @@ func TestSign(t *testing.T) {
 					IssuedAt: 1,
 				},
 			},
-				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+				client: conn,
 			},
 			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsInN1YiI6InN1YmplY3QiLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vYWxhc3RyaWEuZ2l0aHViLmlvL2lkZW50aXR5L2NyZWRlbnRpYWxzL3YxIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJBbGFzdHJpYVZlcmlmaWFibGVDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImxldmVsT2ZBc3N1cmFuY2UiOjB9fX0.JjmlK87WUgN9OvJLwSV6-hO9LFvb8ntPv6jU44sfsw8UuyLJYsap5EwQqKHrbrZncqhA_u-nLCKMmdqT6A68ZA",
 			wantErr: false,
@@ -130,7 +138,7 @@ func TestSign(t *testing.T) {
 					IssuedAt: 1,
 				},
 			},
-				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+				client: conn,
 			},
 			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsImF1ZCI6ImF1ZGllbmNlIiwidnAiOnsiQGNvbnRleHQiOlsiaHR0cHM6Ly93d3cudzMub3JnLzIwMTgvY3JlZGVudGlhbHMvdjEiLCJodHRwczovL2FsYXN0cmlhLmdpdGh1Yi5pby9pZGVudGl0eS9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVQcmVzZW50YXRpb24iLCJBbGFzdHJpYVZlcmlmaWFibGVQcmVzZW50YXRpb24iXSwicHJvY0hhc2giOiJwcm9jZXNzLWhhc2giLCJwcm9jVXJsIjoicHJvY2Vzcy11cmwiLCJ2ZXJpZmlhYmxlQ3JlZGVudGlhbCI6WyJjcmVkZW50aWFsXzEiLCJjcmVkZW50aWFsXzIiXX19.-Ad4f6RaODDBXH_UxFSSs8RwuDyAdNt_Ilu3xgeQliUdl8t7x1HMriT-7_j3dMVoLZlfcx4pVxx_YLgTP_74ug",
 			wantErr: false,
@@ -160,7 +168,7 @@ func TestSign(t *testing.T) {
 					},
 				},
 			},
-				privateKey: "8dd5e4759a2d8a0ebeb1a1c53b113dad453daaf140b47c419eeef11a46d656b3",
+				client: conn,
 			},
 			want:    "eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiJqc29uLXdlYi10b2tlbiIsImtpZCI6ImtleS1pZCJ9.eyJpYXQiOjEsImlzcyI6Imlzc3VlciIsImNidSI6ImNhbGxiYWNrLXVybCIsInZwIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vYWxhc3RyaWEuZ2l0aHViLmlvL2lkZW50aXR5L2NyZWRlbnRpYWxzL3YxIl0sInR5cGUiOlsiQWxhc3RyaWFWZXJpZmlhYmxlUHJlc2VudGF0aW9uUmVxdWVzdCJdLCJwcm9jSGFzaCI6InByb2Nlc3MtaGFzaCIsInByb2NVcmwiOiJwcm9jZXNzLXVybCIsImRhdGEiOlt7IkBjb250ZXh0IjpbImNvbnRleHQtMSJdLCJyZXF1aXJlZCI6dHJ1ZSwiZmllbGRfbmFtZSI6ImNyZWRlbnRpYWxfZmllbGRfbmFtZV8xIn1dfX0.K3kl8XFWmmjYF4Te0hjyBRaqCKXKrvosLC4ZMiM6kBFAeQaIkiYUPiFyh7hjsY4HVPfFfVx8PKupQ3Iyx531uw",
 			wantErr: false,
@@ -168,7 +176,7 @@ func TestSign(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Sign(tt.args.jwt, tt.args.privateKey)
+			got, err := Sign(tt.args.client, tt.args.jwt)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Sign() error = %v, wantErr %v", err, tt.wantErr)

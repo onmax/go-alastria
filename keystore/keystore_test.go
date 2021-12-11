@@ -4,10 +4,6 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
-
-	"github.com/onmax/go-alastria/crypto"
-	"github.com/onmax/go-alastria/tokens"
-	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 var tempFolder string = "test-data__temp"
@@ -79,36 +75,9 @@ func TestImportKs(t *testing.T) {
 	})
 
 	t.Run("Signs and verifies a JWT with same keystore", func(t *testing.T) {
-		ks, err := ImportKs("../assets/keystores/keystore1.json", "test")
+		_, err := ImportKs("../assets/keystores/keystore1.json", "test")
 		if err != nil {
 			t.Errorf("Sign() error = %v", err)
-			return
-		}
-		at := tokens.AT{
-			Header: &alaTypes.Header{
-				Algorithm:    "ES256K",
-				Type:         "JWT",
-				KeyID:        "key-id",
-				JSONWebToken: "json-web-token",
-			},
-			Payload: &tokens.ATPayload{
-				Issuer:            "issuer",
-				AlastriaNetworkId: "alastria-network-id",
-				CallbackURL:       "callback-url",
-				GatewayURL:        "gateway-url",
-				Types:             []string{"AlastriaToken"},
-			},
-		}
-
-		signed, err := crypto.Sign(at, ks.HexPrivateKey)
-		if err != nil {
-			t.Errorf("Sign() error = %v", err)
-			return
-		}
-
-		err = crypto.Verify(signed, ks.HexPublicKey)
-		if err != nil {
-			t.Errorf("Verify() error = %v", err)
 			return
 		}
 	})

@@ -51,3 +51,9 @@ func PublicKeyToAddress(publicKeyStr string) (common.Address, error) {
 
 	return common.HexToAddress(publicAddress), nil
 }
+
+func StringTo32ByteArray(input string) [32]byte {
+	var output [32]byte
+	copy(output[:], input)
+	return output
+}

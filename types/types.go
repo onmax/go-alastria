@@ -67,7 +67,6 @@ type Connection struct {
 	Network   *Network
 	Client    *Client
 	Tx        *TxClient
-	Connected bool
 }
 
 type KeystoreConfig struct {
@@ -99,5 +98,11 @@ var (
 	ErrTxOptsNotSet    = errors.New("eth tx opts not set")
 	ErrInvalidJWT      = errors.New("invalid jwt")
 )
+
+type PSMHashStatus struct {
+	Exists  bool
+	PSMHash common.Address
+	Status  uint8
+}
 
 // TODO Separate the types in files

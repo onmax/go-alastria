@@ -6,21 +6,22 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/onmax/go-alastria/client"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address) (*types.Transaction, error) {
-	err := checkIdentityManager(conn)
+	err := client.CheckIdentityManager(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkTxOpts(conn)
+	err = client.CheckTxOpts(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkKeystore(conn)
+	err = client.CheckKeystore(conn)
 	if err != nil {
 		return nil, err
 	}
@@ -29,17 +30,17 @@ func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address
 }
 
 func DelegateCall(conn *alaTypes.Connection, delegatedData *types.Transaction) (*types.Transaction, error) {
-	err := checkIdentityManager(conn)
+	err := client.CheckIdentityManager(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkTxOpts(conn)
+	err = client.CheckTxOpts(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkKeystore(conn)
+	err = client.CheckKeystore(conn)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +56,7 @@ func DelegateCall(conn *alaTypes.Connection, delegatedData *types.Transaction) (
 }
 
 func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (common.Address, error) {
-	err := checkIdentityManager(conn)
+	err := client.CheckIdentityManager(conn)
 	if err != nil {
 		return common.Address{}, err
 	}
@@ -64,17 +65,17 @@ func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (commo
 }
 
 func CreateAlastriaIdentity(conn *alaTypes.Connection, addPublicKeyCallData []byte) (*types.Transaction, error) {
-	err := checkIdentityManager(conn)
+	err := client.CheckIdentityManager(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkTxOpts(conn)
+	err = client.CheckTxOpts(conn)
 	if err != nil {
 		return nil, err
 	}
 
-	err = checkKeystore(conn)
+	err = client.CheckKeystore(conn)
 	if err != nil {
 		return nil, err
 	}

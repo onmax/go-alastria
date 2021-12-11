@@ -7,9 +7,9 @@ import (
 	"github.com/onmax/go-alastria/blockchain/tx"
 	"github.com/onmax/go-alastria/blockchain/txutil"
 	"github.com/onmax/go-alastria/client"
+	"github.com/onmax/go-alastria/credentials"
 	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/did"
-	"github.com/onmax/go-alastria/hash"
 	"github.com/onmax/go-alastria/hex"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
@@ -31,12 +31,6 @@ func SetKeystore(conn *alaTypes.Connection, ksConfig *alaTypes.KeystoreConfig) e
 // the current thread checking once every second.
 // conn needs to have a client and keystore set
 func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
-	if conn.Client.Eth == nil {
-		return alaTypes.ErrEthClientNotSet
-	}
-	if conn.Client.Ks == nil {
-		return alaTypes.ErrKeystoreNotSet
-	}
 	return network.SendTx(conn, tx)
 }
 
@@ -73,92 +67,30 @@ func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address)
 	return tx.GetCurrentPublicKey(conn, agentAddress)
 }
 
-func AddSubjectCredential(conn *alaTypes.Connection, signedJWT string, subjectDid *alaTypes.Did, URI string) (*types.Transaction, string, error) {
-	// TODO move this logic
-	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, subjectDid)
-	tx, err := tx.AddSubjectCredential(conn, psmHashByteArr, URI)
-	if err != nil {
-		return &types.Transaction{}, "", err
-	}
-	return tx, psmHash, nil
+func AddSubjectCredentials(client *alaTypes.Connection, signedCredentials []string, subjectDid *alaTypes.Did, URI string) ([]string, []string, error) {
+	// TODO Return also the status of the psmHash
+	return credentials.AddSubjectCredentials(client, signedCredentials, subjectDid, URI)
 }
 
-func AddSubjectCredentials(client *alaTypes.Connection, credentials []string, subjectDid *alaTypes.Did, URI string) ([]string, []string, error) {
-	// TODO Move this code
-	var (
-		txs       []string = make([]string, len(credentials))
-		psmHashes []string = make([]string, len(credentials))
-	)
-
-	for _, credential := range credentials {
-		// Right now, the function is blocking until the transactions are made
-		// TODO Add non-blocking option
-		tx, psmHash, err := AddSubjectCredential(client, credential, subjectDid, URI)
-		if err != nil {
-			return nil, nil, err
-		}
-		SendTx(client, tx)
-		txutil.UpdateNonce(client)
-
-		txs = append(txs, tx.Hash().Hex())
-		psmHashes = append(psmHashes, psmHash)
-	}
-
-	return txs, psmHashes, nil
+func GetSubjectCredentialList(conn *alaTypes.Connection, subjectAddress common.Address) ([]common.Address, error) {
+	return credentials.GetSubjectCredentialList(conn, subjectAddress)
 }
 
-func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address) ([]common.Address, error) {
-	// TODO Move somewhere else
-	// Ignoringing the first value as it is the length of credentialsByteArray and in go is easy to calculate
-	_, credentialsByteArray, err := tx.GetSubjectCredentialList(conn, subject)
-	if err != nil {
-		return []common.Address{}, err
-	}
-
-	var credentials []common.Address
-	for _, credentialByteArray := range credentialsByteArray {
-		credential := common.BytesToAddress(credentialByteArray[:])
-		credentials = append(credentials, credential)
-	}
-	return credentials, nil
+func GetSubjectCredentialsStatus(conn *alaTypes.Connection, subjectDid *alaTypes.Did, psmHashes []common.Address) ([]*alaTypes.PSMHashStatus, error) {
+	return credentials.GetSubjectCredentialsStatus(conn, subjectDid, psmHashes)
 }
 
-func AddIssuerCredential(conn *alaTypes.Connection, signedJWT string, entityDid *alaTypes.Did) (*types.Transaction, string, error) {
-	// TODO Move somewhere else
-	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, entityDid)
-	addSubjectCredentialTx, err := tx.AddIssuerCredential(conn, psmHashByteArr)
-	if err != nil {
-		return &types.Transaction{}, "", err
-	}
-	return addSubjectCredentialTx, psmHash, nil
+func AddIssuerCredentials(client *alaTypes.Connection, signedCredentials []string, entityDid *alaTypes.Did) ([]string, []string, error) {
+	// TODO Return also the status of the psmHash
+	return credentials.AddIssuerCredentials(client, signedCredentials, entityDid)
 }
 
-func AddIssuerCredentials(client *alaTypes.Connection, credentials []string, entityDid *alaTypes.Did) ([]string, []string, error) {
-	// TODO Move this code
-	var (
-		txs       []string = make([]string, len(credentials))
-		psmHashes []string = make([]string, len(credentials))
-	)
-
-	for _, credential := range credentials {
-		// Right now, the function is blocking until the transactions are made
-		// TODO Add non-blocking option
-		tx, psmHash, err := AddIssuerCredential(client, credential, entityDid)
-		if err != nil {
-			return nil, nil, err
-		}
-		SendTx(client, tx)
-		txutil.UpdateNonce(client)
-		txs = append(txs, tx.Hash().Hex())
-		psmHashes = append(psmHashes, psmHash)
-	}
-
-	return txs, psmHashes, nil
+func GetIssuerCredentialStatus(conn *alaTypes.Connection, issuerDid *alaTypes.Did, psmHash common.Address) (*alaTypes.PSMHashStatus, error) {
+	return credentials.GetIssuerCredentialStatus(conn, issuerDid, psmHash)
 }
 
 func SignJWT(conn *alaTypes.Connection, jwt interface{}) (string, error) {
-	// TODO Check Keystore
-	return crypto.Sign(jwt, conn.Client.Ks.HexPrivateKey)
+	return crypto.Sign(conn, jwt)
 }
 
 func VerifyJWT(signedJWT string, publicKey string) (bool, error) {

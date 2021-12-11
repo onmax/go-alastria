@@ -39,6 +39,7 @@ func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address)
 	return txsender.GetCurrentPublicKey(conn, agentAddress)
 }
 
+// Credentials - Subject
 func AddSubjectCredential(conn *alaTypes.Connection, psmHash [32]byte, URI string) (*types.Transaction, error) {
 	return txsender.AddSubjectCredential(conn, psmHash, URI)
 }
@@ -47,6 +48,15 @@ func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address)
 	return txsender.GetSubjectCredentialList(conn, subject)
 }
 
+func GetSubjectCredentialStatus(conn *alaTypes.Connection, subject common.Address, psmHash [32]byte) (bool, uint8, error) {
+	return txsender.GetSubjectCredentialStatus(conn, subject, psmHash)
+}
+
+// Credentials - Issuer
 func AddIssuerCredential(conn *alaTypes.Connection, psmHash [32]byte) (*types.Transaction, error) {
 	return txsender.AddIssuerCredential(conn, psmHash)
+}
+
+func GetIssuerCredentialStatus(conn *alaTypes.Connection, issuer common.Address, psmHash [32]byte) (bool, uint8, error) {
+	return txsender.GetIssuerCredentialStatus(conn, issuer, psmHash)
 }

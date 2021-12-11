@@ -111,7 +111,6 @@ func TestHexToByteArr(t *testing.T) {
 	}
 }
 
-
 func TestPublicKeyToAddress(t *testing.T) {
 	type args struct {
 		publicKeyStr string
@@ -140,6 +139,32 @@ func TestPublicKeyToAddress(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("PublicKeyBytesToAddress() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStringTo32ByteArray(t *testing.T) {
+	type args struct {
+		input string
+	}
+	tests := []struct {
+		name string
+		args args
+		want [32]byte
+	}{
+		{
+			name: "valid string",
+			args: args{
+				input: "0xbc8f70b6722d1bff3129f17c9b72b27a136475f5bae9ac47b1d36301887b5dfb",
+			},
+			want: [32]byte{48, 120, 98, 99, 56, 102, 55, 48, 98, 54, 55, 50, 50, 100, 49, 98, 102, 102, 51, 49, 50, 57, 102, 49, 55, 99, 57, 98, 55, 50, 98, 50},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := StringTo32ByteArray(tt.args.input); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StringTo32ByteArray() = %v, want %v", got, tt.want)
 			}
 		})
 	}

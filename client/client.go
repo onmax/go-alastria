@@ -32,8 +32,7 @@ func NewClient(args *alaTypes.ClientConf) (*alaTypes.Connection, error) {
 			Instances: &alaTypes.Instances{},
 			Addresses: &alaTypes.Addresses{},
 		},
-		Network:   &alaTypes.Network{},
-		Connected: false,
+		Network: &alaTypes.Network{},
 	}
 
 	if args.Keystore != nil {
@@ -151,6 +150,5 @@ func ConnectToNetwork(conn *alaTypes.Connection, nodeUrl string) error {
 		return err
 	}
 	conn.Client.Eth = client
-	conn.Connected = true
 	return nil
 }

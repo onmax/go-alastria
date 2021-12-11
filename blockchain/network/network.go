@@ -40,6 +40,13 @@ func checkTransactionReceipt(conn *alaTypes.Connection, txHash common.Hash) uint
 // the current thread checking once every second
 // conn needs to have a client set.
 func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
+	if conn.Client.Eth == nil {
+		return alaTypes.ErrEthClientNotSet
+	}
+	if conn.Client.Ks == nil {
+		return alaTypes.ErrKeystoreNotSet
+	}
+	
 	err := conn.Client.Eth.SendTransaction(context.Background(), tx)
 
 	if err != nil {

@@ -1,22 +1,28 @@
 package crypto
 
-// TODO Rename this file to tokens or something
 import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/onmax/go-alastria/client"
 	"github.com/onmax/go-alastria/tokens"
+	alaTypes "github.com/onmax/go-alastria/types"
 	secp256k1 "github.com/ureeves/jwt-go-secp256k1"
 )
 
 // Signs a JWT
-func Sign(jwt interface{}, _pk string) (string, error) {
+func Sign(conn *alaTypes.Connection, jwt interface{}) (string, error) {
+	err := client.CheckKeystore(conn)
+	if err != nil {
+		return "", err
+	}
+
 	h64, p64, err := tokens.JwtToB64(jwt)
 	if err != nil {
 		return "", err
 	}
 
-	pk, err := crypto.HexToECDSA(_pk)
+	pk, err := crypto.HexToECDSA(conn.Client.Ks.HexPrivateKey)
 	if err != nil {
 		return "", err
 	}
