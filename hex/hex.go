@@ -3,6 +3,10 @@ package hex
 import (
 	"encoding/hex"
 	ehex "encoding/hex"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"golang.org/x/crypto/sha3"
 )
 
 func Remove0x(input string) string {
@@ -31,4 +35,19 @@ func HexToByteArr(input string) ([]byte, error) {
 		return nil, err
 	}
 	return decodedByteArray, nil
+}
+
+func PublicKeyToAddress(publicKeyStr string) (common.Address, error) {
+	publicKey, err := HexToByteArr(publicKeyStr) // TODO Sanitize removing 0x and 03 || 04
+	if err != nil {
+		return common.Address{}, err
+	}
+	var buf []byte
+
+	hash := sha3.NewLegacyKeccak256()
+	hash.Write(publicKey[:])
+	buf = hash.Sum(nil)
+	publicAddress := hexutil.Encode(buf[12:])
+
+	return common.HexToAddress(publicAddress), nil
 }
