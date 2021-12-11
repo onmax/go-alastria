@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/blockchain/txsender"
+	"github.com/onmax/go-alastria/hex"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
@@ -15,10 +16,14 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, erro
 		return &types.Transaction{}, err
 	}
 	return txsender.CreateAlastriaIdentity(conn, addKeyTx.Data())
-
 }
 
-func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address) (*types.Transaction, error) {
+func PrepareAlastriaId(conn *alaTypes.Connection, newActorPublicKey string) (*types.Transaction, error) {
+	newActorAddress, err := hex.PublicKeyToAddress(newActorPublicKey)
+
+	if err != nil {
+		return nil, err
+	}
 	delegatedData, err := txsender.PrepareAlastriaId(conn, newActorAddress)
 	if err != nil {
 		return &types.Transaction{}, err

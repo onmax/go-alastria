@@ -43,7 +43,7 @@ func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
 }
 
 func PublicKeyToAddress(publicKey string) (common.Address, error) {
-	return crypto.PublicKeyToAddress(publicKey)
+	return hex.PublicKeyToAddress(publicKey)
 }
 
 func HexToTx(txStr string) (*types.Transaction, error) {
@@ -55,11 +55,7 @@ func TxToHex(tx_ *types.Transaction) (string, error) {
 }
 
 func PrepareAlastriaId(conn *alaTypes.Connection, newActorPublicKey string) (*types.Transaction, error) {
-	newActorAddress, err := crypto.PublicKeyToAddress(newActorPublicKey)
-	if err != nil {
-		return nil, err
-	}
-	return tx.PrepareAlastriaId(conn, newActorAddress)
+	return tx.PrepareAlastriaId(conn, newActorPublicKey)
 }
 
 func CreateAlastriaIdentity(conn *alaTypes.Connection) (*types.Transaction, error) {

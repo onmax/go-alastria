@@ -40,13 +40,13 @@ func checkTransactionReceipt(conn *alaTypes.Connection, txHash common.Hash) uint
 // the current thread checking once every second
 // conn needs to have a client set.
 func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
-	// TODO Add timeout
 	err := conn.Client.Eth.SendTransaction(context.Background(), tx)
-
+	
 	if err != nil {
 		return err
 	}
-
+	
+	// TODO Add timeout
 	for {
 		status := checkTransactionReceipt(conn, tx.Hash())
 		if status == 1 {
