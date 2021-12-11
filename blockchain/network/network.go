@@ -41,11 +41,11 @@ func checkTransactionReceipt(conn *alaTypes.Connection, txHash common.Hash) uint
 // conn needs to have a client set.
 func SendTx(conn *alaTypes.Connection, tx *types.Transaction) error {
 	err := conn.Client.Eth.SendTransaction(context.Background(), tx)
-	
+
 	if err != nil {
 		return err
 	}
-	
+
 	// TODO Add timeout
 	for {
 		status := checkTransactionReceipt(conn, tx.Hash())

@@ -1,7 +1,11 @@
 package hash
 
-func PsmHash(signedJwt, did string) (string, [32]byte) {
-	psmHash := Sha3(signedJwt + did)
+import (
+	alaTypes "github.com/onmax/go-alastria/types"
+)  
+
+func PsmHash(signedJwt string, did *alaTypes.Did) (string, [32]byte) {
+	psmHash := Sha3(signedJwt + did.String())
 
 	var output [32]byte
 	copy(output[:], psmHash)

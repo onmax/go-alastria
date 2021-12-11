@@ -51,8 +51,6 @@ You can check two examples on how to create new DID on Alastria:
  ```bash
 ------ Creating new actor ------ 
 
-To simplify the code, errors are not being checked
-
         Step 1: Entity generates an AT
 AT: eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJqd2siOiIzNTZlM2ZjZTQzNWQ4NzI5MDYyZTUyZDI2M2MwYzcwNWIzYzVlMjAxYTlhOTYwOGNkYjA3MDc2NGU2YjhkZjMwYWU4NDIzYjQzOWE3YWYyYmNjMzUyOTc3ODM0MWFiMDZjMWU0NDQxMTM1MmYyMTdiNjhjZTQ0YTY3M2ExZGY2MyIsImtpZCI6ImRpZDphbGE6cXVvcjpyZWR0OmQyZjg2OGYwNTZlZjNhNDhiYmM4ZDQ0NmRmZWQ0MTFlOWJmOTNhYjAja2V5cy0xIn0.eyJqdGkiOiJ5b3VyLXVuaXF1ZS1hdC1pZCIsImlhdCI6MTYzNjc5ODU1MjE1OSwiZXhwIjoyMDM2Nzk4NTUyMTU5LCJpc3MiOiJkaWQ6YWxhOnF1b3I6cmVkVDpkMmY4NjhmMDU2ZWYzYTQ4YmJjOGQ0NDZkZmVkNDExZTliZjkzYWIwIiwidHlwZSI6WyJBbGFzdHJpYVRva2VuIiwiVVMxMiJdLCJhbmkiOiJyZWRUIiwiY2J1IjoiaHR0cHM6Ly95b3VyLWJhY2tlbmQtdXJsLmNvbSIsImd3dSI6Imh0dHBzOi8veW91ci1wcm92aWRlci11cmwuY29tIn0.fgKWMlm3CAOQGDXT4kn0JLof9rTd-Q4CwqlRFeQGq9VjYanmLZL3zoeqEkgCktqSQmOF3HdjvLfD_MD0TgVtFA. You can check its contents in https://jwt.io
 And somehow sends it to the new agent like a QR code for example.
@@ -76,8 +74,6 @@ New actor's Alastria DID: did:ala:quor:redT:af6a7777f5a98c2b47a0bc3bf965b4a4014d
  <summary>Only Blockchain</summary>
  ```bash
 ------ Creating new actor | Only blockchain part ------ 
-
-To simplify the code, errors are not being checked
 
         Omitting step 1 as it has nothing to do with blockchain
         Step 2: New agent generates CreateAlastriaID transaction

@@ -14,10 +14,10 @@ var entityKsPath = "../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a
 var subjectKsPath = "../../../../assets/keystores/subject.json"
 
 // More information about this process in the ../README.md
+// To simplify the code, errors are not being checked
 
 func main() {
 	fmt.Printf("\n------ Creating new actor | Only blockchain part ------ \n\n")
-	fmt.Printf("To simplify the code, errors are not being checked\n\n")
 
 	fmt.Printf("\tOmitting step 1 as it has nothing to do with blockchain\n")
 

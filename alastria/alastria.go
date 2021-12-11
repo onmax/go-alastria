@@ -1,8 +1,6 @@
 package alastria
 
 import (
-	"fmt"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/blockchain/network"
@@ -75,16 +73,43 @@ func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address)
 	return tx.GetCurrentPublicKey(conn, agentAddress)
 }
 
-func AddSubjectCredential(conn *alaTypes.Connection, signedJWT string, subjectDid string, URI string) (string, string, error) {
+func AddSubjectCredential(conn *alaTypes.Connection, signedJWT string, subjectDid *alaTypes.Did, URI string) (*types.Transaction, string, error) {
+	// TODO move this logic
 	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, subjectDid)
-	addSubjectCredentialTx, err := tx.AddSubjectCredential(conn, psmHashByteArr, URI)
+	tx, err := tx.AddSubjectCredential(conn, psmHashByteArr, URI)
 	if err != nil {
-		return "", "", err
+		return &types.Transaction{}, "", err
 	}
-	return addSubjectCredentialTx.Hash().Hex(), psmHash, nil
+	return tx, psmHash, nil
+}
+
+func AddSubjectCredentials(client *alaTypes.Connection, credentials []string, subjectDid *alaTypes.Did, URI string) ([]string, []string, error) {
+	// TODO Move this code
+	var (
+		txs       []string = make([]string, len(credentials))
+		psmHashes []string = make([]string, len(credentials))
+	)
+
+	for _, credential := range credentials {
+		// Right now, the function is blocking until the transactions are made
+		// TODO Add non-blocking option
+		tx, psmHash, err := AddSubjectCredential(client, credential, subjectDid, URI)
+		if err != nil {
+			return nil, nil, err
+		}
+		SendTx(client, tx)
+		txutil.UpdateNonce(client)
+
+		txs = append(txs, tx.Hash().Hex())
+		psmHashes = append(psmHashes, psmHash)
+	}
+
+	return txs, psmHashes, nil
 }
 
 func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address) ([]common.Address, error) {
+	// TODO Move somewhere else
+	// Ignoringing the first value as it is the length of credentialsByteArray and in go is easy to calculate
 	_, credentialsByteArray, err := tx.GetSubjectCredentialList(conn, subject)
 	if err != nil {
 		return []common.Address{}, err
@@ -98,14 +123,37 @@ func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address)
 	return credentials, nil
 }
 
-func AddIssuerCredential(conn *alaTypes.Connection, signedJWT string, subjectDid string) (string, string, error) {
-	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, subjectDid)
+func AddIssuerCredential(conn *alaTypes.Connection, signedJWT string, entityDid *alaTypes.Did) (*types.Transaction, string, error) {
+	// TODO Move somewhere else
+	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, entityDid)
 	addSubjectCredentialTx, err := tx.AddIssuerCredential(conn, psmHashByteArr)
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
-		return "", "", err
+		return &types.Transaction{}, "", err
 	}
-	return addSubjectCredentialTx.Hash().Hex(), psmHash, nil
+	return addSubjectCredentialTx, psmHash, nil
+}
+
+func AddIssuerCredentials(client *alaTypes.Connection, credentials []string, entityDid *alaTypes.Did) ([]string, []string, error) {
+	// TODO Move this code
+	var (
+		txs       []string = make([]string, len(credentials))
+		psmHashes []string = make([]string, len(credentials))
+	)
+
+	for _, credential := range credentials {
+		// Right now, the function is blocking until the transactions are made
+		// TODO Add non-blocking option
+		tx, psmHash, err := AddIssuerCredential(client, credential, entityDid)
+		if err != nil {
+			return nil, nil, err
+		}
+		SendTx(client, tx)
+		txutil.UpdateNonce(client)
+		txs = append(txs, tx.Hash().Hex())
+		psmHashes = append(psmHashes, psmHash)
+	}
+
+	return txs, psmHashes, nil
 }
 
 func SignJWT(conn *alaTypes.Connection, jwt interface{}) (string, error) {

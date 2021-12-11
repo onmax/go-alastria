@@ -16,10 +16,9 @@ var entityKsPath = "../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a
 var subjectKsPath = "../../../../assets/keystores/subject.json"
 
 // More information about this process in the ../README.md
-
+// To simplify the code, errors are not being checked
 func main() {
 	fmt.Printf("\n------ Creating new actor ------ \n\n")
-	fmt.Printf("To simplify the code, errors are not being checked\n\n")
 
 	// The process starts in the entity
 	signedAT := step1__entityGeneratesAT()
@@ -129,7 +128,7 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedAIC string) {
 
 	// Convert hex tx to tx struct
 	signedCreateAIDTx, _ := alastria.HexToTx(aic.Payload.CreateAlastriaTX)
-	
+
 	// generate and sign signedPrepareAITx
 	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, aic.Payload.PublicKey)
 

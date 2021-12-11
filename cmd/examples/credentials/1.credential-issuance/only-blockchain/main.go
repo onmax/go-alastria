@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/tokens"
@@ -12,6 +13,9 @@ import (
 
 	alaTypes "github.com/onmax/go-alastria/types"
 )
+
+var subjectKsPath = "../../../../../assets/keystores/subject.json"
+var entityKsPath = "../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json"
 
 // See assumptions in README.md
 var subjectAddress = common.HexToAddress("d0a0d5a1310a715157c3f81b789d6d9dc447aef5")
@@ -43,21 +47,23 @@ var levelOfAssurance = map[string]int{
 }
 
 // More information about this process in the ./README.md
-
+// To simplify the code, errors are not being checked
 func main() {
 	// Only issue the credentials that are stored in our database. In this example see var entityDatabase
 	credentialsToIssueTemp = []string{"passport", "email"}
 
 	fmt.Printf("\n------ Entity issues credentials to subject ------ \n\n")
-	fmt.Printf("To simplify the code, errors are not being checked\n\n")
 
 	fmt.Printf("\tOmiting step 1-3 as they are only for establishing a secure handshake between subject and issuer\n")
 	fmt.Printf("\tStep 4: The entity generates and send signed credentials to subject\n")
-	step4()
+	credentials := step4()
 
 	fmt.Printf("As a response of the HTTP request made by the subject, the credential will send the signed credentials\n\n")
 
-	fmt.Printf("\tStep 5: The subject receives the signed credentials and store them somewhere secure\n\n")
+	fmt.Printf("\tStep 5: The subject receives the signed credentials and store them somewhere secure. Optionally, the user could write in blockchain that he has received the credentials\n\n")
+
+	step5__subjectWriteInBlockchain(credentials)
+
 }
 
 func step4() []string {
@@ -80,7 +86,7 @@ func generateCredential(entityDid string, subjectDid string, key string, value s
 		},
 		Payload: &tokens.CredentialPayload{
 			JSONTokenId: configuration.JtiCredential,
-			IssuedAt:    configuration.Iat,
+			IssuedAt:    uint64(time.Now().UnixNano()) / uint64(time.Millisecond),
 			ExpiresAt:   configuration.Exp,
 			Issuer:      entityDid,
 			Subject:     subjectDid,
@@ -99,7 +105,7 @@ func generateCredential(entityDid string, subjectDid string, key string, value s
 func step4__generateCredentials() []string {
 	var credentials []string
 
-	entityConf := exampleutil.GetDisconnectedClientConf("../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityConf := exampleutil.GetDisconnectedClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
 	for _, credentialKey := range credentialsToIssueTemp {
@@ -113,21 +119,21 @@ func step4__generateCredentials() []string {
 }
 
 func step4__writeInBlockchain(credentials []string) {
-	entityConf := exampleutil.GetClientConf("../../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityConf := exampleutil.GetClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
-	var (
-		txs       []string = make([]string, len(credentials))
-		psmHashes []string = make([]string, len(credentials))
-	)
+	txs, psmHashes, _ := alastria.AddIssuerCredentials(entityClient, credentials, entityDid)
 
-	for _, credential := range credentials {
-		// Right now, the function is blocking until the transactions are made. You might want to use
-		// another thread for this
-		tx, psmHash, _ := alastria.AddSubjectCredential(entityClient, credential, entityDid.String(), "URI")
-		txs = append(txs, tx)
-		psmHashes = append(psmHashes, psmHash)
-	}
+	fmt.Printf("The entity has added %v credentials to the blockchain\n", len(credentials))
+	fmt.Printf("The transaction hashes are: %v\n", txs)
+	fmt.Printf("The PSMHashes are: %v\n", psmHashes)
+}
+
+func step5__subjectWriteInBlockchain(credentials []string) {
+	subjectConf := exampleutil.GetClientConf(subjectKsPath)
+	subjectClient, _ := alastria.NewClient(subjectConf)
+
+	txs, psmHashes, _ := alastria.AddSubjectCredentials(subjectClient, credentials, subjectDid, "URI")
 
 	fmt.Printf("The entity has added %v credentials to the blockchain\n", len(credentials))
 	fmt.Printf("The transaction hashes are: %v\n", txs)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/onmax/go-alastria/internal/configuration"
 	"github.com/onmax/go-alastria/tokens"
@@ -47,10 +48,10 @@ var levelOfAssurance = map[string]int{
 }
 
 // More information about this process in the ./README.md
+// To simplify the code, errors are not being checked
 
 func main() {
 	fmt.Printf("\n------ Entity issues credentials to subject ------ \n\n")
-	fmt.Printf("To simplify the code, errors are not being checked\n\n")
 
 	subjectDid, credentialsKeys := step1__subjectSelectsCredentials()
 	fmt.Printf("\tStep 1: The subject selects credentials\n")
@@ -208,7 +209,7 @@ func generateCredential(entityDid string, subjectDid string, key string, value s
 		},
 		Payload: &tokens.CredentialPayload{
 			JSONTokenId: configuration.JtiCredential,
-			IssuedAt:    configuration.Iat,
+			IssuedAt:    uint64(time.Now().UnixNano()) / uint64(time.Millisecond),
 			ExpiresAt:   configuration.Exp,
 			Issuer:      entityDid,
 			Subject:     subjectDid,
@@ -244,18 +245,7 @@ func step4__issuerWriteInBlockchain(credentials []string) {
 	entityConf := exampleutil.GetClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
-	var (
-		txs       []string = make([]string, len(credentials))
-		psmHashes []string = make([]string, len(credentials))
-	)
-
-	for _, credential := range credentials {
-		// Right now, the function is blocking until the transactions are made. You might want to use
-		// another thread for this
-		tx, psmHash, _ := alastria.AddIssuerCredential(entityClient, credential, entityDid.String())
-		txs = append(txs, tx)
-		psmHashes = append(psmHashes, psmHash)
-	}
+	txs, psmHashes, _ := alastria.AddIssuerCredentials(entityClient, credentials, entityDid)
 
 	fmt.Printf("The entity has added %v credentials to the blockchain\n", len(credentials))
 	fmt.Printf("The transaction hashes are: %v\n", txs)
@@ -266,18 +256,7 @@ func step5__subjectWriteInBlockchain(credentials []string) {
 	subjectConf := exampleutil.GetClientConf(subjectKsPath)
 	subjectClient, _ := alastria.NewClient(subjectConf)
 
-	var (
-		txs       []string = make([]string, len(credentials))
-		psmHashes []string = make([]string, len(credentials))
-	)
-
-	for _, credential := range credentials {
-		// Right now, the function is blocking until the transactions are made. You might want to use
-		// another thread for this
-		tx, psmHash, _ := alastria.AddSubjectCredential(subjectClient, credential, entityDid.String(), "URI")
-		txs = append(txs, tx)
-		psmHashes = append(psmHashes, psmHash)
-	}
+	txs, psmHashes, _ := alastria.AddSubjectCredentials(subjectClient, credentials, subjectDid, "URI")
 
 	fmt.Printf("The entity has added %v credentials to the blockchain\n", len(credentials))
 	fmt.Printf("The transaction hashes are: %v\n", txs)
