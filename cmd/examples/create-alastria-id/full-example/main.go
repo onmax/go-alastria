@@ -12,6 +12,9 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+var entityKsPath = "../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json"
+var subjectKsPath = "../../../../assets/keystores/subject.json"
+
 // More information about this process in the ../README.md
 
 func main() {
@@ -50,7 +53,7 @@ func main() {
 }
 
 func step1__entityGeneratesAT() string {
-	entityConf := exampleutil.GetDisconnectedClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityConf := exampleutil.GetDisconnectedClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityConf)
 
 	at := tokens.AT{
@@ -77,7 +80,7 @@ func step1__entityGeneratesAT() string {
 
 func step2(signedAT string) string {
 	// The new agent needs to connect to the network
-	newAgentConnConf := exampleutil.GetClientConf("../../../assets/keystores/subject.json")
+	newAgentConnConf := exampleutil.GetClientConf(subjectKsPath)
 	newAgentClient, _ := alastria.NewClient(newAgentConnConf)
 
 	crypto.Verify(signedAT, newAgentClient.Client.Ks.HexPublicKey) // Remember to check the return value
@@ -121,12 +124,12 @@ func step3__entitySignsPrepareAID_And_SendsTxs(signedAIC string) {
 	alastria.VerifyJWT(signedAIC, aic.Payload.PublicKey) // Remember to check the return value of Verify
 
 	// The entity needs to connect to the network if not already is
-	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityArgs := exampleutil.GetClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	// Convert hex tx to tx struct
 	signedCreateAIDTx, _ := alastria.HexToTx(aic.Payload.CreateAlastriaTX)
-
+	
 	// generate and sign signedPrepareAITx
 	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, aic.Payload.PublicKey)
 

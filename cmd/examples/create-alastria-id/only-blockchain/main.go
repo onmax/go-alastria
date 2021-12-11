@@ -10,6 +10,9 @@ import (
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
+var entityKsPath = "../../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json"
+var subjectKsPath = "../../../../assets/keystores/subject.json"
+
 // More information about this process in the ../README.md
 
 func main() {
@@ -38,17 +41,18 @@ func main() {
 
 func step2__newAgentSignsTx() (*types.Transaction, string) {
 	// The new agent needs to connect to the network
-	newAgentConnConf := exampleutil.GetClientConf("../../../assets/keystores/subject.json")
+	newAgentConnConf := exampleutil.GetClientConf(subjectKsPath)
 	newAgentClient, _ := alastria.NewClient(newAgentConnConf)
 
 	// The subject, from the wallet, should build the tx createAlastriaId and sign it
 	signedTxCreateAID, _ := alastria.CreateAlastriaIdentity(newAgentClient)
+
 	return signedTxCreateAID, newAgentClient.Client.Ks.HexPublicKey
 }
 
 func step3__entitySignsPrepareAID_And_SendsTxs(signedTxCreateAID *types.Transaction, newActorPublicKey string) {
 	// The entity needs to connect to the network
-	entityArgs := exampleutil.GetClientConf("../../../assets/keystores/entity1-a9728125c573924b2b1ad6a8a8cd9bf6858ced49.json")
+	entityArgs := exampleutil.GetClientConf(entityKsPath)
 	entityClient, _ := alastria.NewClient(entityArgs)
 
 	signedPrepareAITx, _ := alastria.PrepareAlastriaId(entityClient, newActorPublicKey)
@@ -65,5 +69,4 @@ func step4__buildNewAgentDid(newActorPub string) *alaTypes.Did {
 	actorProxy, _ := alastria.IdentityKeys(entityClient, newActorAddress)
 
 	return alastria.NewDid(configuration.Network, configuration.NetworkId, actorProxy)
-
 }

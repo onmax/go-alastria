@@ -48,6 +48,7 @@ You can check two examples on how to create new DID on Alastria:
 
 <details>
  <summary>Full code</summary>
+ ```bash
 ------ Creating new actor ------ 
 
 To simplify the code, errors are not being checked
@@ -68,10 +69,12 @@ The entity receives the AIC and destructure the 3 important params mentioned bef
 
         Step 4: Get the full DID
 New actor's Alastria DID: did:ala:quor:redT:af6a7777f5a98c2b47a0bc3bf965b4a4014d302c
+```
 </details>
 
 <details>
  <summary>Only Blockchain</summary>
+ ```bash
 ------ Creating new actor | Only blockchain part ------ 
 
 To simplify the code, errors are not being checked
@@ -85,6 +88,7 @@ Both of them should go in the AIC
 The entity needs first to parse the signedTxCreateAID transaction, and then, the entity send both transactions in a specific order
         Step 4: Get the full DID
 DID of the new actor: did:ala:quor:redT:bd741459000200190ca63338358f1de6c9b37a5d
+```
 </details>
 
 

@@ -25,10 +25,7 @@ func PrepareAlastriaId(conn *alaTypes.Connection, newActorAddress common.Address
 		return nil, err
 	}
 
-	delegatedData, _ := conn.Contracts.Instances.IdentityManager.PrepareAlastriaID(conn.Tx.Opts, newActorAddress)
-	delegated, _ := conn.Contracts.Instances.IdentityManager.DelegateCall(
-		conn.Tx.Opts, common.HexToAddress(conn.Contracts.Addresses.IdentityManager.Hex()), big.NewInt(0), delegatedData.Data())
-	return delegated, nil
+	return conn.Contracts.Instances.IdentityManager.PrepareAlastriaID(conn.Tx.Opts, newActorAddress)
 }
 
 func DelegateCall(conn *alaTypes.Connection, delegatedData *types.Transaction) (*types.Transaction, error) {
@@ -49,7 +46,11 @@ func DelegateCall(conn *alaTypes.Connection, delegatedData *types.Transaction) (
 
 	identityManagerHex := common.HexToAddress(conn.Contracts.Addresses.IdentityManager.Hex())
 
-	delegated, _ := conn.Contracts.Instances.IdentityManager.DelegateCall(conn.Tx.Opts, identityManagerHex, big.NewInt(0), delegatedData.Data())
+	delegated, err := conn.Contracts.Instances.IdentityManager.DelegateCall(conn.Tx.Opts, identityManagerHex, big.NewInt(0), delegatedData.Data())
+	if err != nil {
+		return nil, err
+	}
+
 	return delegated, nil
 }
 
@@ -77,6 +78,5 @@ func CreateAlastriaIdentity(conn *alaTypes.Connection, addPublicKeyCallData []by
 	if err != nil {
 		return nil, err
 	}
-
 	return conn.Contracts.Instances.IdentityManager.CreateAlastriaIdentity(conn.Tx.Opts, addPublicKeyCallData)
 }
