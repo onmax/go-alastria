@@ -1,27 +1,27 @@
 package credentials
 
 import (
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/onmax/go-alastria/blockchain/network"
 	"github.com/onmax/go-alastria/blockchain/tx"
 	"github.com/onmax/go-alastria/blockchain/txutil"
+	"github.com/onmax/go-alastria/did"
 	"github.com/onmax/go-alastria/hash"
-	"github.com/onmax/go-alastria/hex"
+	"github.com/onmax/go-alastria/tokens"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func AddIssuerCredential(conn *alaTypes.Connection, signedJWT string, entityDid *alaTypes.Did) (*types.Transaction, string, error) {
-	psmHash, psmHashByteArr := hash.PsmHash(signedJWT, entityDid)
-	addSubjectCredentialTx, err := tx.AddIssuerCredential(conn, psmHashByteArr)
+	psmHash := hash.PsmHash(signedJWT, entityDid)
+	addSubjectCredentialTx, err := tx.AddIssuerCredential(conn, psmHash)
 	if err != nil {
 		return &types.Transaction{}, "", err
 	}
+
 	return addSubjectCredentialTx, psmHash, nil
 }
 
 func AddIssuerCredentials(client *alaTypes.Connection, credentials []string, entityDid *alaTypes.Did) ([]string, []string, error) {
-	// TODO Move this code
 	var (
 		txs       []string = make([]string, len(credentials))
 		psmHashes []string = make([]string, len(credentials))
@@ -43,8 +43,24 @@ func AddIssuerCredentials(client *alaTypes.Connection, credentials []string, ent
 	return txs, psmHashes, nil
 }
 
-func GetIssuerCredentialStatus(conn *alaTypes.Connection, subjectDid *alaTypes.Did, psmHash common.Address) (*alaTypes.PSMHashStatus, error) {
-	psmHashByteArr := hex.StringTo32ByteArray(psmHash.Hex())
-	subjectDidAsAddress := common.HexToAddress(subjectDid.ProxyAddress)
-	return GetSubjectCredentialStatus(conn, subjectDidAsAddress, psmHashByteArr)
+func GetIssuerCredentialStatus(conn *alaTypes.Connection, signedCredential string) (*alaTypes.PSMHashStatus, error) {
+	credential, err := tokens.DecodeCredential(signedCredential)
+	if err != nil {
+		return nil, err
+	}
+	entityDid, err := did.NewDidFromString(credential.Payload.Issuer)
+	if err != nil {
+		return nil, err
+	}
+
+	issuerPsmHash := hash.PsmHash(signedCredential, entityDid)
+	_, status, err := tx.GetIssuerCredentialStatus(conn, entityDid, issuerPsmHash)
+	if err != nil {
+		return &alaTypes.PSMHashStatus{}, err
+	}
+
+	return &alaTypes.PSMHashStatus{
+		PSMHash: issuerPsmHash,
+		Status:  status,
+	}, nil
 }

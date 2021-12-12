@@ -104,8 +104,15 @@ var (
 
 type PSMHashStatus struct {
 	Exists  bool
-	PSMHash common.Address
+	PSMHash string
 	Status  uint8
+}
+
+type PSMHashStatuses struct {
+	IssuerPSMHash  string
+	SubjectPSMHash string
+	Credential     string
+	Status         uint8
 }
 
 // TODO Separate the types in files

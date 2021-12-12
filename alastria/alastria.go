@@ -7,7 +7,6 @@ import (
 	"github.com/onmax/go-alastria/blockchain/tx"
 	"github.com/onmax/go-alastria/blockchain/txutil"
 	"github.com/onmax/go-alastria/client"
-	"github.com/onmax/go-alastria/credentials"
 	"github.com/onmax/go-alastria/crypto"
 	"github.com/onmax/go-alastria/did"
 	"github.com/onmax/go-alastria/hex"
@@ -66,28 +65,6 @@ func IdentityKeys(conn *alaTypes.Connection, agentAddress common.Address) (strin
 
 func GetCurrentPublicKey(conn *alaTypes.Connection, agentAddress common.Address) (string, error) {
 	return tx.GetCurrentPublicKey(conn, agentAddress)
-}
-
-func AddSubjectCredentials(client *alaTypes.Connection, signedCredentials []string, subjectDid *alaTypes.Did, URI string) ([]string, []string, error) {
-	// TODO Return also the status of the psmHash
-	return credentials.AddSubjectCredentials(client, signedCredentials, subjectDid, URI)
-}
-
-func GetSubjectCredentialList(conn *alaTypes.Connection, subjectAddress common.Address) ([]common.Address, error) {
-	return credentials.GetSubjectCredentialList(conn, subjectAddress)
-}
-
-func GetSubjectCredentialsStatus(conn *alaTypes.Connection, subjectDid *alaTypes.Did, psmHashes []common.Address) ([]*alaTypes.PSMHashStatus, error) {
-	return credentials.GetSubjectCredentialsStatus(conn, subjectDid, psmHashes)
-}
-
-func AddIssuerCredentials(client *alaTypes.Connection, signedCredentials []string, entityDid *alaTypes.Did) ([]string, []string, error) {
-	// TODO Return also the status of the psmHash
-	return credentials.AddIssuerCredentials(client, signedCredentials, entityDid)
-}
-
-func GetIssuerCredentialStatus(conn *alaTypes.Connection, issuerDid *alaTypes.Did, psmHash common.Address) (*alaTypes.PSMHashStatus, error) {
-	return credentials.GetIssuerCredentialStatus(conn, issuerDid, psmHash)
 }
 
 func SignJWT(conn *alaTypes.Connection, jwt interface{}) (string, error) {

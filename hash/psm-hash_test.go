@@ -1,7 +1,6 @@
 package hash
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/onmax/go-alastria/did"
@@ -18,7 +17,6 @@ func TestPsmHash(t *testing.T) {
 		name  string
 		args  args
 		want  string
-		want1 [32]byte
 	}{
 		{
 			name: "test ok",
@@ -27,17 +25,13 @@ func TestPsmHash(t *testing.T) {
 				did:       d,
 			},
 			want:  "0xbc8f70b6722d1bff3129f17c9b72b27a136475f5bae9ac47b1d36301887b5dfb",
-			want1: [32]byte{48, 120, 98, 99, 56, 102, 55, 48, 98, 54, 55, 50, 50, 100, 49, 98, 102, 102, 51, 49, 50, 57, 102, 49, 55, 99, 57, 98, 55, 50, 98, 50},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := PsmHash(tt.args.signedJwt, tt.args.did)
+			got := PsmHash(tt.args.signedJwt, tt.args.did)
 			if got != tt.want {
 				t.Errorf("PsmHash() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("PsmHash() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}

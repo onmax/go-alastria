@@ -7,14 +7,12 @@ import (
 	"github.com/onmax/go-alastria/blockchain/tx"
 	"github.com/onmax/go-alastria/blockchain/txutil"
 	"github.com/onmax/go-alastria/hash"
-	"github.com/onmax/go-alastria/hex"
 	alaTypes "github.com/onmax/go-alastria/types"
 )
 
 func AddSubjectCredential(conn *alaTypes.Connection, signedCredential string, subjectDid *alaTypes.Did, URI string) (*types.Transaction, string, error) {
-	// TODO move this logic
-	psmHash, psmHashByteArr := hash.PsmHash(signedCredential, subjectDid)
-	tx, err := tx.AddSubjectCredential(conn, psmHashByteArr, URI)
+	psmHash := hash.PsmHash(signedCredential, subjectDid)
+	tx, err := tx.AddSubjectCredential(conn, psmHash, URI)
 	if err != nil {
 		return &types.Transaction{}, "", err
 	}
@@ -45,39 +43,37 @@ func AddSubjectCredentials(client *alaTypes.Connection, signedCredentials []stri
 	return txs, psmHashes, nil
 }
 
-func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address) ([]common.Address, error) {
+func GetSubjectCredentialList(conn *alaTypes.Connection, subject common.Address) ([]string, error) {
 	// Ignoringing the first value as it is the length of credentialsByteArray and in go is easy to calculate
-	_, credentialsByteArray, err := tx.GetSubjectCredentialList(conn, subject)
+	_, credentialsStr, err := tx.GetSubjectCredentialList(conn, subject)
 	if err != nil {
-		return []common.Address{}, err
+		return nil, err
 	}
 
-	var credentials []common.Address
-	for _, credentialByteArray := range credentialsByteArray {
-		credential := common.BytesToAddress(credentialByteArray[:])
-		credentials = append(credentials, credential)
+	var credentialsPsmHashes []string
+	for _, credentialPsmHash := range credentialsStr {
+		credentialsPsmHashes = append(credentialsPsmHashes, credentialPsmHash)
 	}
-	return credentials, nil
+	return credentialsPsmHashes, nil
 }
 
-func GetSubjectCredentialStatus(conn *alaTypes.Connection, subject common.Address, psmHash [32]byte) (*alaTypes.PSMHashStatus, error) {
-	exists, status, err := tx.GetSubjectCredentialStatus(conn, subject, psmHash)
+func GetSubjectCredentialStatus(conn *alaTypes.Connection, subjectDid *alaTypes.Did, signedCredential string) (*alaTypes.PSMHashStatus, error) {
+	psmHash := hash.PsmHash(signedCredential, subjectDid)
+	exists, status, err := tx.GetSubjectCredentialStatus(conn, subjectDid, psmHash)
 	if err != nil {
 		return nil, err
 	}
 	return &alaTypes.PSMHashStatus{
 		Exists:  exists,
-		PSMHash: common.BytesToAddress(psmHash[:]),
+		PSMHash: psmHash,
 		Status:  status,
 	}, nil
 }
 
-func GetSubjectCredentialsStatus(conn *alaTypes.Connection, subjectDid *alaTypes.Did, psmHashes []common.Address) ([]*alaTypes.PSMHashStatus, error) {
+func GetSubjectCredentialsStatus(conn *alaTypes.Connection, subjectDid *alaTypes.Did, signedCredentials []string) ([]*alaTypes.PSMHashStatus, error) {
 	var statuses []*alaTypes.PSMHashStatus
-	for _, psmHash := range psmHashes {
-		psmHashByteArr := hex.StringTo32ByteArray(psmHash.Hex())
-		subjectDidAsAddress := common.HexToAddress(subjectDid.ProxyAddress)
-		status, err := GetSubjectCredentialStatus(conn, subjectDidAsAddress, psmHashByteArr)
+	for _, signedCredential := range signedCredentials {
+		status, err := GetSubjectCredentialStatus(conn, subjectDid, signedCredential)
 		if err != nil {
 			return nil, err
 		}
