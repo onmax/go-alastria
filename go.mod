@@ -3,7 +3,7 @@ module github.com/onmax/go-alastria
 go 1.16
 
 require (
-	github.com/ethereum/go-ethereum v1.10.13
+	github.com/ethereum/go-ethereum v1.10.14
 	github.com/ureeves/jwt-go-secp256k1 v0.2.0
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
 )
